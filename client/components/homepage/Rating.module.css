@@ -1,0 +1,91 @@
+.section {
+    background-color: #fff;
+  }
+  
+  .sectionTitle {
+    font-size: 52px;
+    font-weight: 900;
+    font-family: Roboto, sans-serif;
+  }
+  
+  .sectionDescription {
+    font-size: 15px;
+    font-family: Inter, sans-serif;
+  }
+  
+  .arrowButton {
+    width: 38px;
+    height: 38px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8.5px;
+  }
+  
+  .arrowIcon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .productCard {
+    border-radius: 10px;
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+  
+  .evenCard {
+    background-color: #fff;
+  }
+  
+  .oddCard {
+    background-color: #f3f3f3;
+  }
+  
+  .productImage {
+    width: 73px;
+    height: 72px;
+    object-fit: cover;
+  }
+  
+  .productInfo {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 31px;
+  }
+  
+  .productName, .productPrice {
+    font-size: 15px;
+    font-family: Inter, sans-serif;
+  }
+  
+  .ratingContainer {
+    padding: 0 10px;
+  }
+  
+  .starIcon {
+    width: 23.4px;
+    height: 22.3px;
+    margin-right: 10px;
+  }
+  
+  .buyButton {
+    width: 125px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 11px 27px;
+  }
+  
+  @media (max-width: 768px) {
+    .sectionTitle {
+      font-size: 36px;
+    }
+  
+    .productCard {
+      margin-bottom: 15px;
+    }
+  }
