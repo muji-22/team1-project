@@ -11,7 +11,9 @@
 
 GIT執行操作前先確認目錄和所在分支
 <br>
+
 ###開始
+
 <br>
 #### 1.把專案clone到本地
 git clone https://專案.git .
@@ -35,20 +37,27 @@ git push origin dev
 
 ---
 <br>
+
 ###後續更動專案之前
+
 <br>
+
 #### a.分支切換到dev
 git checkout dev
 <br>
+
 #### b.把dev更新到最新狀態
 git pull origin dev
 <br>
+
 #### c.接著將分支切回個人分支
 git checkout Name_dev
 <br>
+
 #### d.將最新的dev合併到個人分支
 git merge dev
 <br>
+
 #### 如果有解決衝突、修改、更動之後重複上述 第3~6點動作
 git add .<br>
 git commit -m "備註"<br>
