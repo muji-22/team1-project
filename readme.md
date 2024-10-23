@@ -8,9 +8,9 @@
 
 ## git
 
-:::info
+
 GIT執行操作前先確認目錄和所在分支
-:::
+<br>
 ###開始
 #### 1.把專案clone到本地
 git clone https://專案.git .
