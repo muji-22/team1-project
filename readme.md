@@ -15,26 +15,27 @@ GIT執行操作前先確認目錄和所在分支
 ###開始
 
 <br>
-#### 1.把專案clone到本地
+1.把專案clone到本地
 git clone https://專案.git .
 <br>
-#### 2.新建並切換到新分支
+2.新建並切換到新分支
 git checkout -b Name_dev
 <br>
-#### 3.完成變更、修改之後把變動加入暫存
+3.完成變更、修改之後把變動加入暫存
 git add .
 <br>
-#### 4.把剛剛暫存的儲存變成一個版本並加入備註
+4.把剛剛暫存的儲存變成一個版本並加入備註
 git commit -m "備註"
 <br>
-#### 5.切換分支到dev並把Name_dev合併過去
+5.切換分支到dev並把Name_dev合併過去
 git checkout dev
 git merge --no-ff -m "備註" Name_dev
 <br>
-#### 6.把更動push上github
+6.把更動push上github
 git push origin dev
 完成
 
+<br>
 ---
 <br>
 
@@ -42,23 +43,23 @@ git push origin dev
 
 <br>
 
-#### a.分支切換到dev
+a.分支切換到dev
 git checkout dev
 <br>
 
-#### b.把dev更新到最新狀態
+b.把dev更新到最新狀態
 git pull origin dev
 <br>
 
-#### c.接著將分支切回個人分支
+c.接著將分支切回個人分支
 git checkout Name_dev
 <br>
 
-#### d.將最新的dev合併到個人分支
+d.將最新的dev合併到個人分支
 git merge dev
 <br>
 
-#### 如果有解決衝突、修改、更動之後重複上述 第3~6點動作
+如果有解決衝突、修改、更動之後重複上述 第3~6點動作<br>
 git add .<br>
 git commit -m "備註"<br>
 git checkout dev<br>
