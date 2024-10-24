@@ -1,38 +1,39 @@
 import React from 'react'
 
+
 const Footer = () => {
   return (
     <footer className="bg-light py-4">
       <div className="container">
         <div className="row">
           <div className="col-md-4">
-            <div className="d-flex flex-column">
-              <a href="#" className="text-info mb-2">
+            <div className="d-flex flex-column d-none d-md-flex">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 最新消息
               </a>
-              <a href="#" className="text-dark mb-2">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 關於我們
               </a>
-              <a href="#" className="text-dark mb-2">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 聯絡我們
               </a>
-              <a href="#" className="text-dark mb-2">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 會員權益
               </a>
             </div>
           </div>
           <div className="col-md-4">
-            <div className="d-flex flex-column">
-              <a href="#" className="text-dark mb-2">
+            <div className="d-flex flex-column d-none d-md-flex">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 購物說明
               </a>
-              <a href="#" className="text-dark mb-2">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 客服留言
               </a>
-              <a href="#" className="text-dark mb-2">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 隱私條款
               </a>
-              <a href="#" className="text-dark mb-2">
+              <a href="#" className="text-dark mb-2 text-decoration-none">
                 使用條款
               </a>
             </div>
