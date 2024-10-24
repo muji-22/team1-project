@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 function Header() {
   return (
-    <header className="bg-light w-100">
+    <header className="bg-light w-100 sticky-top">
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light">
           <button
@@ -22,57 +22,37 @@ function Header() {
           <Link className="navbar-brand mx-auto order-1" href="/">
             <img src="/images/LOGO-B.svg" alt="Logo" className="img-fluid" />
           </Link>
-          <div className="navbar-nav order-2">
-            <a className="nav-link d-lg-none" href="#">
-              購物車
-              <i className="bi bi-cart" />
-            </a>
-            <a className="nav-link d-lg-none" href="#">
-              收藏
-              <i className="bi bi-heart" />
-            </a>
-          </div>
+          
           <div className="collapse navbar-collapse order-3" id="navbarNav">
             <ul className="navbar-nav mx-auto">
-              <li className="nav-item">
+              <li className="nav-item mx-3">
                 <a className="nav-link" href="#">
-                  A
+                  首頁
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item mx-3">
                 <a className="nav-link" href="#">
-                  B
+                  文章
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item mx-3">
                 <a className="nav-link" href="#">
-                  C
+                  商品列表
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-item mx-3">
                 <a className="nav-link" href="#">
-                  D
+                  商品租借
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  E
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  F
-                </a>
-              </li>
+ 
             </ul>
-            <div className="navbar-nav d-none d-lg-flex">
+            <div className="navbar-nav">
               <a className="nav-link" href="#">
                 購物車
-                <i className="bi bi-cart" />
               </a>
               <a className="nav-link" href="#">
                 收藏
-                <i className="bi bi-heart" />
               </a>
             </div>
           </div>

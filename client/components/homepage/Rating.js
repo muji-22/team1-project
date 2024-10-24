@@ -1,5 +1,7 @@
 import React from 'react'
 import styles from './Rating.module.css'
+import { FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 
 const Rating = () => {
   const products = [
@@ -22,18 +24,10 @@ const Rating = () => {
       <div className="row justify-content-center mb-4">
         <div className="col-auto">
           <button className={`btn ${styles.arrowButton}`}>
-            <img
-              src="Vector 3 (Stroke).svg"
-              alt="Previous"
-              className={styles.arrowIcon}
-            />
+          <FaArrowLeft/>
           </button>
           <button className={`btn ${styles.arrowButton}`}>
-            <img
-              src="Vector 3 (Stroke).svg"
-              alt="Next"
-              className={styles.arrowIcon}
-            />
+          <FaArrowRight/>
           </button>
         </div>
       </div>
