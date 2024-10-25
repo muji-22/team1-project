@@ -3,6 +3,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { FaDiscord } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
+import { IoIosMail } from "react-icons/io";
 
 
 
@@ -72,12 +73,14 @@ const Footer = () => {
         </div>
         
         <div className="row border-top pt-3 mt-5">
-          <div className="col-6 text-start">
-            <p className="text-dark">© 2024. Perthon. All rights reserved</p>
+          <div className="col-6">
+            <small className="text-dark text-start">© 2024. Perthon. All rights reserved</small>
           </div>
 
-          <div className="col-6 text-end">
-        <FaDiscord/><FaFacebookF/>
+          <div className="col-6">
+            <div className='fs-2 d-flex gap-3 justify-content-end'>
+          <IoIosMail/><FaDiscord/><FaFacebookF className='fs-3'/><FaInstagram/>
+            </div>
           </div>
         </div>
       </div>
