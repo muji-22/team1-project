@@ -21,7 +21,7 @@ const Rating = () => {
           </p>
         </div>
       </div>
-      <div className="row justify-content-center mb-4">
+      <div className="row justify-content-end mb-4">
         <div className="col-auto">
           <button className={`btn ${styles.arrowButton}`}>
           <FaArrowLeft/>
