@@ -1,9 +1,11 @@
 import React from 'react'
+import { FaArrowRight } from "react-icons/fa";
+
 
 
 const Footer = () => {
   return (
-    <footer className="bg-light py-4">
+    <footer className="bg-light p-5">
       <div className="container">
         <div className="row">
           <div className="col-md-4">
@@ -40,30 +42,26 @@ const Footer = () => {
           </div>
           <div className="col-md-4">
             <div className="text-center mb-3">
-              <h3 className="font-weight-bold">pertho</h3>
               <img
-                src="Vector 5.svg"
+                src="/images/LOGO-B.svg"
                 alt="Logo"
                 className="img-fluid"
-                style={{ maxWidth: '50px' }}
+                style={{ maxWidth: '80px' }}
               />
             </div>
-            <h5 className="font-weight-bold mb-3">馬上收到最新產品的消息</h5>
+            <h5 className="font-weight-bold mb-3 text-center">馬上收到最新產品的消息</h5>
             <div className="input-group">
               <input
                 type="email"
                 className="form-control"
                 placeholder="輸入您的電子郵件"
+                aria-label="Recipient's username"
+                aria-describedby="button-addon2"
               />
-              <div className="input-group-append">
-                <button className="btn btn-outline-secondary" type="button">
-                  <img
-                    src="Vector 3 (Stroke).svg"
-                    alt="Send"
-                    style={{ width: '18px', height: '18px' }}
-                  />
-                </button>
-              </div>
+              <button class="btn btn-outline-secondary" type="button" id="button-addon2"><FaArrowRight /></button>
+
+
+
             </div>
           </div>
         </div>
