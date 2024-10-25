@@ -1,5 +1,10 @@
 import React from 'react'
 import { FaArrowRight } from "react-icons/fa";
+import { FaDiscord } from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+
+
 
 
 
@@ -63,6 +68,16 @@ const Footer = () => {
 
 
             </div>
+          </div>
+        </div>
+        
+        <div className="row border-top pt-3 mt-5">
+          <div className="col-6 text-start">
+            <p className="text-dark">© 2024. Perthon. All rights reserved</p>
+          </div>
+
+          <div className="col-6 text-end">
+        <FaDiscord/><FaFacebookF/>
           </div>
         </div>
       </div>
