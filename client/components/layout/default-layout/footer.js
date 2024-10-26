@@ -64,7 +64,7 @@ const Footer = () => {
                 aria-label="Recipient's username"
                 aria-describedby="button-addon2"
               />
-              <button class="btn btn-outline-secondary" type="button" id="button-addon2"><FaArrowRight /></button>
+              <button className="btn btn-outline-secondary" type="button" id="button-addon2"><FaArrowRight /></button>
 
 
 
