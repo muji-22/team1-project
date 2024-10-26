@@ -1,0 +1,53 @@
+// styles/bootstrap-custom.scss
+
+// 1. 導入必要的 Bootstrap 檔案
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/variables-dark";
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/utilities";
+
+// 2. 定義自定義顏色
+$custom: #40CBCE;
+
+// 3. 創建自定義顏色映射
+$custom-colors: (
+  "custom": $custom,
+);
+
+// 4. 合併到主題顏色
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+// 5. 創建自定義顏色機制
+$utilities: map-merge(
+  $utilities,
+  (
+    "color": map-merge(
+      map-get($utilities, "color"),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, "color"), "values"),
+          (
+            "custom": $custom
+          )
+        ),
+      ),
+    ),
+    "background-color": map-merge(
+      map-get($utilities, "background-color"),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, "background-color"), "values"),
+          (
+            "custom": $custom
+          )
+        ),
+      ),
+    ),
+  )
+);
+
+
+// 5. 導入全部 Bootstrap
+@import "../node_modules/bootstrap/scss/bootstrap";
