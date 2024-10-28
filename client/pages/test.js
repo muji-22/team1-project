@@ -1,13 +1,14 @@
 import React from 'react'
-import Coupon from '@/components/coupon/Coupon'
-import CouponSelector from '@/components/coupon/CouponSelector'
+import Review from '../components/product-review/Review'
+import StarRating from '../components/product-review/StarRating'
 function Test() {
     return (
       <>
       <main className='container min-vh-100'>
 
-        <Coupon />
-        <CouponSelector />
+        <StarRating />
+        <Review />
+
       </main>
       </>
     )
