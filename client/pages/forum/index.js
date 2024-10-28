@@ -1,12 +1,17 @@
 import React from "react";
 
-function forumPage(params) {
+// app/page.js (App Router)
+// pages/index.js (Pages Router)
+
+import dynamic from 'next/dynamic';
+
+const CustomEditor = dynamic( () => import( '@/pages/forum/Editor.js' ), { ssr: false } );
+
+function forumPage() {
   return (
-    <>
-      <h1>forum</h1>
-      <div></div>
-    </>
+    <CustomEditor />
   );
 }
+
 
 export default forumPage
