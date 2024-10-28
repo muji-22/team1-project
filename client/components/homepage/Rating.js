@@ -15,6 +15,25 @@ const Rating = () => {
 
   return (
     <section className={`container ${styles.section} py-5`}>
+      <div className="row justify-content-center mb-4">
+        <div className="col-md-8 text-center">
+          <h2 className={`${styles.sectionTitle} mb-3`}>顧客評分</h2>
+          <p className={styles.sectionDescription}>
+            放商品資訊、評分、購買連結等
+          </p>
+        </div>
+      </div>
+      <div className="row justify-content-end mb-4">
+        <div className="col-auto">
+          <button className={`btn ${styles.arrowButton}`}>
+            <FaArrowLeft />
+          </button>
+          <button className={`btn ${styles.arrowButton}`}>
+            <FaArrowRight />
+          </button>
+        </div>
+      </div>
+
       <div className="row">
         {products.map((product, index) => (
           <div key={index} className="col-12 mb-3">
