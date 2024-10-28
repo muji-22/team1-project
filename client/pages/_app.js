@@ -1,5 +1,6 @@
 // pages/_app.js
 import Layout from '../components/layout/default-layout'
+import ScrollToTop from '@/components/ScrollToTop'
 import { useEffect } from 'react'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/Bootstrap-custom.scss'
@@ -13,6 +14,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <Layout>
       <Component {...pageProps} />
+      <ScrollToTop />
     </Layout>
   )
 }
