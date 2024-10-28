@@ -2,6 +2,10 @@
 import React from "react";
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import Link from "next/link";
+import { IoCartOutline } from "react-icons/io5";
+import { IoMdHeartEmpty } from "react-icons/io";
+import { FaRegUser } from "react-icons/fa";
+
 
 function Header() {
   return (
@@ -51,11 +55,14 @@ function Header() {
               </li>
             </ul>
             <div className="navbar-nav">
-              <a className="nav-link" href="#">
-                購物車
+            <a className="nav-link" href="#">
+                <FaRegUser className="fs-4"/>
               </a>
               <a className="nav-link" href="#">
-                收藏
+                <IoCartOutline className="fs-3 text-custom"/>
+              </a>
+              <a className="nav-link" href="#">
+                <IoMdHeartEmpty className="fs-3 text-danger"/>
               </a>
             </div>
           </div>
