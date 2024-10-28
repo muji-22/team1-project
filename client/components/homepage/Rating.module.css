@@ -29,11 +29,6 @@
     height: 16px;
   }
   
-  .productCard {
-    border-radius: 10px;
-    border: 0.5px solid rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-  }
   
   .evenCard {
     background-color: #fff;
@@ -78,6 +73,13 @@
     font-size: 16px;
     font-weight: 900;
     padding: 11px 27px;
+    border: none;
+    
+    &&:hover {
+      background-color: #40cbce;
+      color: #fff;
+      border:  none;
+    }
   }
   
   @media (max-width: 768px) {
