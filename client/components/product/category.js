@@ -105,145 +105,221 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
 
     return (
         <>
-            <div>
-                {/* 搜尋欄 */}
-                <div>
-                    <form onSubmit={handleSearch}>
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="請輸入商品名稱..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            <button className="btn btn-primary" type="submit">
-                                搜尋
-                            </button>
+            {/* 搜尋欄 */}
+            <div className="mb-3">
+                <form onSubmit={handleSearch}>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="請輸入商品名稱..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button className="btn btn-primary" type="submit">
+                            搜尋
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div className="accordion" id="filterAccordion">
+                {/* 遊戲類型 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseGameTypes"
+                        >
+                            遊戲類型
+                        </button>
+                    </h3>
+                    <div
+                        id="collapseGameTypes"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <ul className="list-unstyled mb-0">
+                                {tags.map((tag) => (
+                                    <li key={tag.id} className="mb-2">
+                                        <label className="d-flex align-items-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={gametypesTags.has(
+                                                    tag.id
+                                                )}
+                                                onChange={() =>
+                                                    handleTagsChange(tag.id)
+                                                }
+                                                className="me-2"
+                                            />
+                                            <span>{tag.name}</span>
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    </form>
+                    </div>
                 </div>
 
-                <div>
-                    <div>
-                        <h3>遊戲類型</h3>
-                        <ul>
-                            {tags.map((tag) => (
-                                <li key={tag.id}>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={gametypesTags.has(tag.id)}
-                                            onChange={() =>
-                                                handleTagsChange(tag.id)
-                                            }
-                                        />
-                                        <span>{tag.name}</span>
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3>人數</h3>
-                        <ul>
-                            {playersOptions.map((option) => (
-                                <li key={option.id}>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            checked={
-                                                selectedPlayers === option.id
-                                            }
-                                            onChange={() =>
-                                                handleSingleSelect(
-                                                    option.id,
-                                                    setSelectedPlayers
-                                                )
-                                            }
-                                            name="players"
-                                        />
-                                        <span>{option.label}</span>
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3>遊玩時間</h3>
-                        <ul>
-                            {playtimeOptions.map((option) => (
-                                <li key={option.id}>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            checked={
-                                                selectedPlaytime === option.id
-                                            }
-                                            onChange={() =>
-                                                handleSingleSelect(
-                                                    option.id,
-                                                    setSelectedPlaytime
-                                                )
-                                            }
-                                            name="playtime"
-                                        />
-                                        <span>{option.label}</span>
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3>適合年齡</h3>
-                        <ul>
-                            {ageOptions.map((option) => (
-                                <li key={option.id}>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            checked={selectedAge === option.id}
-                                            onChange={() =>
-                                                handleSingleSelect(
-                                                    option.id,
-                                                    setSelectedAge
-                                                )
-                                            }
-                                            name="age"
-                                        />
-                                        <span>{option.label}</span>
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3>價格範圍</h3>
-                        <div>
-                            <input
-                                type="number"
-                                value={priceRange.min}
-                                onChange={handleMinPriceChange}
-                                placeholder="最低價格"
-                                className="form-control"
-                            />
-                            <span>-</span>
-                            <input
-                                type="number"
-                                value={priceRange.max}
-                                onChange={handleMaxPriceChange}
-                                placeholder="最高價格"
-                                className="form-control"
-                            />
+                {/* 人數 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button "
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapsePlayers"
+                        >
+                            人數
+                        </button>
+                    </h3>
+                    <div
+                        id="collapsePlayers"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <ul className="list-unstyled mb-0">
+                                {playersOptions.map((option) => (
+                                    <li key={option.id} className="mb-2">
+                                        <label className="d-flex align-items-center">
+                                            <input
+                                                type="radio"
+                                                checked={
+                                                    selectedPlayers ===
+                                                    option.id
+                                                }
+                                                onChange={() =>
+                                                    handleSingleSelect(
+                                                        option.id,
+                                                        setSelectedPlayers
+                                                    )
+                                                }
+                                                name="players"
+                                                className="me-2"
+                                            />
+                                            <span>{option.label}</span>
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
+                    </div>
+                </div>
+
+                {/* 遊玩時間 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapsePlaytime"
+                        >
+                            遊玩時間
+                        </button>
+                    </h3>
+                    <div
+                        id="collapsePlaytime"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <ul className="list-unstyled mb-0">
+                                {playtimeOptions.map((option) => (
+                                    <li key={option.id} className="mb-2">
+                                        <label className="d-flex align-items-center">
+                                            <input
+                                                type="radio"
+                                                checked={
+                                                    selectedPlaytime ===
+                                                    option.id
+                                                }
+                                                onChange={() =>
+                                                    handleSingleSelect(
+                                                        option.id,
+                                                        setSelectedPlaytime
+                                                    )
+                                                }
+                                                name="playtime"
+                                                className="me-2"
+                                            />
+                                            <span>{option.label}</span>
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 適合年齡 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseAge"
+                        >
+                            適合年齡
+                        </button>
+                    </h3>
+                    <div
+                        id="collapseAge"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <ul className="list-unstyled mb-0">
+                                {ageOptions.map((option) => (
+                                    <li key={option.id} className="mb-2">
+                                        <label className="d-flex align-items-center">
+                                            <input
+                                                type="radio"
+                                                checked={
+                                                    selectedAge === option.id
+                                                }
+                                                onChange={() =>
+                                                    handleSingleSelect(
+                                                        option.id,
+                                                        setSelectedAge
+                                                    )
+                                                }
+                                                name="age"
+                                                className="me-2"
+                                            />
+                                            <span>{option.label}</span>
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 價格範圍 */}
+                <div className="mt-3">
+                    <h4 className="mb-2">價格範圍</h4>
+                    <div className="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            value={priceRange.min}
+                            onChange={handleMinPriceChange}
+                            placeholder="最低價格"
+                            className="form-control"
+                        />
+                        <span>-</span>
+                        <input
+                            type="number"
+                            value={priceRange.max}
+                            onChange={handleMaxPriceChange}
+                            placeholder="最高價格"
+                            className="form-control"
+                        />
                     </div>
                 </div>
             </div>
-            );
         </>
     );
 };
