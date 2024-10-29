@@ -16,6 +16,8 @@ function HomePage() {
                 {/* 右側內容區 */}
                 <div className="col-md-9">
                     {/* 這裡可以放置商品列表或其他內容 */}
+                    <ProductCard />
+                    
                     <div className="p-3">{/* 商品列表內容 */}</div>
                 </div>
             </div>
