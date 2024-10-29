@@ -43,7 +43,6 @@ import {
   TableProperties,
   TableToolbar,
   TextTransformation,
-  TodoList,
   Underline,
   Undo,
 } from "ckeditor5";
@@ -83,7 +82,7 @@ function CustomEditor() {
         "|",
         "bulletedList",
         "numberedList",
-        "todoList",
+
         "outdent",
         "indent",
       ],
@@ -128,7 +127,7 @@ function CustomEditor() {
       TableProperties,
       TableToolbar,
       TextTransformation,
-      TodoList,
+
       Underline,
       Undo,
     ],
@@ -227,7 +226,7 @@ function CustomEditor() {
     <div>
       <div className="main-container">
         <div
-          className="editor-container editor-container_classic-editor"
+          className="editor-container editor-container_classic-editor container"
           ref={editorContainerRef}
         >
           <div className="editor-container__editor">
