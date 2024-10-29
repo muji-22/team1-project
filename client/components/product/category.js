@@ -123,10 +123,10 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                 </form>
             </div>
 
-            <div className="accordion" id="filterAccordion">
+            <div className="accordion " id="filterAccordion">
                 {/* 遊戲類型 */}
                 <div className="accordion-item">
-                    <h3 className="accordion-header">
+                    <h3 className="accordion-header px-3 accordion-flush ">
                         <button
                             className="accordion-button"
                             type="button"
@@ -143,7 +143,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                         <div className="accordion-body">
                             <ul className="list-unstyled mb-0">
                                 {tags.map((tag) => (
-                                    <li key={tag.id} className="mb-2">
+                                    <li key={tag.id} className="mb-2 px-3 ">
                                         <label className="d-flex align-items-center">
                                             <input
                                                 type="checkbox"
@@ -166,7 +166,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
 
                 {/* 人數 */}
                 <div className="accordion-item">
-                    <h3 className="accordion-header">
+                    <h3 className="accordion-header px-3 accordion-flush ">
                         <button
                             className="accordion-button "
                             type="button"
@@ -183,7 +183,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                         <div className="accordion-body">
                             <ul className="list-unstyled mb-0">
                                 {playersOptions.map((option) => (
-                                    <li key={option.id} className="mb-2">
+                                    <li key={option.id} className="mb-2 px-3">
                                         <label className="d-flex align-items-center">
                                             <input
                                                 type="radio"
@@ -211,7 +211,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
 
                 {/* 遊玩時間 */}
                 <div className="accordion-item">
-                    <h3 className="accordion-header">
+                    <h3 className="accordion-header px-3 accordion-flush">
                         <button
                             className="accordion-button"
                             type="button"
@@ -228,7 +228,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                         <div className="accordion-body">
                             <ul className="list-unstyled mb-0">
                                 {playtimeOptions.map((option) => (
-                                    <li key={option.id} className="mb-2">
+                                    <li key={option.id} className="mb-2 px-3">
                                         <label className="d-flex align-items-center">
                                             <input
                                                 type="radio"
@@ -256,7 +256,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
 
                 {/* 適合年齡 */}
                 <div className="accordion-item">
-                    <h3 className="accordion-header">
+                    <h3 className="accordion-header px-3 accordion-flush">
                         <button
                             className="accordion-button"
                             type="button"
@@ -273,7 +273,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                         <div className="accordion-body">
                             <ul className="list-unstyled mb-0">
                                 {ageOptions.map((option) => (
-                                    <li key={option.id} className="mb-2">
+                                    <li key={option.id} className="mb-2 px-3">
                                         <label className="d-flex align-items-center">
                                             <input
                                                 type="radio"

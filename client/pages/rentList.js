@@ -4,7 +4,7 @@ import ProductCard from "@/components/product/productCard";
 function HomePage() {
     return (
         <div className="container mb-5">
-            <h2 className=" my-5">商品列表</h2>
+            <h2 className=" my-5">商品租借列表</h2>
 
             {/* 主要內容區 */}
             <div className="row">
