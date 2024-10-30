@@ -54,7 +54,7 @@ $accordion-padding-x:                     0rem;
 $accordion-color:                         $body-color;
 $accordion-bg:                            $body-bg;
 $accordion-border-width:                  $border-width;
-$accordion-border-color:                  rgba($black, .125);
+$accordion-border-color:                  none;
 $accordion-border-radius:                 $border-radius;
 $accordion-inner-border-radius:           subtract($accordion-border-radius, $accordion-border-width);
 
