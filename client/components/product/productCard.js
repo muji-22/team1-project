@@ -11,7 +11,7 @@ const ProductCard = ({}) => {
             <div className="card col-3 border border-primary mb-5">
                 <div className="py-5">
                     <img
-                        src="/public/images/product_img/5a5f970ae84dd70001593509_DIXIT_7_Box_CH.jpg"
+                        src="/images/product_img/5a5f970ae84dd70001593509_DIXIT_7_Box_CH.jpg"
                         alt="產品圖片"
                     />
                 </div>
