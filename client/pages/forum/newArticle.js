@@ -1,9 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
-const CustomEditor = dynamic(() => import("@/pages/forum/Editor.js"), {
-    ssr: false,
-  });
-  
-function newAritcle() {
+import "@/components/editor/Editor.js";
+
+export default function newAritcle() {
   return <>CustomEditor</>;
 }
