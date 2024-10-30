@@ -1,11 +1,7 @@
 .card {
-    width: 215px;
-    height: 450px;
-    background-color: #ccc;
+    width: 240px;
+    /* background-color: #ccc; */
 }
-.imgBox {
-    width: 215px;
-    height: 215px;
-    /* object-fit: cover; */
-    background-color: #ccc;
+.img {
+    width: 100%;
 }

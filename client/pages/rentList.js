@@ -1,28 +1,42 @@
 import React, { useState } from "react";
 import CategorySidebar from "@/components/product/category";
 import ProductCard from "@/components/product/productCard";
-function HomePage() {
+import MayFavorite from "@/components/product/mayfavorite";
+function RentList() {
     return (
         <div className="container mb-5">
-            <h2 className=" my-5">商品租借列表</h2>
+            <h2 className=" my-5">租借商品列表</h2>
 
             {/* 主要內容區 */}
             <div className="row">
                 {/* 左側篩選欄 */}
-                <div className="col-md-3">
+                <div className="col-2">
                     <CategorySidebar />
                 </div>
 
                 {/* 右側內容區 */}
-                <div className="col-md-9">
-                    {/* 這裡可以放置商品列表或其他內容 */}
-                    <ProductCard />
-                    
-                    <div className="p-3">{/* 商品列表內容 */}</div>
+
+                <div className="col-10">
+                    <div className="row">
+                        {/* 這裡可以放置商品列表或其他內容 */}
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                    </div>
                 </div>
             </div>
+            <MayFavorite />
         </div>
     );
 }
 
-export default HomePage;
+export default RentList;

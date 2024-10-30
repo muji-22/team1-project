@@ -108,7 +108,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
             {/* 搜尋欄 */}
             <div className="mb-3">
                 <form onSubmit={handleSearch}>
-                    <div className="input-group rounded-pill search-box">
+                    <div className="input-group rounded-pill search-box rounded-pill">
                         <input
                             type="text"
                             className="form-control"
@@ -127,7 +127,6 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                 {/* 遊戲類型 */}
                 <div className="accordion-item">
                     <h3 className="accordion-header px-3 accordion-flush ">
-                        
                         <button
                             className="accordion-button"
                             type="button"
