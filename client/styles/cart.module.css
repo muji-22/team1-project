@@ -1,0 +1,35 @@
+.pcDNone{
+    display: none;
+}
+
+.stepBar{
+    padding: 5rem 3rem 5rem 3rem;
+}
+
+.step{
+    display: flex;
+    max-width: 459px;
+    opacity: 0.5;
+    gap: 10px;
+}
+
+.stepBox {
+    background: #2DACAE;
+    display: flex;
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    
+}
+.stepNum{
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 50px;
+    padding-right: 3px;
+    text-align: center;
+}
