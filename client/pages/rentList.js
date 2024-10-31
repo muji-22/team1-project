@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CategorySidebar from "@/components/product/category";
 import ProductCard from "@/components/product/productCard";
-import MayFavorite from "@/components/product/mayfavorite";
+import MayFavorite from "@/components/product/mayFavorite";
 function RentList() {
     return (
         <div className="container mb-5">
@@ -34,7 +34,6 @@ function RentList() {
                     </div>
                 </div>
             </div>
-            <MayFavorite />
         </div>
     );
 }
