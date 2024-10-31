@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import testRouter from './routes/test.js'  // 引入測試路由
+import productRouter from './routes/products.js'  // 加入商品路由
 import 'dotenv/config'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -20,10 +20,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 
-// 使用測試路由
-app.use('/api/test', testRouter)
+// 使用商品路由
+app.use('/api/products', productRouter)
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3005
 app.listen(PORT, () => {
   console.log(`Server is running on: http://localhost:${PORT}`)
 })
