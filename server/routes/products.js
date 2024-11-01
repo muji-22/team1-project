@@ -1,3 +1,4 @@
+// 商品的API
 import express from 'express'
 import pool from '../database/connect.js'  // 改成 connect.js
 
