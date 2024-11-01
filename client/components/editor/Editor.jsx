@@ -1,15 +1,13 @@
-// components/custom-editor.js
-"use client"; // only in App Router
-
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useState, useEffect, useRef } from "react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+
 import {
   ClassicEditor,
   AccessibilityHelp,
+  Alignment,
   Autoformat,
   AutoImage,
   Autosave,
-  BlockQuote,
   Bold,
   CloudServices,
   Essentials,
@@ -19,8 +17,6 @@ import {
   ImageInline,
   ImageInsert,
   ImageInsertViaUrl,
-  ImageResize,
-  ImageStyle,
   ImageTextAlternative,
   ImageToolbar,
   ImageUpload,
@@ -36,6 +32,7 @@ import {
   PasteFromOffice,
   SelectAll,
   SimpleUploadAdapter,
+  Strikethrough,
   Table,
   TableCaption,
   TableCellProperties,
@@ -43,6 +40,7 @@ import {
   TableProperties,
   TableToolbar,
   TextTransformation,
+  TodoList,
   Underline,
   Undo,
 } from "ckeditor5";
@@ -51,7 +49,9 @@ import translations from "ckeditor5/translations/zh.js";
 
 import "ckeditor5/ckeditor5.css";
 
-function CustomEditor() {
+import "@/components/editor/App.module.css";
+
+export default function CustomEditor() {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -73,27 +73,29 @@ function CustomEditor() {
         "bold",
         "italic",
         "underline",
+        "strikethrough",
         "|",
         "link",
         "insertImage",
         "mediaEmbed",
         "insertTable",
-        "blockQuote",
+        "|",
+        "alignment",
         "|",
         "bulletedList",
         "numberedList",
-
+        "todoList",
         "outdent",
         "indent",
       ],
-      shouldNotGroupWhenFull: false,
+      shouldNotGroupWhenFull: true,
     },
     plugins: [
       AccessibilityHelp,
+      Alignment,
       Autoformat,
       AutoImage,
       Autosave,
-      BlockQuote,
       Bold,
       CloudServices,
       Essentials,
@@ -103,8 +105,6 @@ function CustomEditor() {
       ImageInline,
       ImageInsert,
       ImageInsertViaUrl,
-      ImageResize,
-      ImageStyle,
       ImageTextAlternative,
       ImageToolbar,
       ImageUpload,
@@ -120,6 +120,7 @@ function CustomEditor() {
       PasteFromOffice,
       SelectAll,
       SimpleUploadAdapter,
+      Strikethrough,
       Table,
       TableCaption,
       TableCellProperties,
@@ -127,7 +128,7 @@ function CustomEditor() {
       TableProperties,
       TableToolbar,
       TextTransformation,
-
+      TodoList,
       Underline,
       Undo,
     ],
@@ -177,17 +178,10 @@ function CustomEditor() {
       ],
     },
     image: {
-      toolbar: [
-        "toggleImageCaption",
-        "imageTextAlternative",
-        "|",
-        "imageStyle:inline",
-        "imageStyle:wrapText",
-        "imageStyle:breakText",
-        "|",
-        "resizeImage",
-      ],
+      toolbar: ["toggleImageCaption", "imageTextAlternative"],
     },
+    initialData:
+      null,
     language: "zh",
     link: {
       addTargetToExternalLinks: true,
@@ -226,7 +220,7 @@ function CustomEditor() {
     <div>
       <div className="main-container">
         <div
-          className="editor-container editor-container_classic-editor container"
+          className="editor-container editor-container_classic-editor"
           ref={editorContainerRef}
         >
           <div className="editor-container__editor">
@@ -241,5 +235,3 @@ function CustomEditor() {
     </div>
   );
 }
-
-export default CustomEditor;

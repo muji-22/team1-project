@@ -1,7 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import "@/components/editor/Editor.js";
+import CustomEditor from "@/components/editor/Editor.jsx";
 
 export default function newAritcle() {
-  return <>CustomEditor</>;
+  return <><h1>111</h1>CustomEditor</>;
 }
