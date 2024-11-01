@@ -1,4 +1,7 @@
 // pages/_app.js
+import { AuthProvider } from '../contexts/AuthContext';
+//會員功能測試
+
 import Layout from '../components/layout/default-layout'
 import ScrollToTop from '@/components/ScrollToTop'
 import { useEffect } from 'react'
@@ -13,7 +16,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <Layout>
+      <AuthProvider>
       <Component {...pageProps} />
+      </AuthProvider>
       <ScrollToTop />
     </Layout>
   )
