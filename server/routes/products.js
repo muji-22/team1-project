@@ -1,6 +1,6 @@
 // 商品的API
 import express from 'express'
-import pool from '../database/connect.js'
+import pool from '../config/db.js'
 
 const router = express.Router()
 
