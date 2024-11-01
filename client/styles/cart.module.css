@@ -14,7 +14,7 @@
 }
 
 .stepBox {
-    background: #2DACAE;
+    background: rgb(45, 172, 174);
     display: flex;
     width: 100px;
     height: 100px;
@@ -32,4 +32,19 @@
     width: 50px;
     padding-right: 3px;
     text-align: center;
+}
+
+.stepWord {
+    display: flex;
+    flex-direction: column;
+    margin-block: auto;
+    margin-left: 12px;
+    color: #030303;
+}
+
+.stepline {
+    height: 1px;
+    width: 147px;
+    background-color: #000;
+    margin-block: 10px;
 }
