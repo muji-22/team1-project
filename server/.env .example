@@ -1,0 +1,17 @@
+PORT="3005" #設定後端的port
+NODE_ENV="development"
+DB_HOST="localhost" 
+DB_PORT="3306" #設定資料庫的port
+DB_DATABASE="mfee57" #要連線資料庫的名稱
+DB_USERNAME="admin" #連線資料庫的帳號
+DB_PASSWORD="admin" #連線資料庫的密碼
+SMTP_TO_EMAIL=test@gmail.com
+SMTP_TO_PASSWORD=vgmnwokxwxflxxxx
+ACCESS_TOKEN_SECRET=thisisverstrongaccesstokensecre
+DEBUG=true
+OTP_SECRET=thisisaotpsecretforserver
+JWT_SECRET=your_very_long_and_secure_secret_key
+
+
+
+#使用時在後端跟目錄建立.env並把這裡的內容複製進去

@@ -3,9 +3,8 @@
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon app.js",
-    "seed": "node ./cli/db-init.js",
-    "backup": "node ./cli/db-backup.js",
+    "dev": "nodemon ./bin/www",
+    "start": "node ./bin/www",
     "debug": "DEBUG=express:* node ./bin/www",
     "debug-win": "set DEBUG=express:* & node ./bin/www"
   },
