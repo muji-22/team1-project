@@ -10,6 +10,7 @@ SMTP_TO_PASSWORD=vgmnwokxwxflxxxx
 ACCESS_TOKEN_SECRET=thisisverstrongaccesstokensecre
 DEBUG=true
 OTP_SECRET=thisisaotpsecretforserver
+JWT_SECRET=your_very_long_and_secure_secret_key
 
 
 
