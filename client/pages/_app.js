@@ -1,27 +1,27 @@
 // pages/_app.js
-import { AuthProvider } from '../contexts/AuthContext';
+import { AuthProvider } from "../contexts/AuthContext";
 //會員功能測試
 
-import Layout from '../components/layout/default-layout'
-import ScrollToTop from '@/components/ScrollToTop'
-import { useEffect } from 'react'
+import Layout from "../components/layout/default-layout";
+import ScrollToTop from "@/components/ScrollToTop";
+import { useEffect } from "react";
 // import 'bootstrap/dist/css/bootstrap.min.css'
-import '../styles/Bootstrap-custom.scss'
+import "../styles/Bootstrap-custom.scss";
 
 // 確保 Bootstrap 只在客戶端環境中加載和執行，不然網頁會壞掉
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    import('bootstrap/dist/js/bootstrap')
-  }, [])
+    import("bootstrap/dist/js/bootstrap");
+  }, []);
 
   return (
-    <Layout>
-      <AuthProvider>
-      <Component {...pageProps} />
-      </AuthProvider>
-      <ScrollToTop />
-    </Layout>
-  )
+    <AuthProvider>
+      <Layout>
+        <Component {...pageProps} />
+        <ScrollToTop />
+      </Layout>
+    </AuthProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
