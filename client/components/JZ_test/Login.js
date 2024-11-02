@@ -1,44 +1,40 @@
-// components/Login.js
+// components/JZ_test/Login.js
 import React, { useState } from 'react';
-// import { useAuth } from '../contexts/AuthContext';
-import { useAuth } from '../../contexts/AuthContext';  // 修改路徑
+import { useAuth } from '../../contexts/AuthContext';
 import styles from './Login.module.css';
 
 export default function Login() {
-
-    const { login } = useAuth();  // 從 context 中取得 login 函數
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     account: '',
-    password: ''
+    password: '',
+    remember: false
   });
   
-  // 加入 error 狀態
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 重置錯誤訊息
     setError('');
     setIsLoading(true);
     
     try {
-        await login(formData);  // 使用 context 中的 login 函數
-        // 登入成功後會自動導向首頁（在 AuthContext 中處理）
-      } catch (error) {
-        setError(error.message || '登入失敗');
-      } finally {
-        setIsLoading(false);
-      }
+      await login(formData);
+    } catch (error) {
+      setError(error.message || '登入失敗');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,8 +45,7 @@ export default function Login() {
             <div className="card-body p-5">
               <h2 className="text-center mb-4">會員登入</h2>
 
-               {/* 錯誤訊息顯示 */}
-               {error && (
+              {error && (
                 <div className="alert alert-danger" role="alert">
                   {error}
                 </div>
@@ -88,22 +83,29 @@ export default function Login() {
                     <input
                       type="checkbox"
                       className="form-check-input"
-                      id="rememberMe"
+                      id="remember"
+                      name="remember"
+                      checked={formData.remember}
+                      onChange={handleChange}
                     />
-                    <label className="form-check-label" htmlFor="rememberMe">
+                    <label className="form-check-label" htmlFor="remember">
                       記住我
                     </label>
                   </div>
                   <a href="#" className="text-decoration-none">忘記密碼？</a>
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100 mb-3">
-                  登入
+                <button 
+                  type="submit" 
+                  className="btn btn-primary w-100 mb-3"
+                  disabled={isLoading}
+                >
+                  {isLoading ? '登入中...' : '登入'}
                 </button>
 
                 <div className="text-center">
                   <span className="me-2">還不是會員？</span>
-                  <a href="#" className="text-decoration-none">立即註冊</a>
+                  <a href="/register" className="text-decoration-none">立即註冊</a>
                 </div>
               </form>
             </div>

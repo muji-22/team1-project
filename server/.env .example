@@ -14,4 +14,4 @@ JWT_SECRET=your_very_long_and_secure_secret_key
 
 
 
-#使用時在後端跟目錄建立.env並把這裡的內容複製進去
+#使用時在後端根目錄建立.env並把這裡的內容複製進去
