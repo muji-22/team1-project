@@ -1,6 +1,5 @@
 // components/JZ_test/Register.js
-import styles from './Register.module.css';
-// components/JZ_test/Register.js
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 

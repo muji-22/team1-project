@@ -2,44 +2,21 @@
   width: 100%;
 }
 
-/* .breadcrumb {
-  max-width: 1440px;
-  height: 80px;
-  background: white;
-  position: relative;
-  line-height: 5;
-  display: block;
-  left: 50px;
-  color: orange;
-} */
 
 .top {
   margin: 0px auto;
   width: 400px;
 }
 
-.wrap {
-  max-width: 1440px;
-  height: 90vh;
-  border: 1px solid black;
-  margin: auto;
-  display: flex;
-  background: url("./login-pic.png") no-repeat;
-  background-size: 100% 100%;
-  margin-bottom: 40px;
 
-}
 
-.space {
-  width: 1100px;
-}
 
 .resgiter {
   max-width: 450px;
   height: 450px;
   border-radius: 20px;
   margin-block: auto;
-  margin-inline-end: 100px;
+  margin-inline: auto;
   background: white;
   box-shadow: -10px 10px 5px gray;
 }
@@ -93,7 +70,7 @@
 .forgrt {
   width: 100px;
   display: block;
-  margin-inline-start: 250px;
+  margin-inline-start: 150px;
   text-align: right;
   margin-top: 5px;
   background: white;
@@ -126,6 +103,7 @@
 .box{
   width: 100%;
   height: 20px;
+  margin-bottom: 10px;
 }
 .message{
   display: block;
@@ -141,7 +119,12 @@
   backdrop-filter: blur(5px);
   z-index: 1000;
 }
-
+.check{
+margin-inline-start: 50px;
+}
+.test{
+  display: flex;
+}
 
 @media(max-width: 992px) {
   .main {
