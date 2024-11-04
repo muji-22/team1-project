@@ -12,7 +12,7 @@ function Header() {
 
   const handleLogout = async () => {
     await logout();
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (
@@ -56,8 +56,8 @@ function Header() {
               {/* 未登入狀態 */}
               {!user ? (
                 <>
-                  <Link href="/login" className="nav-link px-3">登入</Link>
-                  <Link href="/register" className="btn btn-primary">註冊</Link>
+                  <Link href="/auth/login" className="nav-link px-3">登入</Link>
+                  <Link href="/auth/register" className="btn btn-primary">註冊</Link>
                 </>
               ) : (
                 <>
