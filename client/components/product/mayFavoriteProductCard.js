@@ -2,12 +2,13 @@ import React from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import styles from "./productCard.module.css";
 import { FaCartPlus } from "react-icons/fa";
+import AddFavProduct from '@/components/cart/addFavProduct';
 
 const MayFavoriteProductCard = ({}) => {
     return (
         <>
             {/* 修改 col 寬度為 col-lg-3 (一排四個) */}
-            <div className="col-lg-3 col-md-4 col-sm-6">
+            <div className="col-lg-3 col-md-4 col-sm-6 d-flex justify-content-center">
                 <div className={`card border-0 ${styles.card}`}>
                     <img
                         src="/images/product_img/5ab8f0d041c091b6fbceed32_AnimaUponAnimal_BOX_3D.jpg"
@@ -29,12 +30,7 @@ const MayFavoriteProductCard = ({}) => {
                                 </a>
                             </div>
                         </div>
-                        <a
-                            href="#"
-                            className="btn btn-custom w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto"
-                        >
-                            加入購物車 <FaCartPlus size={20} />
-                        </a>
+                         <AddFavProduct/>
                     </div>
                 </div>
             </div>
