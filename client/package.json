@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^9.3.1",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "ckeditor5": "^43.3.0",
     "mysql2": "^3.11.3",
     "next": "14.2.16",
     "react": "^18",

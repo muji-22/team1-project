@@ -132,7 +132,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   // 更新使用者資料
