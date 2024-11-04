@@ -6,13 +6,14 @@ import { FaRegUser } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 
+
 function Header() {
   const { user, logout } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
     await logout();
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (
@@ -56,8 +57,7 @@ function Header() {
               {/* 未登入狀態 */}
               {!user ? (
                 <>
-                  <Link href="/login" className="nav-link px-3">登入</Link>
-                  <Link href="/register" className="btn btn-primary">註冊</Link>
+                  <Link href="/auth/login" className="btn buttonCustomB">登入</Link>
                 </>
               ) : (
                 <>
@@ -128,7 +128,7 @@ function Header() {
       >
         <div className="offcanvas-header bg-dark d-flex justify-content-between align-items-center">
           <div
-            className="offcanvas-title flex-grow-1 text-center"
+            className="offcanvas-title flex-grow-1 text-center ps-4"
             id="offcanvasMenuLabel"
           >
             <img src="/images/LOGO-W.svg" alt="Logo" className="img-fluid" />
@@ -154,12 +154,9 @@ function Header() {
                 </button>
               </>
             ) : (
-              <div className="d-flex justify-content-center gap-2">
-                <Link href="/login" className="btn btn-outline-primary">
+              <div className="d-flex justify-content-center">
+                <Link href="/auth/login" className="btn buttonCustomB">
                   登入
-                </Link>
-                <Link href="/register" className="btn btn-primary">
-                  註冊
                 </Link>
               </div>
             )}

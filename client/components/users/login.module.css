@@ -1,0 +1,213 @@
+.main {
+  width: 100%;
+}
+
+
+.top {
+  margin: 0px auto;
+  width: 400px;
+}
+
+
+
+
+.resgiter {
+  max-width: 450px;
+  height: 450px;
+  border-radius: 20px;
+  margin-block: auto;
+  margin-inline: auto;
+  background: white;
+  box-shadow: -10px 10px 5px gray;
+}
+
+.inputGroup {
+  display: block;
+  width: 80%;
+  height: 50px;
+  background: #D9D9D9;
+  border: 0px;
+  border-radius: 5px;
+  margin: 40px auto;
+  outline: none;
+  padding-left: 25px;
+  font-size: 20px;
+  box-shadow: 3px 3px 5px gray;
+}
+
+.btnResgiter {
+  display: block;
+  background: #40CBCE;
+  color: white;
+  width: 80%;
+  height: 65px;
+  border-radius: 5px;
+  margin: 25px auto;
+  border: 0px;
+  font-size: 30px;
+  box-shadow: 3px 3px 5px gray;
+  font-weight: 1000;
+
+  &:hover {
+    box-shadow: 5px 5px 5px black;
+    text-shadow: 2px 2px 2px black;
+  }
+}
+
+.line {
+  width: 80%;
+  border-top: 1px solid black;
+  margin-inline: auto;
+}
+
+.bottom {
+  display: flex;
+  margin: 30px 0px 0px 100px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.forgrt {
+  width: 100px;
+  display: block;
+  margin-inline-start: 150px;
+  text-align: right;
+  margin-top: 5px;
+  background: white;
+  border: 0px;
+  font-size: 14px;
+  font-weight: 600;
+  &:hover {
+    text-shadow: 0.5px 0.5px 0.5px black;
+}
+}
+
+.btnLogin {
+  width: 100px;
+  background: black;
+  color: white;
+  margin: auto;
+  border-radius: 3px;
+  text-align: center;
+  border: 0px;
+  font-size: 16px;
+  font-weight: 600;
+  &:hover {
+    box-shadow: 3px 3px 3px #40CBCE;
+    text-shadow: 1px 1px 1px #40CBCE;
+}
+}
+.link{
+  text-decoration: none;
+}
+.box{
+  width: 100%;
+  height: 20px;
+  margin-bottom: 10px;
+}
+.message{
+  display: block;
+  color: red;
+  text-align: center;
+}
+.loading{
+  width: 100%;
+  height: 450px;
+  border: 1px solid black;
+  color: red;
+ background: white;
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+}
+.check{
+margin-inline-start: 50px;
+}
+.test{
+  display: flex;
+}
+
+@media(max-width: 992px) {
+  .main {
+    width: 100%;
+  }
+
+  .breadcrumb {
+    width: 100%;
+    height: 120px;
+  }
+
+  .top {
+    margin: 0px auto;
+  }
+
+  .wrap {
+    max-width: 992px;
+    height: 700px;
+    margin: auto;
+    background: url("./login-pic.png") no-repeat;
+    margin-bottom: 40px;
+
+  }
+
+  .space {
+    width: 0px;
+    height: 100px;
+  }
+
+  .resgiter {
+    max-width: 500px;
+    height: 450px;
+    border-radius: 20px;
+    margin-inline: auto;
+    background: white;
+    box-shadow: -10px 10px 5px gray;
+  }
+
+  .inputGroup {
+    display: block;
+    width: 85%;
+    height: 50px;
+    background: #D9D9D9;
+    border: 0px;
+    border-radius: 5px;
+    margin: 40px auto;
+    outline: none;
+    padding-left: 25px;
+    font-size: 14px;
+    box-shadow: 3px 3px 5px gray;
+  }
+
+  .btnResgiter {
+    display: block;
+    background: #40CBCE;
+    color: white;
+    width: 85%;
+    height: 65px;
+    border-radius: 5px;
+    margin: 25px auto;
+    border: 0px;
+    font-size: 24px;
+    box-shadow: 3px 3px 5px gray;
+  }
+
+  .bottom {
+    display: flex;
+    margin: 30px 0px 0px 100px;
+  }
+
+  .forgrt {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .btnLogin {
+    width: 100px;
+    background: black;
+    color: white;
+    margin: auto;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+}

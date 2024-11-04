@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CategoryMobile from "./categoryMobile";
 
 const CategorySidebar = ({ onSelectTags = () => {} }) => {
     const [gametypesTags, setGametypesTags] = useState(new Set());
@@ -320,6 +321,28 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                     </div>
                 </div>
             </div>
+              {/* 手機版 */}
+              {/* <CategoryMobile 
+                tags={tags}
+                playersOptions={playersOptions}
+                playtimeOptions={playtimeOptions}
+                ageOptions={ageOptions}
+                gametypesTags={gametypesTags}
+                selectedPlayers={selectedPlayers}
+                selectedPlaytime={selectedPlaytime}
+                selectedAge={selectedAge}
+                priceRange={priceRange}
+                handleTagsChange={handleTagsChange}
+                setSelectedPlayers={setSelectedPlayers}
+                setSelectedPlaytime={setSelectedPlaytime}
+                setSelectedAge={setSelectedAge}
+                handlePriceChange={(type, value) => {
+                    if (type === 'min') handleMinPriceChange({ target: { value } });
+                    else handleMaxPriceChange({ target: { value } });
+                }}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+            /> */}
         </>
     );
 };
