@@ -1,7 +1,30 @@
-import React from "react";
-import dynamic from "next/dynamic";
-import CustomEditor from "@/components/editor/Editor.jsx";
+import Link from "next/link";
+import Myeditor from "@/components/editor/Myeditor";
+import { useState, useEffect } from "react";
+import "@/components/editor/editor.module.css"
+const Editor = ()=>{
+  const [editorLoaded, setEditorLoaded] = useState(false);
+  const [data, setData] = useState("");
 
-export default function newAritcle() {
-  return <><h1>111</h1>CustomEditor</>;
-}
+  useEffect(() => {
+    setEditorLoaded(true);
+  }, []);
+
+
+  return(
+    <div className="container py-5">
+      <h1>建立文章</h1>
+      <Myeditor
+        name="description"
+        onChange={(data) => {
+          setData(data);
+        }}
+        editorLoaded={editorLoaded}
+      />
+      <br/>
+      <Link href="/">回首頁</Link>
+    </div>
+  );
+};
+
+export default Editor;
