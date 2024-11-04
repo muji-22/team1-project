@@ -1,0 +1,83 @@
+.main{
+    width: 100%;
+}
+.breadcrumb {
+    max-width: 1440px;
+    height: 80px;
+    position: relative;
+    line-height: 5;
+    display: block;
+    left: 50px;
+    color: orange;
+}
+
+.wrap {
+    max-width: 1440px;
+    height: 700px;
+    margin: auto;
+    display: flex;
+    background: url("./login-pic.png") no-repeat;
+    background-size: 100% 100%;
+    margin-bottom: 40px;
+  
+  }
+  .forget{
+    width: 400px;
+    height: 320px;
+    background: white;
+    margin-inline: auto;
+    margin-top: 120px;
+    border-radius: 20px;
+    box-shadow: -10px 10px 5px gray;
+  }
+  .input{
+    display: block;
+  width: 80%;
+  height: 50px;
+  background: #D9D9D9;
+  border: 0px;
+  border-radius: 5px;
+  margin: 40px auto;
+  outline: none;
+  padding-left: 25px;
+  font-size: 20px;
+  box-shadow: 3px 3px 5px gray;
+  }
+  .btn{
+    display: block;
+    background: #40CBCE;
+    color: white;
+    width: 80%;
+    height: 65px;
+    border-radius: 5px;
+    margin: 25px auto;
+    border: 0px;
+    font-size: 30px;
+    box-shadow: 3px 3px 5px gray;
+    font-weight: 1000;
+    &:hover {
+      box-shadow: 5px 5px 5px black;
+      text-shadow: 2px 2px 2px black;
+    }
+  }
+  .title{
+    display: block;
+    width: 300px;
+    border-bottom:1px solid black ;
+    margin-top: 10px;
+    margin-inline: auto;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+  }
+  .return{
+    border: 0px;
+    font-size: 24px;
+    font-weight: 600;
+    background: white;
+    &:hover {
+      box-shadow: 5px 5px 5px black;
+      
+  }
+  }
+  
