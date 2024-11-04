@@ -4,7 +4,7 @@ import MayFavoriteProductCard from "./mayFavoriteProductCard"; // 確保路徑�
 const MayFavorite = () => {
     return (
         <>
-            <div className="col-12">
+            <div className="col-9">
                 <h2 className="mb-4 text-center">你可能也喜歡</h2>
                 <div className="row">
                     <MayFavoriteProductCard />

@@ -4,7 +4,9 @@ import StepOne from '@/components/cart/stepone';
 import StepTwo from '@/components/cart/steptwo';
 import StepThree from '@/components/cart/stepthree';
 import styles from '@/styles/cart.module.css';
-import AddCartProduct from '@/components/cart/addProduct';
+import MayFavorite from '@/components/product/mayFavorite';
+import AddProduct from '@/components/cart/addProduct';
+
 
 export default function index() {
 
@@ -50,9 +52,12 @@ export default function index() {
             <span>最後確認</span>
           </div>
           </Col>
-          
         </Row>
-        
+      </Container>
+      <Container>
+        <Row className={`d-flex justify-content-center align-items-center`}>
+          <MayFavorite/>
+        </Row>
       </Container>
     </>
   )
