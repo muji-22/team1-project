@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // API 路由
 app.use('/api/products', productRouter)
-app.use('/api/auth', authRouter)  // 新增授權相關路由
+//app.use('/api/auth', authRouter)  // 新增授權相關路由
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {
