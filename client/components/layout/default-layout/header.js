@@ -83,7 +83,7 @@ function Header() {
                       </li>
                       <li><hr className="dropdown-divider" /></li>
                       <li>
-                        <Link href="/member/profile" className="dropdown-item">
+                        <Link href="/auth/user" className="dropdown-item">
                           會員資料
                         </Link>
                       </li>
