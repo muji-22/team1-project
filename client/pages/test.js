@@ -1,13 +1,13 @@
 import React from 'react'
-// import ProductList from '@/components/JZ_test/ProductList'
-import Register from '@/components/JZ_test/Register'
+import ProductList from '@/components/JZ_test/ProductList'
+// import Register from '@/components/JZ_test/Register'
 function Test() {
     return (
       <>
       <main className='container min-vh-100'>
 
-      {/* <ProductList /> */}
-      <Register/>
+      <ProductList />
+      {/* <Register/> */}
       </main>
       </>
     )

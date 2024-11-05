@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CategoryMobile from "./categoryMobile";
 import { GrFilter } from "react-icons/gr";
 
 const CategorySidebar = ({ onSelectTags = () => {} }) => {
@@ -9,6 +10,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
     const [priceRange, setPriceRange] = useState({ min: "", max: "" });
     const [searchQuery, setSearchQuery] = useState("");
 
+    // 選項數據
     const tags = [
         { id: 1, name: "大腦" },
         { id: 2, name: "派對" },
@@ -47,6 +49,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
         { id: 4, label: "18+" },
     ];
 
+    // 處理函數
     const handleTagsChange = (tagId) => {
         const newTags = new Set(gametypesTags);
         if (newTags.has(tagId)) {
@@ -58,7 +61,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
     };
 
     const handleSingleSelect = (id, setter) => {
-        setter(id);
+        setter(prevId => prevId === id ? null : id);
     };
 
     const handleMinPriceChange = (event) => {
@@ -71,9 +74,15 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
         setPriceRange(newPriceRange);
     };
 
+    const handlePriceChange = (type, value) => {
+        setPriceRange(prev => ({
+            ...prev,
+            [type]: value
+        }));
+    };
+
     const handleSearch = (e) => {
         e.preventDefault();
-        // 將搜尋關鍵字加入到篩選條件中
         const filters = {
             gametypes: Array.from(gametypesTags),
             players: selectedPlayers,
@@ -107,6 +116,8 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
     return (
         <>
             {/* 桌面版側邊欄 (lg以上顯示) */}
+            
+
             <div className="d-none d-lg-block">
                 {/* 搜尋欄 */}
                 <div className="mb-3">
@@ -125,7 +136,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                         </div>
                     </form>
                 </div>
-
+    
                 <div className="accordion" id="filterAccordionDesktop">
                     {/* 遊戲類型 */}
                     <div className="accordion-item">
@@ -150,12 +161,8 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="checkbox"
-                                                    checked={gametypesTags.has(
-                                                        tag.id
-                                                    )}
-                                                    onChange={() =>
-                                                        handleTagsChange(tag.id)
-                                                    }
+                                                    checked={gametypesTags.has(tag.id)}
+                                                    onChange={() => handleTagsChange(tag.id)}
                                                     className="me-2"
                                                 />
                                                 <span>{tag.name}</span>
@@ -166,7 +173,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                             </div>
                         </div>
                     </div>
-
+    
                     {/* 人數 */}
                     <div className="accordion-item">
                         <h3 className="accordion-header px-3 accordion-flush">
@@ -186,23 +193,12 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                             <div className="accordion-body">
                                 <ul className="list-unstyled mb-0">
                                     {playersOptions.map((option) => (
-                                        <li
-                                            key={option.id}
-                                            className="mb-2 px-3"
-                                        >
+                                        <li key={option.id} className="mb-2 px-3">
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="radio"
-                                                    checked={
-                                                        selectedPlayers ===
-                                                        option.id
-                                                    }
-                                                    onChange={() =>
-                                                        handleSingleSelect(
-                                                            option.id,
-                                                            setSelectedPlayers
-                                                        )
-                                                    }
+                                                    checked={selectedPlayers === option.id}
+                                                    onChange={() => handleSingleSelect(option.id, setSelectedPlayers)}
                                                     name="playersDesktop"
                                                     className="me-2"
                                                 />
@@ -214,7 +210,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                             </div>
                         </div>
                     </div>
-
+    
                     {/* 遊玩時間 */}
                     <div className="accordion-item">
                         <h3 className="accordion-header px-3 accordion-flush">
@@ -234,23 +230,12 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                             <div className="accordion-body">
                                 <ul className="list-unstyled mb-0">
                                     {playtimeOptions.map((option) => (
-                                        <li
-                                            key={option.id}
-                                            className="mb-2 px-3"
-                                        >
+                                        <li key={option.id} className="mb-2 px-3">
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="radio"
-                                                    checked={
-                                                        selectedPlaytime ===
-                                                        option.id
-                                                    }
-                                                    onChange={() =>
-                                                        handleSingleSelect(
-                                                            option.id,
-                                                            setSelectedPlaytime
-                                                        )
-                                                    }
+                                                    checked={selectedPlaytime === option.id}
+                                                    onChange={() => handleSingleSelect(option.id, setSelectedPlaytime)}
                                                     name="playtimeDesktop"
                                                     className="me-2"
                                                 />
@@ -262,7 +247,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                             </div>
                         </div>
                     </div>
-
+    
                     {/* 適合年齡 */}
                     <div className="accordion-item">
                         <h3 className="accordion-header px-3 accordion-flush">
@@ -282,23 +267,12 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                             <div className="accordion-body">
                                 <ul className="list-unstyled mb-0">
                                     {ageOptions.map((option) => (
-                                        <li
-                                            key={option.id}
-                                            className="mb-2 px-3"
-                                        >
+                                        <li key={option.id} className="mb-2 px-3">
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="radio"
-                                                    checked={
-                                                        selectedAge ===
-                                                        option.id
-                                                    }
-                                                    onChange={() =>
-                                                        handleSingleSelect(
-                                                            option.id,
-                                                            setSelectedAge
-                                                        )
-                                                    }
+                                                    checked={selectedAge === option.id}
+                                                    onChange={() => handleSingleSelect(option.id, setSelectedAge)}
                                                     name="ageDesktop"
                                                     className="me-2"
                                                 />
@@ -310,7 +284,7 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                             </div>
                         </div>
                     </div>
-
+    
                     {/* 價格範圍 */}
                     <div className="mt-3">
                         <h4 className="mb-2">價格範圍</h4>
@@ -334,247 +308,31 @@ const CategorySidebar = ({ onSelectTags = () => {} }) => {
                     </div>
                 </div>
             </div>
+    
+           
+            
 
             {/* 手機版側邊欄 (lg以下顯示) */}
-            <div className="d-lg-none">
-                {/* 搜尋欄 */}
-                <div className="mb-3">
-                    <form onSubmit={handleSearch}>
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="請輸入商品名稱..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            <button className="btn btn-primary" type="submit">
-                                搜尋
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                {/* 篩選區塊 */}
-                <div className="accordion" id="filterAccordionMobile">
-                    {/* 遊戲類型 */}
-                    <div className="accordion-item">
-                        <h2 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseGameTypesMobile"
-                            >
-                                遊戲類型{" "}
-                                {gametypesTags.size > 0 &&
-                                    `(${gametypesTags.size})`}
-                            </button>
-                        </h2>
-                        <div
-                            id="collapseGameTypesMobile"
-                            className="accordion-collapse collapse show"
-                            data-bs-parent="#filterAccordionMobile"
-                        >
-                            <div className="accordion-body">
-                                <div className="d-flex flex-wrap gap-2">
-                                    {tags.map((tag) => (
-                                        <button
-                                            key={tag.id}
-                                            onClick={() =>
-                                                handleTagsChange(tag.id)
-                                            }
-                                            className={`btn ${
-                                                gametypesTags.has(tag.id)
-                                                    ? "btn-primary"
-                                                    : "btn-outline-primary"
-                                            }`}
-                                        >
-                                            {tag.name}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 人數 */}
-                    <div className="accordion-item">
-                        <h2 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapsePlayersMobile"
-                            >
-                                人數 {selectedPlayers && "(1)"}
-                            </button>
-                        </h2>
-                        <div
-                            id="collapsePlayersMobile"
-                            className="accordion-collapse collapse show"
-                            data-bs-parent="#filterAccordionMobile"
-                        >
-                            <div className="accordion-body">
-                                <div className="d-flex flex-wrap gap-2">
-                                    {playersOptions.map((option) => (
-                                        <button
-                                            key={option.id}
-                                            onClick={() =>
-                                                handleSingleSelect(
-                                                    option.id,
-                                                    setSelectedPlayers
-                                                )
-                                            }
-                                            className={`btn ${
-                                                selectedPlayers === option.id
-                                                    ? "btn-primary"
-                                                    : "btn-outline-primary"
-                                            }`}
-                                        >
-                                            {option.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 遊玩時間 */}
-                    <div className="accordion-item">
-                        <h2 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapsePlaytimeMobile"
-                            >
-                                遊玩時間 {selectedPlaytime && "(1)"}
-                            </button>
-                        </h2>
-                        <div
-                            id="collapsePlaytimeMobile"
-                            className="accordion-collapse collapse show"
-                            data-bs-parent="#filterAccordionMobile"
-                        >
-                            <div className="accordion-body">
-                                <div className="d-flex flex-wrap gap-2">
-                                    {playtimeOptions.map((option) => (
-                                        <button
-                                            key={option.id}
-                                            onClick={() =>
-                                                handleSingleSelect(
-                                                    option.id,
-                                                    setSelectedPlaytime
-                                                )
-                                            }
-                                            className={`btn ${
-                                                selectedPlaytime === option.id
-                                                    ? "btn-primary"
-                                                    : "btn-outline-primary"
-                                            }`}
-                                        >
-                                            {option.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 適合年齡 */}
-                    <div className="accordion-item">
-                        <h2 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseAgeMobile"
-                            >
-                                適合年齡 {selectedAge && "(1)"}
-                            </button>
-                        </h2>
-                        <div
-                            id="collapseAgeMobile"
-                            className="accordion-collapse collapse show"
-                            data-bs-parent="#filterAccordionMobile"
-                        >
-                            <div className="accordion-body">
-                                <div className="d-flex flex-wrap gap-2">
-                                    {ageOptions.map((option) => (
-                                        <button
-                                            key={option.id}
-                                            onClick={() =>
-                                                handleSingleSelect(
-                                                    option.id,
-                                                    setSelectedAge
-                                                )
-                                            }
-                                            className={`btn ${
-                                                selectedAge === option.id
-                                                    ? "btn-primary"
-                                                    : "btn-outline-primary"
-                                            }`}
-                                        >
-                                            {option.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 價格範圍 */}
-                    <div className="accordion-item">
-                        <h2 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapsePriceMobile"
-                            >
-                                價格範圍{" "}
-                                {(priceRange.min || priceRange.max) && "(1)"}
-                            </button>
-                        </h2>
-                        <div
-                            id="collapsePriceMobile"
-                            className="accordion-collapse collapse show"
-                            data-bs-parent="#filterAccordionMobile"
-                        >
-                            <div className="accordion-body">
-                                <div className="d-flex align-items-center gap-2">
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        placeholder="最低"
-                                        value={priceRange.min}
-                                        onChange={(e) =>
-                                            handlePriceChange(
-                                                "min",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <span>-</span>
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        placeholder="最高"
-                                        value={priceRange.max}
-                                        onChange={(e) =>
-                                            handlePriceChange(
-                                                "max",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <CategoryMobile 
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                handleSearch={handleSearch}
+                tags={tags}
+                gametypesTags={gametypesTags}
+                handleTagsChange={handleTagsChange}
+                playersOptions={playersOptions}
+                selectedPlayers={selectedPlayers}
+                setSelectedPlayers={setSelectedPlayers}
+                playtimeOptions={playtimeOptions}
+                selectedPlaytime={selectedPlaytime}
+                setSelectedPlaytime={setSelectedPlaytime}
+                ageOptions={ageOptions}
+                selectedAge={selectedAge}
+                setSelectedAge={setSelectedAge}
+                priceRange={priceRange}
+                handlePriceChange={handlePriceChange}
+                handleSingleSelect={handleSingleSelect}
+            />
         </>
     );
 };
