@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./user.module.css";
 import {
   GiDiceSixFacesOne,
@@ -9,17 +9,37 @@ import {
   GiDiceSixFacesSix,
 } from "react-icons/gi";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from 'next/router';
 
 export default function UserData() {
-  const { user } = useAuth();
+  const { user, updateUserData, updateAvatar, loading } = useAuth();
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    account: user ? user.account : "",
-    name: user ? user.name : "",
-    phone: user ? user.phone : "",
-    email: user ? user.email : "",
-    address: user ? user.address : "",
-    birthday: user ? user.birthday : "",
+    account: "",
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    birthday: "",
   });
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (!user) {
+      router.push('/auth/login');
+      return;
+    }
+
+    setFormData({
+      account: user.account || "",
+      name: user.name || "",
+      phone: user.phone || "",
+      email: user.email || "",
+      address: user.address || "",
+      birthday: user.birthday || "",
+    });
+  }, [user, loading, router]);
 
   const input = [
     {
@@ -28,7 +48,7 @@ export default function UserData() {
       icon: <GiDiceSixFacesOne />,
       type: "account",
       name: "account",
-      disabled:"disabled"
+      disabled: "disabled"
     },
     {
       id: "2",
@@ -36,7 +56,7 @@ export default function UserData() {
       icon: <GiDiceSixFacesTwo />,
       type: "text",
       name: "name",
-      disabled:""
+      disabled: ""
     },
     {
       id: "3",
@@ -44,6 +64,7 @@ export default function UserData() {
       icon: <GiDiceSixFacesThree />,
       type: "phone",
       name: "phone",
+      disabled: ""
     },
     {
       id: "4",
@@ -51,7 +72,7 @@ export default function UserData() {
       icon: <GiDiceSixFacesFour />,
       type: "email",
       name: "email",
-       disabled:""
+      disabled: ""
     },
     {
       id: "5",
@@ -59,15 +80,15 @@ export default function UserData() {
       icon: <GiDiceSixFacesFive />,
       type: "address",
       name: "address",
-       disabled:""
+      disabled: ""
     },
     {
       id: "6",
       lable: "生日",
       icon: <GiDiceSixFacesSix />,
       type: "date",
-      name: "date",
-      disabled:""
+      name: "birthday",
+      disabled: ""
     },
   ];
 
@@ -79,12 +100,47 @@ export default function UserData() {
     }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateUserData(formData);
+      alert('資料更新成功！');
+    } catch (error) {
+      alert('更新失敗：' + error.message);
+    }
+  };
+
+  const handleAvatarUpload = async (e) => {
+    e.preventDefault();
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        try {
+          await updateAvatar(file);
+          alert('頭像上傳成功！');
+        } catch (error) {
+          alert('上傳失敗：' + error.message);
+        }
+      }
+    };
+    
+    fileInput.click();
+  };
+
+  if (loading || !user) {
+    return <div className={styles.loading}>載入中...</div>;
+  }
+
   return (
     <>
       <div className={styles.navSpace} />
       <div className={styles.reUser}>
         <div className={styles.reUserLeft}>
-          <form action>
+          <form onSubmit={handleSubmit}>
             {input.map((v, i) => {
               return (
                 <div className={styles.inputWrap} key={v.id}>
@@ -108,8 +164,15 @@ export default function UserData() {
           </form>
         </div>
         <div className={styles.reUserRight}>
-          <form action>
-            <div className={styles.userPic2} />
+          <form onSubmit={handleAvatarUpload}>
+            <div 
+              className={styles.userPic2} 
+              style={{
+                backgroundImage: user?.avatar_url ? `url(${user.avatar_url})` : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
             <button className={styles.button} type="submit">
               上傳大頭照
             </button>
