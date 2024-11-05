@@ -5,6 +5,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import productRouter from './routes/products.js'
 import authRouter from './routes/auth.js'  // 新增引入
+import couponRouter from './routes/coupons.js' //優惠券
 import 'dotenv/config'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 // API 路由
 app.use('/api/products', productRouter)
 app.use('/api/auth', authRouter)  // 新增授權相關路由
+app.use('/api/coupons', couponRouter) //優惠券
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {
