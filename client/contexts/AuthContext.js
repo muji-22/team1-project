@@ -50,6 +50,8 @@ export function AuthProvider({ children }) {
 
       if (response.ok) {
         const data = await response.json();
+        // 更新本地儲存的使用者資料
+        localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
       } else {
         // token 無效，清除儲存的資訊
@@ -150,17 +152,52 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(userData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.message || '更新失敗');
       }
 
       // 更新本地儲存的使用者資料
-      const updatedUser = { ...user, ...userData };
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+
+      return true;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+
+  // 更新頭像
+  const updateAvatar = async (file) => {
+    try {
+      setError(null);
+      const token = localStorage.getItem('token');
+      
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const response = await fetch(`${API_URL}/upload-avatar`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || '上傳失敗');
+      }
+
+      // 更新本地儲存的使用者資料
+      const updatedUser = { ...user, avatar_url: data.avatar_url };
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setUser(updatedUser);
 
-      return true;
+      return data;
     } catch (error) {
       setError(error.message);
       throw error;
@@ -181,6 +218,7 @@ export function AuthProvider({ children }) {
     logout,
     checkAuth,
     updateUserData,
+    updateAvatar,
     isAuthenticated,
   };
 
