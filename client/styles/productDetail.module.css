@@ -1,0 +1,16 @@
+.mainContain{
+  margin-top: 5rem;
+}
+.rightSide{
+  padding-left: 50px;
+}
+.productImgContainer{
+  width: 100%;
+  height: 100%;
+  
+}
+.productImg{
+  height: auto;
+  max-width: 100%;
+  object-fit: cover;
+}
