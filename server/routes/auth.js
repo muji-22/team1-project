@@ -45,13 +45,14 @@ router.post('/login', async (req, res) => {
       { expiresIn: req.body.remember ? '7d' : '24h' }
     )
 
-    // 清除敏感資訊
+    // 清除敏感資訊並加入其他需要的資料
     const safeUser = {
       id: user.id,
       account: user.account,
       name: user.name,
       email: user.email,
-      role: user.role || 'user'
+      role: user.role || 'user',
+      avatar_url: user.avatar_url
     }
 
     res.json({
@@ -112,15 +113,31 @@ router.post('/register', async (req, res) => {
 })
 
 // 檢查 token
-router.get('/check', authenticateToken, (req, res) => {
-  const safeUser = {
-    id: req.user.id,
-    account: req.user.account,
-    name: req.user.name,
-    email: req.user.email,
-    role: req.user.role || 'user'
+router.get('/check', authenticateToken, async (req, res) => {
+  try {
+    // 從資料庫獲取最新的使用者資料
+    const [users] = await pool.query(
+      'SELECT id, account, name, email, phone, birthday, address, avatar_url FROM users WHERE id = ?',
+      [req.user.id]
+    )
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: '使用者不存在' })
+    }
+
+    const safeUser = {
+      ...users[0],
+      role: req.user.role || 'user'
+    }
+
+    res.json({ 
+      valid: true, 
+      user: safeUser 
+    })
+  } catch (error) {
+    console.error('檢查認證錯誤:', error)
+    res.status(500).json({ message: '伺服器錯誤' })
   }
-  res.json({ valid: true, user: safeUser })
 })
 
 // 取得使用者資料

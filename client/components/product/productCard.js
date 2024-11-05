@@ -5,27 +5,43 @@ import { FaCartPlus } from "react-icons/fa";
 // // 定義產品資料型別
 
 // // 元件接收產品資料作為props
-const ProductCard = ({}) => {
+const ProductCard = ({
+    id,
+    name,
+    price,
+    image,
+    descrition, // 注意：資料庫中的欄位名稱是 descrition
+    onAddToCart,
+    onAddToWishlist, }) => {
+    const handleImageError = (e) => {
+        e.target.src = "/images/default-product.jpg";
+    };
+
     return (
         <>
             <div className="col-lg-4 col-md-5 col-sm-6 mb-4">
                 <div className={`card border-0 ${styles.card} col-2`}>
                     <img
-                        src="/images/product_img/5ab8f0d041c091b6fbceed32_AnimaUponAnimal_BOX_3D.jpg "
-                        className={`card-img-top  ${styles.img}`}
-                        alt="產品圖片"
+                        className={`card-img-top ${styles.img}`}
+                        src={`/images/product_img/${encodeURIComponent(image)}`}
+                        onError={(e) => {
+                            // 錯誤時的預設圖片
+                        }}
+                        alt={name}
                     />
                     <div className="card-body">
-                        <h5 className="card-title">Card title</h5>
+                        <h5 className="card-title">{name}</h5>
                         <p className="card-text price origin text-danger ">
-                            <del>500</del>
+                            <del>{descrition}</del>
                         </p>
                         <div className="row align-items-center g-2 mb-2">
                             <div className="col">
-                                <p className="card-text price mb-0">1000</p>
+                                <p className="card-text price mb-0"> NT$ {price?.toLocaleString()}</p>
                             </div>
                             <div className="col-auto">
-                                <a href="#" className="btn">
+                                <a className="btn btn-outline-danger border-0"
+                                    onClick={() => onAddToWishlist?.(id)}
+                                    title="加入收藏">
                                     <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
                                 </a>
                             </div>
