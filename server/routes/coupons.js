@@ -251,4 +251,46 @@ router.put('/use/:couponId', authenticateToken, async (req, res) => {
     }
 });
 
+
+// 9. 檢查優惠券領取狀態 (需要驗證)
+router.get('/check-status/:couponId', authenticateToken, async (req, res) => {
+    const userId = req.user.id;
+    const couponId = req.params.couponId;
+
+    try {
+        // 檢查優惠券是否存在且有效
+        const [coupon] = await pool.query(
+            'SELECT * FROM coupons WHERE id = ? AND valid = 1',
+            [couponId]
+        );
+
+        if (coupon.length === 0) {
+            return res.status(404).json({ 
+                claimed: false,
+                message: '優惠券不存在或已失效' 
+            });
+        }
+
+        // 檢查用戶是否已經領取過此優惠券
+        const [userCoupon] = await pool.query(
+            'SELECT * FROM user_coupons WHERE user_id = ? AND coupon_id = ?',
+            [userId, couponId]
+        );
+
+        res.json({ 
+            claimed: userCoupon.length > 0,
+            claimedTime: userCoupon[0]?.received_time || null,
+            usedTime: userCoupon[0]?.used_time || null,
+            expireTime: userCoupon[0]?.expire_time || null
+        });
+        
+    } catch (error) {
+        console.error('檢查優惠券狀態失敗：', error);
+        res.status(500).json({ 
+            claimed: false,
+            message: '檢查優惠券狀態失敗' 
+        });
+    }
+});
+
 export default router;
