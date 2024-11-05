@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import CategorySidebar from "@/components/product/category";
-import ProductCard from "@/components/product/productCard";
-import MayFavorite from "@/components/product/mayFavorite";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaCartPlus } from "react-icons/fa";
+import style from "@/styles/productDetail.module.css";
 import ProductDetailSide from "@/components/product/productDetailSide";
 import ProductDetailNotice from "@/components/product/productDetailNotice";
+import ProductDetailNotice2 from "@/components/product/productDetailNotice2";
+import ProductDetailMainNotice from "@/components/product/productDetailMainNotice";
+import ProductDetailMainNotice2 from "@/components/product/productDetailMainNotice2";
+import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 
 function ProductDetail() {
   return (
@@ -28,10 +30,10 @@ function ProductDetail() {
       </div>
 
       {/* 內容區 */}
-      <div className="row ">
-        {/* 左側內容區 */}
+      <div className={`row mainContain ${style.mainContain}`}>
+        {/* 左側商品圖片區 */}
 
-        <div className="col-6">
+        <div className="col-md-12 col-lg-6">
           <div
             id="carouselExampleIndicators"
             className="carousel slide"
@@ -59,24 +61,26 @@ function ProductDetail() {
                 aria-label="Slide 3"
               />
             </div>
-            <div className="carousel-inner">
-              <div className="carousel-item active">
+            <div
+              className={`carousel-inner img-fluid ${style.productImgContainer}`}
+            >
+              <div className={`carousel-item active ${style.productImg}`}>
                 <img
-                  src="https://images.pexels.com/photos/21352813/pexels-photo-21352813.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  src="https://images.pexels.com/photos/3098879/pexels-photo-3098879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  className="d-block w-100 img-fluid"
+                  alt="..."
+                />
+              </div>
+              <div className="carousel-item">
+                <img
+                  src="https://images.pexels.com/photos/3098879/pexels-photo-3098879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                   className="d-block w-100"
                   alt="..."
                 />
               </div>
               <div className="carousel-item">
                 <img
-                  src="https://images.pexels.com/photos/21352813/pexels-photo-21352813.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  className="d-block w-100"
-                  alt="..."
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src="https://images.pexels.com/photos/21352813/pexels-photo-21352813.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  src="https://images.pexels.com/photos/3098879/pexels-photo-3098879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                   className="d-block w-100"
                   alt="..."
                 />
@@ -105,13 +109,29 @@ function ProductDetail() {
 
         {/* 右側內容區 */}
 
-        <div className="col-6">
-          <ProductDetailSide/>
+        <div
+          className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
+        >
+          <ProductDetailSide />
+        </div>
+        <div
+          className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}
+        >
+          <ProductDetailSideMobile />
         </div>
       </div>
-      
-			{/* 注意事項 */}
-      <ProductDetailNotice/>
+
+      {/* 說明及規格 */}
+      <div
+        className={`d-block d-lg-none col-md-12 col-lg-6`}
+      >
+        <ProductDetailMainNotice />
+        <ProductDetailMainNotice2 />
+      </div>
+
+      {/* 注意事項 */}
+      <ProductDetailNotice />
+      <ProductDetailNotice2 />
     </div>
   );
 }
