@@ -41,7 +41,7 @@ function Header() {
                 <Link className="nav-link" href="/">首頁</Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/articles">文章</Link>
+                <Link className="nav-link" href="/forum">文章</Link>
               </li>
               <li className="nav-item mx-3">
                 <Link className="nav-link" href="/products">商品列表</Link>

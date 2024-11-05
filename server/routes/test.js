@@ -1,6 +1,6 @@
 // routes/test.js
 import express from 'express'
-import pool from '../config/db.js'
+//import pool from '../config/db.js'
 const router = express.Router()
 
 // 測試資料庫連線

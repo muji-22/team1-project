@@ -14,7 +14,8 @@
 	word-break: break-word;
 }
 
-.editor-container_classic-editor .editor-container__editor {
+.ck-editor__main {
 	min-width: 795px;
 	max-width: 795px;
+    min-height: 5vh;
 }
