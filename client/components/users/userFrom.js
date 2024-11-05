@@ -3,6 +3,7 @@ import styles from "./user.module.css";
 import UserSideBar from "./userSidebar";
 import UserData from './userData'
 import ResetPassword from "./resetPassword";
+import CouponsPage from "../coupon/CouponsPage";
 
 export default function UserForm() {
 
@@ -19,7 +20,7 @@ export default function UserForm() {
   const component = {
     profile: <UserData />,
     resetPassword: <ResetPassword />,
-    // coupon: <Coupon />,
+    coupon: <CouponsPage />,
     // favorites: <Favorites />,
     // records: <Records />
   }

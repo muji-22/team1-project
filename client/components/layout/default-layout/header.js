@@ -147,7 +147,7 @@ function Header() {
               <>
                 <span className="fs-4">{user.name || user.account}</span>
                 <button
-                  className="btn btn-outline-danger ms-3"
+                  className="btn buttonCustomB ms-3"
                   onClick={handleLogout}
                 >
                   登出
