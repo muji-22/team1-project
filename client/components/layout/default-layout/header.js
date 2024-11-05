@@ -83,7 +83,7 @@ function Header() {
                       </li>
                       <li><hr className="dropdown-divider" /></li>
                       <li>
-                        <Link href="/member/profile" className="dropdown-item">
+                        <Link href="/auth/user" className="dropdown-item">
                           會員資料
                         </Link>
                       </li>
@@ -147,7 +147,7 @@ function Header() {
               <>
                 <span className="fs-4">{user.name || user.account}</span>
                 <button
-                  className="btn btn-outline-danger ms-3"
+                  className="btn buttonCustomB ms-3"
                   onClick={handleLogout}
                 >
                   登出

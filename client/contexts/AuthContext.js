@@ -13,31 +13,45 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  // 初始化檢查
+  // 初始化檢查 - 修改成立即執行函數
   useEffect(() => {
-    checkAuth();
+    const initAuth = async () => {
+      const storedUser = loadStoredUser();
+      if (storedUser) {
+        setUser(storedUser);
+      }
+      await checkAuth();
+    };
+
+    initAuth();
   }, []);
 
-  // 檢查本地存儲的使用者資訊
+  // 檢查本地存儲的使用者資訊 - 添加更多錯誤處理
   const loadStoredUser = () => {
     try {
       const storedUser = localStorage.getItem('user');
-      if (storedUser) {
+      const token = localStorage.getItem('token');
+      
+      if (storedUser && token) {
         return JSON.parse(storedUser);
       }
+      return null;
     } catch (error) {
       console.error('Error loading stored user:', error);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      return null;
     }
-    return null;
   };
 
-  // 檢查認證狀態
+  // 檢查認證狀態 - 增強錯誤處理
   const checkAuth = async () => {
     try {
       setError(null);
       const token = localStorage.getItem('token');
       
       if (!token) {
+        setUser(null);
         setLoading(false);
         return;
       }
@@ -48,23 +62,24 @@ export function AuthProvider({ children }) {
         },
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
+        // 確保資料一致性
+        localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
       } else {
-        // token 無效，清除儲存的資訊
         handleLogout();
       }
     } catch (error) {
       console.error('Auth check error:', error);
-      setError('驗證狀態檢查失敗');
       handleLogout();
     } finally {
       setLoading(false);
     }
   };
 
-  // 登入
+  // 登入 - 增加資料同步處理
   const login = async (credentials) => {
     try {
       setError(null);
@@ -84,14 +99,17 @@ export function AuthProvider({ children }) {
         throw new Error(data.message || '登入失敗');
       }
 
-      // 儲存認證資訊
+      // 確保資料同步
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      
       setUser(data.user);
-      router.push('/'); // 登入成功後導向首頁
       
+      // 登入後立即驗證
+      await checkAuth();
+      
+      router.push('/'); 
       return data;
+
     } catch (error) {
       setError(error.message);
       throw error;
@@ -100,45 +118,19 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // 登出
-  const logout = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // 可選：呼叫後端登出 API
-      const token = localStorage.getItem('token');
-      if (token) {
-        await fetch(`${API_URL}/logout`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      }
-
-      handleLogout();
-    } catch (error) {
-      console.error('Logout error:', error);
-      // 即使 API 呼叫失敗，仍然要清除本地狀態
-      handleLogout();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 處理登出邏輯
+  // 登出 - 確保清除所有狀態
   const handleLogout = () => {
+    setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setUser(null);
     router.push('/auth/login');
   };
 
-  // 更新使用者資料
+  // 更新使用者資料 - 增強資料同步
   const updateUserData = async (userData) => {
     try {
       setError(null);
+      setLoading(true);
       const token = localStorage.getItem('token');
       
       const response = await fetch(`${API_URL}/profile`, {
@@ -150,13 +142,14 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(userData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.message || '更新失敗');
       }
 
-      // 更新本地儲存的使用者資料
-      const updatedUser = { ...user, ...userData };
+      // 確保資料同步
+      const updatedUser = { ...user, ...data.user };
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setUser(updatedUser);
 
@@ -164,12 +157,47 @@ export function AuthProvider({ children }) {
     } catch (error) {
       setError(error.message);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  // 檢查是否已登入
-  const isAuthenticated = () => {
-    return !!user && !!localStorage.getItem('token');
+  // 更新頭像 - 增強資料同步
+  const updateAvatar = async (file) => {
+    try {
+      setError(null);
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const response = await fetch(`${API_URL}/upload-avatar`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || '上傳失敗');
+      }
+
+      // 確保資料同步
+      const updatedUser = { ...user, avatar_url: data.avatar_url };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+
+      return data;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Context 值
@@ -178,10 +206,11 @@ export function AuthProvider({ children }) {
     loading,
     error,
     login,
-    logout,
+    logout: handleLogout, // 直接使用 handleLogout
     checkAuth,
     updateUserData,
-    isAuthenticated,
+    updateAvatar,
+    isAuthenticated: () => !!user && !!localStorage.getItem('token'),
   };
 
   return (
@@ -191,7 +220,6 @@ export function AuthProvider({ children }) {
   );
 }
 
-// Hook 使用簡化
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
