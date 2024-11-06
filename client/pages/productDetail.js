@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaCartPlus } from "react-icons/fa";
 import style from "@/styles/productDetail.module.css";
@@ -8,132 +8,173 @@ import ProductDetailNotice2 from "@/components/product/productDetailNotice2";
 import ProductDetailMainNotice from "@/components/product/productDetailMainNotice";
 import ProductDetailMainNotice2 from "@/components/product/productDetailMainNotice2";
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
+import MayFavorite from "@/components/product/mayFavorite";
+import AddProduct from "@/components/cart/addProduct";
 
 function ProductDetail() {
-  return (
-    <div className="container mt-5">
-      {/* 麵包屑 */}
-      <div className="">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-              <a href="#">首頁</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a href="#">商品購買列表</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              商品名稱
-            </li>
-          </ol>
-        </nav>
-      </div>
+  const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-      {/* 內容區 */}
-      <div className={`row mainContain ${style.mainContain}`}>
-        {/* 左側商品圖片區 */}
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('http://localhost:3005/api/products');
+                if (!response.ok) {
+                    throw new Error('網路回應不正確');
+                }
+                const data = await response.json();
+                setProducts(data);
+            } catch (error) {
+                console.error('獲取商品失敗:', error);
+                setError('無法載入商品資料，請稍後再試');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        <div className="col-md-12 col-lg-6">
-          <div
-            id="carouselExampleIndicators"
-            className="carousel slide"
-            data-bs-ride="carousel"
-          >
-            <div className="carousel-indicators">
-              <button
-                type="button"
-                data-bs-target="#carouselExampleIndicators"
-                data-bs-slide-to={0}
-                className="active"
-                aria-current="true"
-                aria-label="Slide 1"
-              />
-              <button
-                type="button"
-                data-bs-target="#carouselExampleIndicators"
-                data-bs-slide-to={1}
-                aria-label="Slide 2"
-              />
-              <button
-                type="button"
-                data-bs-target="#carouselExampleIndicators"
-                data-bs-slide-to={2}
-                aria-label="Slide 3"
-              />
-            </div>
+        fetchProducts();
+    }, []);
+  const Product = ({
+    id,
+    name,
+    price,
+    descrition, // 注意：資料庫中的欄位名稱是 descrition
+    onAddToCart,
+    onAddToWishlist,
+  }) => {
+    // 取得商品圖片（主圖）的路徑
+    const imageUrl = `http://localhost:3005/productImages/${id}/${id}-1.jpg`;
+    const imageUrl2 = `http://localhost:3005/productImages/${id}/${id}-2.jpg`;
+    const imageUrl3 = `http://localhost:3005/productImages/${id}/${id}-3.jpg`;
+    const handleImageError = (e) => {
+      e.target.src = "http://localhost:3005/productImages/default-product.png";
+    };
+    return (
+      <div className="container mt-5">
+        {/* 麵包屑 */}
+        <div className="">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="#">首頁</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="#">商品購買列表</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                商品名稱
+              </li>
+            </ol>
+          </nav>
+        </div>
+
+        {/* 內容區 */}
+        <div className={`row mainContain ${style.mainContain}`}>
+          {/* 左側商品圖片區 */}
+
+          <div className="col-md-12 col-lg-6">
             <div
-              className={`carousel-inner img-fluid ${style.productImgContainer}`}
+              id="carouselExampleIndicators"
+              className="carousel slide"
+              data-bs-ride="carousel"
             >
-              <div className={`carousel-item active ${style.productImg}`}>
-                <img
-                  src="https://images.pexels.com/photos/3098879/pexels-photo-3098879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  className="d-block w-100 img-fluid"
-                  alt="..."
+              <div className="carousel-indicators">
+                <button
+                  type="button"
+                  data-bs-target="#carouselExampleIndicators"
+                  data-bs-slide-to={0}
+                  className="active"
+                  aria-current="true"
+                  aria-label="Slide 1"
+                />
+                <button
+                  type="button"
+                  data-bs-target="#carouselExampleIndicators"
+                  data-bs-slide-to={1}
+                  aria-label="Slide 2"
+                />
+                <button
+                  type="button"
+                  data-bs-target="#carouselExampleIndicators"
+                  data-bs-slide-to={2}
+                  aria-label="Slide 3"
                 />
               </div>
-              <div className="carousel-item">
-                <img
-                  src="https://images.pexels.com/photos/3098879/pexels-photo-3098879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  className="d-block w-100"
-                  alt="..."
-                />
+              <div
+                className={`carousel-inner img-fluid ${style.productImgContainer}`}
+              >
+                <div className={`carousel-item active ${style.productImg}`}>
+                  <img
+                    src={imageUrl}
+                    className="d-block w-100 img-fluid"
+                    alt="..."
+                  />
+                </div>
+                <div className="carousel-item">
+                  <img src={imageUrl2} className="d-block w-100" alt="..." />
+                </div>
+                <div className="carousel-item">
+                  <img src={imageUrl3} className="d-block w-100" alt="..." />
+                </div>
               </div>
-              <div className="carousel-item">
-                <img
-                  src="https://images.pexels.com/photos/3098879/pexels-photo-3098879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  className="d-block w-100"
-                  alt="..."
+              <button
+                className="carousel-control-prev"
+                type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev"
+              >
+                <span
+                  className="carousel-control-prev-icon"
+                  aria-hidden="true"
                 />
-              </div>
+                <span className="visually-hidden">Previous</span>
+              </button>
+              <button
+                className="carousel-control-next"
+                type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next"
+              >
+                <span
+                  className="carousel-control-next-icon"
+                  aria-hidden="true"
+                />
+                <span className="visually-hidden">Next</span>
+              </button>
             </div>
-            <button
-              className="carousel-control-prev"
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide="prev"
-            >
-              <span className="carousel-control-prev-icon" aria-hidden="true" />
-              <span className="visually-hidden">Previous</span>
-            </button>
-            <button
-              className="carousel-control-next"
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide="next"
-            >
-              <span className="carousel-control-next-icon" aria-hidden="true" />
-              <span className="visually-hidden">Next</span>
-            </button>
+          </div>
+
+          {/* 右側內容區 */}
+
+          <div
+            className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
+          >
+            <ProductDetailSide />
+          </div>
+          <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
+            <ProductDetailSideMobile />
           </div>
         </div>
 
-        {/* 右側內容區 */}
-
-        <div
-          className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
-        >
-          <ProductDetailSide />
+        {/* 說明及規格 */}
+        <div className={`d-block d-lg-none col-md-12 col-lg-6`}>
+          <ProductDetailMainNotice />
+          <ProductDetailMainNotice2 />
         </div>
-        <div
-          className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}
-        >
-          <ProductDetailSideMobile />
+
+        {/* 注意事項 */}
+        <ProductDetailNotice />
+        <ProductDetailNotice2 />
+
+        {/* 可能喜歡 */}
+        <div className="d-flex justify-content-center">
+          <MayFavorite />
         </div>
       </div>
-
-      {/* 說明及規格 */}
-      <div
-        className={`d-block d-lg-none col-md-12 col-lg-6`}
-      >
-        <ProductDetailMainNotice />
-        <ProductDetailMainNotice2 />
-      </div>
-
-      {/* 注意事項 */}
-      <ProductDetailNotice />
-      <ProductDetailNotice2 />
-    </div>
-  );
+    );
+  };
 }
 
 export default ProductDetail;
