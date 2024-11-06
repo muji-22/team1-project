@@ -5,16 +5,12 @@ import { FaCartPlus } from "react-icons/fa";
 // // 定義產品資料型別
 
 // // 元件接收產品資料作為props
-const ProductCard = ({
-    id,
-    name,
-    price,
-    image,
-    descrition, // 注意：資料庫中的欄位名稱是 descrition
-    onAddToCart,
-    onAddToWishlist, }) => {
+const ProductCard = ({ id, name, price, onAddToCart, onAddToWishlist }) => {
+    // 取得商品第一張圖片（主圖）的路徑
+    const imageUrl = `http://localhost:3005/productImages/${id}/${id}-1.jpg`;
     const handleImageError = (e) => {
-        e.target.src = "/images/default-product.jpg";
+        e.target.src =
+            "http://localhost:3005/productImages/default-product.png";
     };
 
     return (
@@ -23,25 +19,29 @@ const ProductCard = ({
                 <div className={`card border-0 ${styles.card} col-2`}>
                     <img
                         className={`card-img-top ${styles.img}`}
-                        src={`/images/product_img/${encodeURIComponent(image)}`}
-                        onError={(e) => {
-                            // 錯誤時的預設圖片
-                        }}
+                        src={imageUrl}
+                        onError={handleImageError}
                         alt={name}
                     />
                     <div className="card-body">
                         <h5 className="card-title">{name}</h5>
                         <p className="card-text price origin text-danger ">
-                            <del>{descrition}</del>
+                            <del>NT$ 500</del>
+                            {/* 要放打折後原價的位子] */}
                         </p>
                         <div className="row align-items-center g-2 mb-2">
                             <div className="col">
-                                <p className="card-text price mb-0"> NT$ {price?.toLocaleString()}</p>
+                                <p className="card-text price mb-0">
+                                    {" "}
+                                    NT$ {price?.toLocaleString()}
+                                </p>
                             </div>
                             <div className="col-auto">
-                                <a className="btn btn-outline-danger border-0"
+                                <a
+                                    className="btn btn-outline-danger border-0"
                                     onClick={() => onAddToWishlist?.(id)}
-                                    title="加入收藏">
+                                    title="加入收藏"
+                                >
                                     <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
                                 </a>
                             </div>
