@@ -1,15 +1,17 @@
 import React from "react";
-
+import styles from "@/components/forum/AritcleCard.module.css";
+import Image from "next/image";
 export default function Articles() {
   return (
     <>
-    <div className = "article-row d-flex">
-        <div className="article-card col">
-        <div className="img-container">
-          <img
+      <div className={styles.articleCard}>
+        <div className={`${styles.card}`}>
+          <Image
             className="img"
-            src="/public/images/product_img/5a5f970ae84dd70001593509_DIXIT_7_Box_CH.jpg"
+            src="/images/product_img/5ab8f6bea14f101eb8a54752_DIXIT_4_Box_3D.jpg"
             alt=""
+            width={420}
+            height={420}
           />
         </div>
         <div className="text-container">
@@ -35,8 +37,6 @@ export default function Articles() {
           </div>
         </div>
       </div>
-    </div>
-      
     </>
   );
 }

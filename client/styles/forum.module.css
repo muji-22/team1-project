@@ -15,58 +15,26 @@
   margin-top: 30px;
   margin-bottom: 30px;
 }
-.article-card {
-  background-color: burlywood;
-  border: 2px black;
-  margin-right: 10px;
-  overflow: clip;
-  padding: 10px;
-  margin-right: 10px;
-  .img-container {
-    width: 422px;
-    height: 429px;
 
-    .img {
-      object-fit: cover;
-      height: 100%;
-      width: 100%;
-    }
-  }
-  .icon-container {
-    justify-self: start;
-    margin-top: 20px;
-  }
-  .text-content {
-    margin-bottom: 10px;
-  }
-}
 
-.page {
-  justify-content: center;
-  .btn {
-    justify-content: center;
-  }
- 
-}
-.video-container {
-  background-color: aquamarine;
-  width: 1990px;
-}
 .banner {
   width: 100%;
-  background-color: aquamarine;
+  background-color: #40CBCE;
 }
-.video-card {
-  padding-left: 240px;
-  padding-top: 69px;
-  padding-bottom: 69px;
-  .img-vid {
-    height: 70%;
-    width: 70%;
-    .img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
+.videoContainer {
+  background-color: 2DACAE;
+  padding-left: 25px;
+}
+.videoSlide{
+  justify-self: end;
+  color: #ccc;
+}
+.page {
+  justify-content: center;
+ 
+ 
+}
+ .btn {
+    justify-content: center;
+    font-size: 25px;
   }
-}
