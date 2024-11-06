@@ -14,7 +14,7 @@ const QuantityAdjuster = () => {
   return (
     <div className='btn-group border border-2' role="group" style={{ height: '40px' }}>
       <button className='btn' onClick={decrease}>-</button>
-      <p className='mt-2'>{quantity}</p>
+      <p className='mt-2 ms-2 me-2'>{quantity}</p>
       <button className='btn' onClick={increase}>+</button>
     </div>
   );
