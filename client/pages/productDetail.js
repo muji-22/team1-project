@@ -15,27 +15,10 @@ function ProductDetail() {
   const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const router = useRouter();
+    const { id } = router.query;
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch('http://localhost:3005/api/products');
-                if (!response.ok) {
-                    throw new Error('網路回應不正確');
-                }
-                const data = await response.json();
-                setProducts(data);
-            } catch (error) {
-                console.error('獲取商品失敗:', error);
-                setError('無法載入商品資料，請稍後再試');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, []);
+    
   const Product = ({
     id,
     name,
@@ -50,7 +33,8 @@ function ProductDetail() {
     const imageUrl3 = `http://localhost:3005/productImages/${id}/${id}-3.jpg`;
     const handleImageError = (e) => {
       e.target.src = "http://localhost:3005/productImages/default-product.png";
-    };
+    }; 
+
     return (
       <div className="container mt-5">
         {/* 麵包屑 */}
@@ -64,7 +48,7 @@ function ProductDetail() {
                 <a href="#">商品購買列表</a>
               </li>
               <li class="breadcrumb-item active" aria-current="page">
-                商品名稱
+                {name}
               </li>
             </ol>
           </nav>
