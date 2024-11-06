@@ -1,19 +1,25 @@
 import React from "react";
 import Link from "next/link";
+import styles from "@/styles/Header.module.scss";
 import { IoCartOutline } from "react-icons/io5";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 
-
 function Header() {
   const { user, logout } = useAuth();
   const router = useRouter();
 
+  // 處理登出
   const handleLogout = async () => {
     await logout();
     router.push("/auth/login");
+  };
+
+  // 判斷當前路徑的函式
+  const isActive = (path) => {
+    return router.pathname === path;
   };
 
   return (
@@ -39,16 +45,29 @@ function Header() {
           <div className="collapse navbar-collapse order-3" id="navbarNav">
             <ul className="navbar-nav mx-auto">
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/">首頁</Link>
+                <Link
+                  className={`nav-link ${styles.navLink} ${
+                    isActive("/") ? styles.active : ""
+                  }`}
+                  href="/"
+                >
+                  首頁
+                </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/articles">文章</Link>
+                <Link className={`nav-link ${styles.navLink}`} href="/articles">
+                  文章
+                </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/products">商品列表</Link>
+                <Link className={`nav-link ${styles.navLink}`} href="/products">
+                  商品列表
+                </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/rental">商品租借</Link>
+                <Link className={`nav-link ${styles.navLink}`} href="/rental">
+                  商品租借
+                </Link>
               </li>
             </ul>
 
@@ -57,13 +76,15 @@ function Header() {
               {/* 未登入狀態 */}
               {!user ? (
                 <>
-                  <Link href="/auth/login" className="btn buttonCustomB">登入</Link>
+                  <Link href="/auth/login" className="btn buttonCustomB">
+                    登入
+                  </Link>
                 </>
               ) : (
                 <>
                   {/* 已登入狀態：會員中心下拉選單 */}
                   <div className="nav-item dropdown">
-                    <a 
+                    <a
                       className="nav-link dropdown-toggle"
                       href="#"
                       id="navbarDropdown"
@@ -73,15 +94,20 @@ function Header() {
                     >
                       <FaRegUser className="fs-4" />
                     </a>
-                    
+
                     {/* 下拉選單內容 */}
-                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <ul
+                      className="dropdown-menu dropdown-menu-end"
+                      aria-labelledby="navbarDropdown"
+                    >
                       <li>
                         <span className="dropdown-item-text">
                           你好，{user.name || user.account}
                         </span>
                       </li>
-                      <li><hr className="dropdown-divider" /></li>
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
                       <li>
                         <Link href="/auth/user" className="dropdown-item">
                           會員資料
@@ -92,9 +118,11 @@ function Header() {
                           訂單查詢
                         </Link>
                       </li>
-                      <li><hr className="dropdown-divider" /></li>
                       <li>
-                        <a 
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <a
                           className="dropdown-item text-danger"
                           href="#"
                           onClick={handleLogout}
@@ -187,13 +215,22 @@ function Header() {
               >
                 <div className="accordion-body p-0">
                   <div className="list-group list-group-flush">
-                    <Link href="/member/profile" className="list-group-item list-group-item-action">
+                    <Link
+                      href="/member/profile"
+                      className="list-group-item list-group-item-action"
+                    >
                       會員資料
                     </Link>
-                    <Link href="/member/orders" className="list-group-item list-group-item-action">
+                    <Link
+                      href="/member/orders"
+                      className="list-group-item list-group-item-action"
+                    >
                       訂單查詢
                     </Link>
-                    <Link href="/member/favorites" className="list-group-item list-group-item-action">
+                    <Link
+                      href="/member/favorites"
+                      className="list-group-item list-group-item-action"
+                    >
                       收藏清單
                     </Link>
                   </div>
