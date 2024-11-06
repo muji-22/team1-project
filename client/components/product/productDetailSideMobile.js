@@ -4,6 +4,7 @@ import { FaCartPlus } from "react-icons/fa";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
 import styles from "./productDetailSide.module.css";
 import ProductDetailMainNotice from "./productDetailMainNotice2";
+import AddProduct from '@/components/cart/addProduct';
 
 const ProductDetailSideMobile = ({}) => {
   return (
@@ -26,12 +27,7 @@ const ProductDetailSideMobile = ({}) => {
       <div className="row align-items-center g-2 mt-4 mb-2">
         <div className="col-2"></div>
         <div className="col-4 pe-5">
-          <a
-            href="#"
-            className="btn btn-custom  w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto "
-          >
-            加入購物車 <FaCartPlus size={20} />
-          </a>
+        <AddProduct/>
         </div>
         <div className="col-4 ps-5">
           <a
