@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaCartPlus } from "react-icons/fa";
 import style from "@/styles/productDetail.module.css";
@@ -8,6 +8,8 @@ import ProductDetailNotice2 from "@/components/product/productDetailNotice2";
 import ProductDetailMainNotice from "@/components/product/productDetailMainNotice";
 import ProductDetailMainNotice2 from "@/components/product/productDetailMainNotice2";
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
+import MayFavorite from "@/components/product/mayFavorite";
+import AddProduct from '@/components/cart/addProduct';
 
 function ProductDetail() {
   return (
@@ -132,6 +134,11 @@ function ProductDetail() {
       {/* 注意事項 */}
       <ProductDetailNotice />
       <ProductDetailNotice2 />
+
+      {/* 可能喜歡 */}
+      <div className="d-flex justify-content-center">
+      <MayFavorite />
+      </div>
     </div>
   );
 }
