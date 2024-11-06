@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
-  const [productImages, setProductImages] = useState({}); // 新增圖片狀態
+  const [productImages, setProductImages] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { updateCartCount } = useCart();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,7 +21,7 @@ function ProductList() {
         }
         const data = await response.json();
         setProducts(data);
-        // 取得每個商品的圖片資料
+        
         const imagesData = {};
         for (const product of data) {
           const imageResponse = await fetch(
@@ -40,16 +44,48 @@ function ProductList() {
     fetchProducts();
   }, []);
 
-  const handleAddToCart = (productId) => {
-    // 處理加入購物車邏輯
-    console.log("加入購物車:", productId);
-    // 這裡可以加入購物車的API呼叫
-  };
+  const handleAddToCart = async (productId) => {
+    if (!user) {
+      alert('請先登入會員');
+      window.location.href = '/auth/login';
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3005/api/cart/items', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // 加入 token
+        },
+        body: JSON.stringify({
+          productId: productId,
+          quantity: 1
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        alert('成功加入購物車！');
+        updateCartCount();
+      } else {
+        throw new Error(data.message || '加入購物車失敗');
+      }
+    } catch (error) {
+      console.error('加入購物車錯誤:', error);
+      alert(error.message || '加入購物車失敗');
+    }
+};
 
   const handleAddToWishlist = (productId) => {
     // 處理加入收藏邏輯
     console.log("加入收藏:", productId);
-    // 這裡可以加入收藏的API呼叫
   };
 
   if (loading) {
@@ -84,9 +120,9 @@ function ProductList() {
             <ProductCard
               key={product.id}
               {...product}
-              images={productImages[product.id] || []}  // 傳遞圖片資料
-              onAddToCart={handleAddToCart}
-              onAddToWishlist={handleAddToWishlist}
+              images={productImages[product.id] || []}
+              onAddToCart={() => handleAddToCart(product.id)}
+              onAddToWishlist={() => handleAddToWishlist(product.id)}
             />
           ))}
         </div>
