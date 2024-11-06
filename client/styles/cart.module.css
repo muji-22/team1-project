@@ -1,14 +1,18 @@
-.pcDNone{
+.pcDNone {
     display: none;
 }
-
+@media (max-width: 393px) {
+    .pcDNone {
+        display: block;
+    }
+}
 .stepBar{
     padding: 5rem 3rem 5rem 3rem;
 }
 
 .step{
     display: flex;
-    max-width: 459px;
+    max-width: 350px;
     opacity: 0.5;
     gap: 10px;
 }
@@ -23,6 +27,14 @@
     align-items: center;
     border-radius: 50%;
     
+}
+.nowStep {
+    opacity: 1;
+}
+@media (max-width: 393px) {
+    .nowStep{
+        display: flex;
+    }
 }
 .stepNum{
     font-size: 50px;
