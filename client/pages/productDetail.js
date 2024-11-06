@@ -13,12 +13,11 @@ import AddProduct from "@/components/cart/addProduct";
 
 function ProductDetail() {
   const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const router = useRouter();
-    const { id } = router.query;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+  const { id } = router.query;
 
-    
   const Product = ({
     id,
     name,
@@ -33,7 +32,7 @@ function ProductDetail() {
     const imageUrl3 = `http://localhost:3005/productImages/${id}/${id}-3.jpg`;
     const handleImageError = (e) => {
       e.target.src = "http://localhost:3005/productImages/default-product.png";
-    }; 
+    };
 
     return (
       <div className="container mt-5">
@@ -135,10 +134,26 @@ function ProductDetail() {
           <div
             className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
           >
-            <ProductDetailSide />
+            <ProductDetailSide
+              name={product.name}
+              price={product.price}
+              descrition={product.descrition}
+              min_age={product.min_age}
+              min_users={product.min_users}
+              max_users={product.max_users}
+              playtime={product.playtime}
+            />
           </div>
           <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
-            <ProductDetailSideMobile />
+            <ProductDetailSideMobile
+              name={product.name}
+              price={product.price}
+              descrition={product.descrition}
+              min_age={product.min_age}
+              min_users={product.min_users}
+              max_users={product.max_users}
+              playtime={product.playtime}
+            />
           </div>
         </div>
 
