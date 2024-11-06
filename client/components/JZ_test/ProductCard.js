@@ -7,13 +7,15 @@ const ProductCard = ({
   id,
   name,
   price,
-  image,
   descrition, // 注意：資料庫中的欄位名稱是 descrition
   onAddToCart,
   onAddToWishlist,
 }) => {
+
+  // 取得商品第一張圖片（主圖）的路徑
+  const imageUrl = `http://localhost:3005/productImages/${id}/${id}-1.jpg`;
   const handleImageError = (e) => {
-    e.target.src = "/images/default-product.jpg";
+    e.target.src = "http://localhost:3005/productImages/default-product.png";
   };
 
   return (
@@ -22,10 +24,8 @@ const ProductCard = ({
         <div>
           <img
             className={`card-img-top ${styles.img}`}
-            src={`/images/product_img/${encodeURIComponent(image)}`}
-            onError={(e) => {
-              // 錯誤時的預設圖片
-            }}
+            src={imageUrl}
+            onError={handleImageError}
             alt={name}
           />
           
