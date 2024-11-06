@@ -5,10 +5,12 @@ import { IoCartOutline } from "react-icons/io5";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
 
 function Header() {
   const { user, logout } = useAuth();
+  const { cartCount } = useCart();
   const router = useRouter();
 
   // 處理登出
@@ -134,9 +136,14 @@ function Header() {
                   </div>
 
                   {/* 購物車和收藏圖示 */}
-                  <a className="nav-link" href="#">
+                  <Link className="nav-link position-relative" href="/cart">
                     <IoCartOutline className="fs-3 text-custom" />
-                  </a>
+                    {cartCount > 0 && (
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
                   <a className="nav-link" href="#">
                     <IoMdHeartEmpty className="fs-3 text-danger" />
                   </a>

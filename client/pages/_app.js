@@ -1,6 +1,6 @@
 // pages/_app.js
-import { AuthProvider } from "../contexts/AuthContext";
-//會員功能測試
+import { AuthProvider } from "../contexts/AuthContext"; //會員驗證
+import { CartProvider } from "../contexts/CartContext"; //購物車
 
 import Layout from "../components/layout/default-layout";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -16,10 +16,12 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <AuthProvider>
-      <Layout>
-        <Component {...pageProps} />
-        <ScrollToTop />
-      </Layout>
+      <CartProvider>
+        <Layout>
+          <Component {...pageProps} />
+          <ScrollToTop />
+        </Layout>
+      </CartProvider>
     </AuthProvider>
   );
 }
