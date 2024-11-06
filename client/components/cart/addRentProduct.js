@@ -3,7 +3,7 @@ import swal from "sweetalert2";
 import { Col } from "react-bootstrap";
 import { FaShoppingCart } from "react-icons/fa";
 import axios from 'axios';
-import style from '@/components/cart/addProduct.module.css'
+import style from '@/components/cart/addRentProduct.module.css'
 
 export default function AddRentProduct({ cartQty, productId, activeValues, memberData }) {
 

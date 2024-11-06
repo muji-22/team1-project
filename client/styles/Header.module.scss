@@ -1,0 +1,59 @@
+/* styles/Header.module.css */
+
+.navLink {
+    position: relative;
+    padding: 8px 0;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+  }
+  
+  /* HOVER效果的底線 */
+  .navLink::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #40CBCE;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+  
+  /* 一般hover狀態 */
+  .navLink:hover:not(.active) {  /* 修改這裡：只在非active時才有hover效果 */
+    color: #40CBCE;
+  }
+  
+  .navLink:hover:not(.active)::after {  /* 修改這裡：只在非active時才有hover效果 */
+    width: 100%;
+  }
+  
+  /* ACTIVE效果的小球 */
+  .active {
+    color: #40CBCE !important;
+  }
+  
+  .active::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #40CBCE;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: slideIn 0.3s ease;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(-50%) scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(-50%) scale(1);
+      opacity: 1;
+    }
+  }
