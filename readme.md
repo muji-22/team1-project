@@ -28,7 +28,7 @@ git add .
 git commit -m "備註"
 
 5. 切換分支到dev並把Name_dev合併過去<br>
-git checkout dev
+git checkout dev<br>
 git merge --no-ff -m "備註" Name_dev
 
 6. 把更動push上github<br>
@@ -59,3 +59,30 @@ git merge dev
     git checkout dev<br>
     git merge --no-ff -m "備註" Name_dev<br>
     git push origin dev<br>
+
+
+---
+
+**測試會員登入**
+<br>
+
+1. server根目錄的.env.example複製一份並改名.env並自行更改相應環境變數<br>
+
+2. 啟動XAMPP將Apache與MySQL打開<br>
+
+3. 新增一個資料庫，名稱final_project<br>
+
+4. 把專案底下的final_project.sql匯入<br>
+
+5. 在終端機開啟client端，執行npm run dev<br>
+
+6. 在終端機開啟server端，執行npm run dev<br>
+
+7. 瀏覽器中開啟 http://localhost:3000/ 或 http://localhost:3000/testLogin 測試登入功能
+
+<br><br>
+目前頁面路由還沒完成，所以直接點登入會找不到頁面，必須手動更改網頁
+<br>
+測試帳號：test1
+<br>
+測試密碼：123456

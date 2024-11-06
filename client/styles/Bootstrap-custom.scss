@@ -54,7 +54,7 @@ $accordion-padding-x:                     0rem;
 $accordion-color:                         $body-color;
 $accordion-bg:                            $body-bg;
 $accordion-border-width:                  $border-width;
-$accordion-border-color:                  rgba($black, .125);
+$accordion-border-color:                  none;
 $accordion-border-radius:                 $border-radius;
 $accordion-inner-border-radius:           subtract($accordion-border-radius, $accordion-border-width);
 
@@ -87,3 +87,6 @@ $accordion-button-active-icon:  url("data:image/svg+xml,<svg xmlns='http://www.w
 
 // 導入全部 Bootstrap，不然會缺少樣式
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+
+@import "../styles/_button.scss";
