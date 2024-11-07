@@ -31,7 +31,7 @@ export default function UserForm() {
       <main className={styles.main}>
         <div className={styles.wrap}>
           <div className={styles.leftUser}>
-            <div className={styles.userPic1} />
+            <div className={styles.userPic1}></div>
             <UserSideBar
               activeItem={active}
               onItemClick={setActive} />
