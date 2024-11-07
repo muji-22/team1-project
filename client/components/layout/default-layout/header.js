@@ -1,4 +1,5 @@
-import React from "react";
+// components/layout/default-layout/header.js
+import React, { useState } from "react";
 import Link from "next/link";
 import styles from "@/styles/Header.module.scss";
 import { IoCartOutline } from "react-icons/io5";
@@ -7,11 +8,22 @@ import { FaRegUser } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
+import FavoriteModal from "@/components/favorite/FavoriteModal";
 
 function Header() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const { cartCount } = useCart();
   const router = useRouter();
+  const [showFavorites, setShowFavorites] = useState(false);
+
+  // 打開收藏清單
+  const handleShowFavorites = () => {
+    if (!isAuthenticated()) {
+      router.push("/auth/login");
+      return;
+    }
+    setShowFavorites(true);
+  };
 
   // 處理登出
   const handleLogout = async () => {
@@ -144,9 +156,12 @@ function Header() {
                       </span>
                     )}
                   </Link>
-                  <a className="nav-link" href="#">
+                  <button
+                    className="nav-link border-0 bg-transparent"
+                    onClick={handleShowFavorites}
+                  >
                     <IoMdHeartEmpty className="fs-3 text-danger" />
-                  </a>
+                  </button>
                 </>
               )}
             </div>
@@ -247,6 +262,11 @@ function Header() {
           </div>
         </div>
       </div>
+      {/* 收藏 Modal */}
+      <FavoriteModal
+        isOpen={showFavorites}
+        onClose={() => setShowFavorites(false)}
+      />
     </header>
   );
 }
