@@ -129,8 +129,12 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 1px solid black;
-    margin: 70px auto;
+    border: 1px solid #40CBCE;
+    margin: 70px auto 20px auto;
+    box-shadow: 0px 1px 5px gray;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .userPic2 {
@@ -332,13 +336,15 @@
     .avatarPreview {
       width: 120px;
       height: 120px;
-      margin: 10px auto;
+      margin-inline: auto;
+      margin-top: -25px;
     }
   
     .uploadButton {
-      width: 100px;
+      width: 80px;
       height: 35px;
-      font-size: 16px;
+      font-size: 14px;
+      margin-top: -20px;
       border-radius: 5px;
     }
   }
