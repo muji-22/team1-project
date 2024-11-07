@@ -115,6 +115,7 @@ export default function UserData() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
+    fileInput.name = 'avatar';
     
     fileInput.onchange = async (e) => {
       const file = e.target.files[0];
@@ -165,14 +166,13 @@ export default function UserData() {
         </div>
         <div className={styles.reUserRight}>
           <form onSubmit={handleAvatarUpload}>
-            <div 
-              className={styles.userPic2} 
-              style={{
+           <div className={styles.userPic2} >
+            <div style={{
                 backgroundImage: user?.avatar_url ? `url(${user.avatar_url})` : 'none',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
-              }}
-            />
+              }}></div>
+           </div>
             <button className={styles.button} type="submit">
               上傳大頭照
             </button>
