@@ -21,7 +21,7 @@ const CartContext = createContext()
 export const CartProvider = ({
   children,
   initialCartItems = [], //初始化購物車的加入項目
-  apiUrl = 'http://localhost:3005/cart',
+  apiUrl = "http://localhost:3005/api/cart",
   cartList
   
 } ) => {
@@ -142,7 +142,7 @@ export const CartProvider = ({
   return (
     <CartContext.Provider
       value={{
-        cart: state,
+        usecart: state,
         items: state.items,
         addItem,
         removeItem,
