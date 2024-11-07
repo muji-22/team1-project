@@ -1,0 +1,23 @@
+/* components/avatar.module.css */
+.avatar {
+    border-radius: 50%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 1px solid #00000071;
+  }
+  
+  .small {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .medium {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .large {
+    width: 150px;
+    height: 150px;
+  }

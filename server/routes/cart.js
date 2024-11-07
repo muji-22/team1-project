@@ -1,11 +1,11 @@
 import express from 'express'
 import pool from '../config/db.js'
-import { authenticate } from '../middlewares/authenticate.js'
+import { authenticateToken } from '../middlewares/auth.js'
 
 const router = express.Router()
 
 // 所有購物車操作都需要先驗證登入狀態
-router.use(authenticate)
+router.use(authenticateToken)
 
 // 取得購物車內容
 router.get('/', async (req, res) => {
