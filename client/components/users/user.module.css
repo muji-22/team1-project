@@ -129,8 +129,12 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 1px solid black;
-    margin: 70px auto;
+    border: 1px solid #40CBCE;
+    margin: 70px auto 20px auto;
+    box-shadow: 0px 1px 5px gray;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .userPic2 {
@@ -275,3 +279,72 @@
         display: none;
     }
 }
+
+/* 大頭貼相關樣式 */
+.avatarSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .avatarPreview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid #40CBCE;
+    margin: 70px auto 20px auto;
+    box-shadow: 0px 1px 5px gray;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .uploadSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .fileInput {
+    display: none;
+  }
+  
+  .uploadButton {
+    width: 136px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #40CBCE;
+    background: white;
+    font-size: 20px;
+    box-shadow: 3px 3px 5px gray;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  
+    &:hover {
+      color: white;
+      background: #40CBCE;
+    }
+  }
+  
+  /* RWD 樣式 */
+  @media(max-width: 992px) {
+    .avatarPreview {
+      width: 120px;
+      height: 120px;
+      margin-inline: auto;
+      margin-top: -25px;
+    }
+  
+    .uploadButton {
+      width: 80px;
+      height: 35px;
+      font-size: 14px;
+      margin-top: -20px;
+      border-radius: 5px;
+    }
+  }

@@ -87,6 +87,7 @@ const ProductDetailSide = ({
 
     // 商品不存在
     if (!product) return null;
+    
   return (
     <>
       <div class="row">

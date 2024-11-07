@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import { IoMdHeartEmpty } from "react-icons/io";
+// components/product/ProductCard.js
+import React, { useState, useEffect } from "react";
+import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { FaCartPlus } from "react-icons/fa";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/router";
 import styles from "./productCard.module.css";
 
 const ProductCard = ({
@@ -9,11 +12,78 @@ const ProductCard = ({
    price,
    descrition,
    onAddToCart,
-   onAddToWishlist,
 }) => {
    const [isAdding, setIsAdding] = useState(false);
+   const [isFavorited, setIsFavorited] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
+   const { isAuthenticated } = useAuth();
+   const router = useRouter();
    
    const imageUrl = `http://localhost:3005/productImages/${id}/${id}-1.jpg`;
+
+   // 檢查收藏狀態
+   useEffect(() => {
+     const checkFavoriteStatus = async () => {
+       if (!isAuthenticated()) return;
+       
+       try {
+         const response = await fetch(
+           `http://localhost:3005/api/favorites/check/${id}`,
+           {
+             headers: {
+               Authorization: `Bearer ${localStorage.getItem('token')}`,
+             },
+           }
+         );
+         const data = await response.json();
+         if (response.ok) {
+           setIsFavorited(data.data.isFavorited);
+         }
+       } catch (error) {
+         console.error('檢查收藏狀態失敗:', error);
+       }
+     };
+
+     checkFavoriteStatus();
+   }, [id, isAuthenticated]);
+
+   // 處理收藏
+   const handleToggleFavorite = async (e) => {
+     e.preventDefault();
+     e.stopPropagation();
+     
+     if (!isAuthenticated()) {
+       router.push('/auth/login');
+       return;
+     }
+
+     if (isLoading) return;
+
+     setIsLoading(true);
+     try {
+       const response = await fetch(
+         `http://localhost:3005/api/favorites/${id}`,
+         {
+           method: isFavorited ? 'DELETE' : 'POST',
+           headers: {
+             Authorization: `Bearer ${localStorage.getItem('token')}`,
+             'Content-Type': 'application/json',
+           },
+         }
+       );
+
+       if (response.ok) {
+         setIsFavorited(!isFavorited);
+       } else {
+         throw new Error('操作失敗');
+       }
+     } catch (error) {
+       console.error('切換收藏狀態失敗:', error);
+       alert('操作失敗，請稍後再試');
+     } finally {
+       setIsLoading(false);
+     }
+   };
    
    const handleImageError = (e) => {
        e.target.src = "http://localhost:3005/productImages/default-product.png";
@@ -36,7 +106,21 @@ const ProductCard = ({
 
    return (
        <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
-           <div className={`card border-0 h-100 ${styles.card}`}>
+           <div className={`card border-0 h-100 ${styles.card} position-relative`}>
+               <button
+                   className={`btn btn-outline-danger border-0 position-absolute top-0 end-0 m-2 ${
+                     isLoading ? 'disabled' : ''
+                   }`}
+                   onClick={handleToggleFavorite}
+                   title={isFavorited ? '取消收藏' : '加入收藏'}
+                   disabled={isLoading}
+               >
+                   {isFavorited ? (
+                       <IoMdHeart className="fs-4" />
+                   ) : (
+                       <IoMdHeartEmpty className="fs-4" />
+                   )}
+               </button>
                <div>
                    <img
                        className={`card-img-top ${styles.img}`}
@@ -49,22 +133,9 @@ const ProductCard = ({
                    <h5 className="card-title">{name}</h5>
                    <p className="card-text text-truncate">{descrition}</p>
                    <div className="mt-auto">
-                       <div className="row align-items-center g-2 mb-2">
-                           <div className="col">
-                               <p className="card-text price fs-5 mb-0">
-                                   NT$ {price?.toLocaleString()}
-                               </p>
-                           </div>
-                           <div className="col-auto">
-                               <button
-                                   className="btn btn-outline-danger border-0"
-                                   onClick={() => onAddToWishlist?.(id)}
-                                   title="加入收藏"
-                               >
-                                   <IoMdHeartEmpty className="fs-4" />
-                               </button>
-                           </div>
-                       </div>
+                       <p className="card-text price fs-5 mb-2">
+                           NT$ {price?.toLocaleString()}
+                       </p>
                        <button
                            className={`btn btn-primary w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 ${
                                isAdding ? 'disabled' : ''

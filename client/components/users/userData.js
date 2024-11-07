@@ -111,24 +111,27 @@ export default function UserData() {
   };
 
   const handleAvatarUpload = async (e) => {
-    e.preventDefault();
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    
-    fileInput.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        try {
-          await updateAvatar(file);
-          alert('頭像上傳成功！');
-        } catch (error) {
-          alert('上傳失敗：' + error.message);
-        }
-      }
-    };
-    
-    fileInput.click();
+    const file = e.target.files[0]
+    if (!file) return
+
+    // 檢查檔案類型
+    if (!file.type.startsWith('image/')) {
+      alert('請選擇圖片檔案')
+      return
+    }
+
+    // 檢查檔案大小 (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('檔案大小不能超過 5MB')
+      return
+    }
+
+    try {
+      const result = await updateAvatar(file)
+      alert('大頭貼上傳成功！')
+    } catch (error) {
+      alert('上傳失敗：' + error.message)
+    }
   };
 
   if (loading || !user) {
@@ -164,19 +167,30 @@ export default function UserData() {
           </form>
         </div>
         <div className={styles.reUserRight}>
-          <form onSubmit={handleAvatarUpload}>
+          <div className={styles.avatarSection}>
             <div 
-              className={styles.userPic2} 
+              className={styles.avatarPreview}
               style={{
-                backgroundImage: user?.avatar_url ? `url(${user.avatar_url})` : 'none',
+                backgroundImage: user?.avatar_url 
+                  ? `url(http://localhost:3005${user.avatar_url})` 
+                  : 'url(/default-avatar.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             />
-            <button className={styles.button} type="submit">
-              上傳大頭照
-            </button>
-          </form>
+            <div className={styles.uploadSection}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className={styles.fileInput}
+                id="avatar-upload"
+              />
+              <label htmlFor="avatar-upload" className={styles.uploadButton}>
+                選擇大頭貼
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </>
