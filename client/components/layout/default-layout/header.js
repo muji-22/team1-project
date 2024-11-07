@@ -1,29 +1,19 @@
 // components/layout/default-layout/header.js
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import styles from "@/styles/Header.module.scss";
 import { IoCartOutline } from "react-icons/io5";
-import { IoMdHeartEmpty } from "react-icons/io";
-import { FaRegUser } from "react-icons/fa";
+import { LuUser2 } from "react-icons/lu";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
-import FavoriteModal from "@/components/favorite/FavoriteModal";
+import FavoriteDropdown from "@/components/favorite/FavoriteDropdown";
+
 
 function Header() {
+  const router = useRouter();
   const { user, logout, isAuthenticated } = useAuth();
   const { cartCount } = useCart();
-  const router = useRouter();
-  const [showFavorites, setShowFavorites] = useState(false);
-
-  // 打開收藏清單
-  const handleShowFavorites = () => {
-    if (!isAuthenticated()) {
-      router.push("/auth/login");
-      return;
-    }
-    setShowFavorites(true);
-  };
 
   // 處理登出
   const handleLogout = async () => {
@@ -99,24 +89,25 @@ function Header() {
                   {/* 已登入狀態：會員中心下拉選單 */}
                   <div className="nav-item dropdown">
                     <a
-                      className="nav-link dropdown-toggle"
+                      className="nav-link"
                       href="#"
                       id="navbarDropdown"
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <FaRegUser className="fs-4" />
+                      <LuUser2 className="fs-3" />
                     </a>
 
                     {/* 下拉選單內容 */}
                     <ul
-                      className="dropdown-menu dropdown-menu-end"
+                      className="dropdown-menu dropdown-menu-end text-center"
+                      style={{ minWidth: "200px" }}
                       aria-labelledby="navbarDropdown"
                     >
                       <li>
                         <span className="dropdown-item-text">
-                          你好，{user.name || user.account}
+                          {user.name || user.account}
                         </span>
                       </li>
                       <li>
@@ -151,17 +142,12 @@ function Header() {
                   <Link className="nav-link position-relative" href="/cart">
                     <IoCartOutline className="fs-3 text-custom" />
                     {cartCount > 0 && (
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      <span className="position-absolute translate-middle badge rounded-pill bg-danger">
                         {cartCount}
                       </span>
                     )}
                   </Link>
-                  <button
-                    className="nav-link border-0 bg-transparent"
-                    onClick={handleShowFavorites}
-                  >
-                    <IoMdHeartEmpty className="fs-3 text-danger" />
-                  </button>
+                  <FavoriteDropdown />
                 </>
               )}
             </div>
@@ -262,11 +248,6 @@ function Header() {
           </div>
         </div>
       </div>
-      {/* 收藏 Modal */}
-      <FavoriteModal
-        isOpen={showFavorites}
-        onClose={() => setShowFavorites(false)}
-      />
     </header>
   );
 }
