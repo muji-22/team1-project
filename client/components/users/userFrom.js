@@ -4,6 +4,7 @@ import UserSideBar from "./userSidebar";
 import UserData from './userData'
 import ResetPassword from "./resetPassword";
 import CouponsPage from "../coupon/CouponsPage";
+import FavoriteList from "../favorite/FavoriteList";
 
 export default function UserForm() {
 
@@ -21,7 +22,7 @@ export default function UserForm() {
     profile: <UserData />,
     resetPassword: <ResetPassword />,
     coupon: <CouponsPage />,
-    // favorites: <Favorites />,
+    favorites: <FavoriteList />,
     // records: <Records />
   }
 

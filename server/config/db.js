@@ -1,4 +1,4 @@
-// database/connect.js
+// cinfig/db.js
 import mysql from 'mysql2/promise'
 import 'dotenv/config'
 
