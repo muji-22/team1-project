@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { IoMdHeartEmpty } from "react-icons/io";
+import { FaCartPlus } from "react-icons/fa";
 import style from "@/styles/productDetail.module.css";
 import ProductDetailSide from "@/components/product/productDetailSide";
 import ProductDetailNotice from "@/components/product/productDetailNotice";
@@ -11,22 +13,21 @@ import MayFavorite from "@/components/product/mayFavorite";
 import AddProduct from "@/components/cart/addProduct";
 
 function ProductDetail() {
-  const router = useRouter();
-  const { id } = router.query;
-
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const router = useRouter();
+  const { productid } = router.query;
 
   // 獲取商品資料
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!id) return;
+      if (!productid) return;
 
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:3005/api/products/${id}`
+          `http://localhost:3005/api/products/${productid}`
         );
 
         if (response.status === 404) {
@@ -52,7 +53,7 @@ function ProductDetail() {
     };
 
     fetchProduct();
-  }, [id]);
+  }, [productid]);
 
   // 載入中畫面
   if (loading) {
@@ -107,9 +108,7 @@ function ProductDetail() {
                   type="button"
                   data-bs-target="#carouselExampleIndicators"
                   data-bs-slide-to={index}
-                  className={`${index === 0 ? "active" : ""} ${
-                    style.carouselBtn
-                  }`}
+                  className={index === 0 ? "active" : ""}
                   aria-current={index === 0 ? "true" : "false"}
                   aria-label={`Slide ${index + 1}`}
                 />
@@ -125,7 +124,7 @@ function ProductDetail() {
                   className={`carousel-item ${index === 0 ? "active" : ""}`}
                 >
                   <img
-                    src={`http://localhost:3005/productImages/${product.id}/${product.id}-${num}.jpg`}
+                    src={`http://localhost:3005/productImages/${product.productid}/${product.productid}-${num}.jpg`}
                     className="d-block w-100"
                     alt={`${product.name} ${num}`}
                     onError={(e) => {
@@ -144,7 +143,7 @@ function ProductDetail() {
               data-bs-slide="prev"
             >
               <span
-                className={`carousel-control-prev-icon ${style.prevBtn}`}
+                className="carousel-control-prev-icon"
                 aria-hidden="true"
               ></span>
               <span className="visually-hidden">Previous</span>
@@ -156,7 +155,7 @@ function ProductDetail() {
               data-bs-slide="next"
             >
               <span
-                className={`carousel-control-next-icon ${style.nextBtn}`}
+                className="carousel-control-next-icon"
                 aria-hidden="true"
               ></span>
               <span className="visually-hidden">Next</span>
@@ -164,65 +163,51 @@ function ProductDetail() {
           </div>
         </div>
 
-        {/* 右側商品資訊 */}
-        <div
-          className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
-        >
-          <ProductDetailSide
-            name={product.name}
-            price={product.price}
-            descrition={product.descrition}
-            min_age={product.min_age}
-            min_users={product.min_users}
-            max_users={product.max_users}
-            playtime={product.playtime}
-          />
+          {/* 右側內容區 */}
+
+          <div
+            className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
+          >
+            <ProductDetailSide
+              name={product.name}
+              price={product.price}
+              descrition={product.descrition}
+              min_age={product.min_age}
+              min_users={product.min_users}
+              max_users={product.max_users}
+              playtime={product.playtime}
+            />
+          </div>
+          <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
+            <ProductDetailSideMobile
+              name={product.name}
+              price={product.price}
+              descrition={product.descrition}
+              min_age={product.min_age}
+              min_users={product.min_users}
+              max_users={product.max_users}
+              playtime={product.playtime}
+            />
+          </div>
         </div>
-        <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
-          <ProductDetailSideMobile
-            name={product.name}
-            price={product.price}
-            descrition={product.descrition}
-            min_age={product.min_age}
-            min_users={product.min_users}
-            max_users={product.max_users}
-            playtime={product.playtime}
-          />
+
+        {/* 說明及規格 */}
+        <div className={`d-block d-lg-none col-md-12 col-lg-6`}>
+          <ProductDetailMainNotice />
+          <ProductDetailMainNotice2 />
+        </div>
+
+        {/* 注意事項 */}
+        <ProductDetailNotice />
+        <ProductDetailNotice2 />
+
+        {/* 可能喜歡 */}
+        <div className="d-flex justify-content-center">
+          <MayFavorite />
         </div>
       </div>
+    );
+  };
 
-      {/* 說明及規格 */}
-      <div className={`d-block d-lg-none col-md-12 col-lg-6`}>
-        <ProductDetailMainNotice
-          name={product.name}
-          price={product.price}
-          descrition={product.descrition}
-          min_age={product.min_age}
-          min_users={product.min_users}
-          max_users={product.max_users}
-          playtime={product.playtime}
-        />
-        <ProductDetailMainNotice2
-          name={product.name}
-          price={product.price}
-          descrition={product.descrition}
-          min_age={product.min_age}
-          min_users={product.min_users}
-          max_users={product.max_users}
-          playtime={product.playtime}
-        />
-      </div>
-
-      {/* 注意事項 */}
-      <ProductDetailNotice />
-      <ProductDetailNotice2 />
-
-      {/* 可能喜歡 */}
-      <div className="d-flex justify-content-center">
-        <MayFavorite />
-      </div>
-    </div>
-  );
-}
 
 export default ProductDetail;
