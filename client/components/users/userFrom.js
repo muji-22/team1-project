@@ -5,9 +5,10 @@ import UserData from './userData'
 import ResetPassword from "./resetPassword";
 import CouponsPage from "../coupon/CouponsPage";
 import FavoriteList from "../favorite/FavoriteList";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function UserForm() {
-
+  const { user } = useAuth();
   const [active, setActive] = useState('profile')
 
   const title = {
@@ -31,7 +32,16 @@ export default function UserForm() {
       <main className={styles.main}>
         <div className={styles.wrap}>
           <div className={styles.leftUser}>
-            <div className={styles.userPic1}></div>
+          <div 
+              className={styles.userPic1}
+              style={{
+                backgroundImage: user?.avatar_url 
+                  ? `url(http://localhost:3005${user.avatar_url})` 
+                  : 'url(/default-avatar.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
             <UserSideBar
               activeItem={active}
               onItemClick={setActive} />
