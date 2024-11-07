@@ -200,6 +200,42 @@ export function AuthProvider({ children }) {
     }
   };
 
+      //測試更改密碼
+      const updatePasswordData = async (userData) => {
+        try {
+          setError(null);
+          setLoading(true);
+          const token = localStorage.getItem('token');
+          
+          const response = await fetch(`${API_URL}/password`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(userData),
+          });
+    
+          const data = await response.json();
+    
+          if (!response.ok) {
+            throw new Error(data.message || '更新失敗');
+          }
+    
+          // 確保資料同步
+          const updatedUser = { ...user, ...data.user };
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+          setUser(updatedUser);
+    
+          return true;
+        } catch (error) {
+          setError(error.message);
+          throw error;
+        } finally {
+          setLoading(false);
+        }
+      };
+
   // Context 值
   const value = {
     user,
@@ -210,6 +246,7 @@ export function AuthProvider({ children }) {
     checkAuth,
     updateUserData,
     updateAvatar,
+    updatePasswordData,
     isAuthenticated: () => !!user && !!localStorage.getItem('token'),
   };
 
