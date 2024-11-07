@@ -7,6 +7,7 @@ import { LuUser2 } from "react-icons/lu";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
+import Avatar from "@/components/Avatar";
 import FavoriteDropdown from "@/components/favorite/FavoriteDropdown";
 
 
@@ -27,7 +28,7 @@ function Header() {
   };
 
   return (
-    <header className="bg-light w-100 sticky-top shadow">
+    <header className="bg-light w-100 sticky-top shadow-sm">
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light">
           <button
@@ -105,7 +106,8 @@ function Header() {
                       style={{ minWidth: "200px" }}
                       aria-labelledby="navbarDropdown"
                     >
-                      <li>
+                      <li className="d-flex align-items-center gap-2 px-3 py-2">
+                      <Avatar src={user?.avatar_url} size="small" />
                         <span className="dropdown-item-text">
                           {user.name || user.account}
                         </span>
@@ -178,12 +180,15 @@ function Header() {
         </div>
 
         <div className="offcanvas-body p-0">
-          <div className="p-4 border-bottom border text-center">
+          <div className="p-3 border-bottom border text-center">
             {user ? (
               <>
-                <span className="fs-4">{user.name || user.account}</span>
+              <div className="d-flex justify-content-center">
+              <Avatar src={user?.avatar_url} size="medium" />
+              </div>
+                <span className="fs-6 d-block py-2">{user.name || user.account}</span>
                 <button
-                  className="btn buttonCustomB ms-3"
+                  className="btn btn-sm buttonCustomB"
                   onClick={handleLogout}
                 >
                   登出
