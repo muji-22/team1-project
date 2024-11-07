@@ -554,3 +554,7 @@
     box-shadow: 0 0 0 #fff; /* 取消焦点时的阴影 */
     outline: none; /* 取消焦点时的轮廓 */
   }
+
+.border{
+    border: 1px solid #d4d4d2;
+}

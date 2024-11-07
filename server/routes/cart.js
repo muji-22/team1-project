@@ -29,6 +29,8 @@ router.get('/', async (req, res) => {
     }
 
     // 2. 取得購物車內的所有項目及商品資訊
+    // (資料庫"cart_items"簡寫成 "ci")
+    // (資料庫"product"簡寫成 "p")
     const [items] = await pool.execute(`
       SELECT 
         ci.*,

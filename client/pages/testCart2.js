@@ -220,11 +220,11 @@ export default function Cart() {
   };
 
   // 處理選擇優惠券
-const handleSelectCoupon = (coupon) => {
-  setShowCouponSelector(false)
-  setCouponCode(coupon.code)
-  applyCoupon(coupon.code)
-}
+  const handleSelectCoupon = (coupon) => {
+    setShowCouponSelector(false);
+    setCouponCode(coupon.code);
+    applyCoupon(coupon.code);
+  };
   // 檢查使用者是否已登入並取得購物車資料
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -334,99 +334,109 @@ const handleSelectCoupon = (coupon) => {
               <div className="bg-light p-3">
                 <h4>訂單摘要</h4>
 
-               {/* 優惠券輸入區 */}
-<div className="mb-3">
-  {!appliedCoupon ? (
-    <div>
-      <div className="dropdown w-100">
-        {/* 觸發按鈕 */}
-        <button
-          className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
-          type="button"
-          onClick={() => setShowCouponSelector(!showCouponSelector)}
-        >
-          <span>選擇優惠券</span>
-          <i className="bi bi-chevron-down"></i>
-        </button>
+                {/* 優惠券輸入區 */}
+                <div className="mb-3">
+                  {!appliedCoupon ? (
+                    <div>
+                      <div className="dropdown w-100">
+                        {/* 觸發按鈕 */}
+                        <button
+                          className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+                          type="button"
+                          onClick={() =>
+                            setShowCouponSelector(!showCouponSelector)
+                          }
+                        >
+                          <span>選擇優惠券</span>
+                          <i className="bi bi-chevron-down"></i>
+                        </button>
 
-        {/* 下拉選單內容 */}
-        {showCouponSelector && (
-          <div className="dropdown-menu show w-100 p-3 shadow-lg" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-            {/* 搜尋框 */}
-            <div className="mb-3 sticky-top bg-white pt-1">
-              <div className="input-group input-group-sm">
-                <span className="input-group-text">
-                  <i className="bi bi-search"></i>
-                </span>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="搜尋優惠券..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
+                        {/* 下拉選單內容 */}
+                        {showCouponSelector && (
+                          <div
+                            className="dropdown-menu show w-100 p-3 shadow-lg"
+                            style={{ maxHeight: "400px", overflowY: "auto" }}
+                          >
+                            {/* 搜尋框 */}
+                            <div className="mb-3 sticky-top bg-white pt-1">
+                              <div className="input-group input-group-sm">
+                                <span className="input-group-text">
+                                  <i className="bi bi-search"></i>
+                                </span>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="搜尋優惠券..."
+                                  value={searchTerm}
+                                  onChange={(e) =>
+                                    setSearchTerm(e.target.value)
+                                  }
+                                />
+                              </div>
+                            </div>
 
-            {/* 優惠券列表 */}
-            {filteredCoupons.length > 0 ? (
-              filteredCoupons.map((coupon) => (
-                <div
-                  key={coupon.id}
-                  className="coupon-item card mb-2 cursor-pointer"
-                  onClick={() => handleSelectCoupon(coupon)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="row g-0">
-                    <div className="col-3 bg-primary d-flex align-items-center justify-content-center p-2">
-                      <i className="bi bi-ticket-perforated text-white fs-4"></i>
-                    </div>
-                    <div className="col-9 bg-white text-dark">
-                      <div className="card-body p-2">
-                        <h6 className="card-title mb-1 fw-bold text-truncate">
-                          {coupon.name}
-                        </h6>
-                        <p className="card-text mb-1 text-danger fw-bold">
-                          {coupon.type === "percentage"
-                            ? `${coupon.discount}% OFF`
-                            : `$${coupon.discount} OFF`}
-                        </p>
-                        <small className="text-muted">
-                          到期日：{new Date(coupon.end_date).toLocaleDateString()}
-                        </small>
+                            {/* 優惠券列表 */}
+                            {filteredCoupons.length > 0 ? (
+                              filteredCoupons.map((coupon) => (
+                                <div
+                                  key={coupon.id}
+                                  className="coupon-item card mb-2 cursor-pointer"
+                                  onClick={() => handleSelectCoupon(coupon)}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  <div className="row g-0">
+                                    <div className="col-3 bg-primary d-flex align-items-center justify-content-center p-2">
+                                      <i className="bi bi-ticket-perforated text-white fs-4"></i>
+                                    </div>
+                                    <div className="col-9 bg-white text-dark">
+                                      <div className="card-body p-2">
+                                        <h6 className="card-title mb-1 fw-bold text-truncate">
+                                          {coupon.name}
+                                        </h6>
+                                        <p className="card-text mb-1 text-danger fw-bold">
+                                          {coupon.type === "percentage"
+                                            ? `${coupon.discount}% OFF`
+                                            : `$${coupon.discount} OFF`}
+                                        </p>
+                                        <small className="text-muted">
+                                          到期日：
+                                          {new Date(
+                                            coupon.end_date
+                                          ).toLocaleDateString()}
+                                        </small>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="text-center text-muted py-3">
+                                沒有符合條件的優惠券
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="d-flex justify-content-between align-items-center bg-success bg-opacity-10 p-2 rounded">
+                      <div>
+                        <div className="fw-bold">{appliedCoupon.name}</div>
+                        <small className="text-danger">
+                          {appliedCoupon.type === "percentage"
+                            ? `${appliedCoupon.discount}% OFF`
+                            : `$${appliedCoupon.discount} OFF`}
+                        </small>
+                      </div>
+                      <button
+                        className="btn btn-link btn-sm text-danger p-0"
+                        onClick={removeCoupon}
+                      >
+                        移除
+                      </button>
+                    </div>
+                  )}
                 </div>
-              ))
-            ) : (
-              <div className="text-center text-muted py-3">
-                沒有符合條件的優惠券
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  ) : (
-    <div className="d-flex justify-content-between align-items-center bg-success bg-opacity-10 p-2 rounded">
-      <div>
-        <div className="fw-bold">{appliedCoupon.name}</div>
-        <small className="text-danger">
-          {appliedCoupon.type === "percentage"
-            ? `${appliedCoupon.discount}% OFF`
-            : `$${appliedCoupon.discount} OFF`}
-        </small>
-      </div>
-      <button
-        className="btn btn-link btn-sm text-danger p-0"
-        onClick={removeCoupon}
-      >
-        移除
-      </button>
-    </div>
-  )}
-</div>
 
                 {/* 金額計算 */}
                 <div className="border-top pt-2">
