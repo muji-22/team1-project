@@ -165,41 +165,40 @@ export function AuthProvider({ children }) {
   // 更新頭像 - 增強資料同步
   const updateAvatar = async (file) => {
     try {
-      setError(null);
-      setLoading(true);
-      const token = localStorage.getItem('token');
+      setError(null)
+      setLoading(true)
+      const token = localStorage.getItem('token')
       
-      const formData = new FormData();
-      formData.append('avatar', file);
-
-      const response = await fetch(`${API_URL}/avatar`, {
-        method: 'PUT',
+      const formData = new FormData()
+      formData.append('avatar', file)
+  
+      const response = await fetch('http://localhost:3005/api/auth/upload-avatar', {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`
         },
-        body: formData,
-      });
-
-      const data = await response.json();
-
+        body: formData
+      })
+  
+      const data = await response.json()
+  
       if (!response.ok) {
-        throw new Error(data.message || '上傳失敗');
+        throw new Error(data.message || '上傳失敗')
       }
-
+  
       // 確保資料同步
-      const updatedUser = { ...user, avatar_url: data.avatar_url };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      setUser(updatedUser);
-
-      return data;
+      const updatedUser = { ...user, avatar_url: data.avatar_url }
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+      setUser(updatedUser)
+  
+      return data
     } catch (error) {
-      setError(error.message);
-      throw error;
+      setError(error.message)
+      throw error
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-
+  }
       //測試更改密碼
       const updatePasswordData = async (userData) => {
         try {

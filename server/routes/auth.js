@@ -6,6 +6,7 @@ import pool from '../config/db.js'
 import { authenticateToken } from '../middlewares/auth.js'
 import multer from 'multer'
 import path from 'path'
+import fs from 'fs'
 
 const router = express.Router()
 
@@ -13,14 +14,12 @@ const router = express.Router()
 router.post('/login', async (req, res) => {
   try {
     const { account, password } = req.body
-    console.log('Login attempt:', { account, password }) // 除錯用
 
     // 查詢使用者
     const [users] = await pool.query(
       'SELECT * FROM users WHERE account = ? AND valid = 1',
       [account]
     )
-    console.log('Found users:', users) // 除錯用
     
     if (users.length === 0) {
       return res.status(401).json({ message: '帳號或密碼錯誤' })
@@ -30,7 +29,6 @@ router.post('/login', async (req, res) => {
 
     // 驗證密碼
     const isValid = await bcrypt.compare(password, user.password)
-    console.log('Password validation:', isValid) // 除錯用
 
     if (!isValid) {
       return res.status(401).json({ message: '帳號或密碼錯誤' })
@@ -54,7 +52,10 @@ router.post('/login', async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role || 'user',
-      avatar_url: user.avatar_url
+      avatar_url: user.avatar_url,
+      phone: user.phone,
+      birthday: user.birthday,
+      address: user.address
     }
 
     res.json({
@@ -241,65 +242,78 @@ router.put('/password', authenticateToken, async (req, res) => {
   }
 })
 
-// 設定 大頭貼 用來儲存上傳的圖片
+// 設定檔案儲存
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // 儲存圖片的目錄
-    cb(null, 'uploads/');
+    // 設定儲存路徑
+    cb(null, 'public/avatar')
   },
   filename: (req, file, cb) => {
-    // 設定圖片檔名,Date.now()
-    cb(null,Date.now()+ path.extname(file.originalname));
+    // 確保檔名是唯一的，並保留原始副檔名
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
   }
-});
+})
 
-const upload = multer({ storage });
+// 設定檔案過濾
+const fileFilter = (req, file, cb) => {
+  // 只允許 image 類型
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true)
+  } else {
+    cb(new Error('只允許上傳圖片檔案！'), false)
+  }
+}
 
-// 更新大頭貼 (只更新 avatar_url)
-router.put('/avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
+// 設定 multer
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1024 * 1024 * 5 // 限制 5MB
+  }
+})
+
+// 上傳大頭貼
+router.post('/upload-avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
   try {
-    let avatarUrl = req.user.avatar_url;
-
-    if (req.file) {
-      // 如果舊的 avatar_url 存在，刪除舊的檔案
-      if (avatarUrl && fs.existsSync(avatarUrl)) {
-        fs.unlinkSync(avatarUrl);  // 刪除舊的圖片檔案
-      }
-
-      // 設定新檔案的路徑
-      avatarUrl = req.file.path;  // 儲存檔案的相對路徑
+    if (!req.file) {
+      return res.status(400).json({ message: '請選擇要上傳的圖片' })
     }
 
-    // 更新資料庫中的 avatar_url
-    const [result] = await pool.query(
+    // 處理舊的大頭貼檔案
+    const [user] = await pool.query(
+      'SELECT avatar_url FROM users WHERE id = ?',
+      [req.user.id]
+    )
+
+    if (user[0].avatar_url) {
+      const oldPath = path.join('public', user[0].avatar_url)
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath)
+      }
+    }
+
+    // 設定新的大頭貼路徑 (存入資料庫的是相對路徑)
+    const avatarUrl = `/avatar/${req.file.filename}`
+
+    // 更新資料庫
+    await pool.query(
       'UPDATE users SET avatar_url = ? WHERE id = ?',
       [avatarUrl, req.user.id]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: '使用者不存在' });
-    }
-
-    // 確保返回的是完整的 URL
-    const fullAvatarUrl = `${req.protocol}://${req.get('host')}/${avatarUrl}`;
-
-    // 返回更新後的用戶資料
-    const [updatedUser] = await pool.query(
-      'SELECT id, avatar_url FROM users WHERE id = ?',
-      [req.user.id]
-    );
+    )
 
     res.json({
-      message: '大頭貼更新成功',
-      avatar_url: fullAvatarUrl,  // 返回完整的 URL
-    });
+      message: '大頭貼上傳成功',
+      avatar_url: avatarUrl
+    })
+
   } catch (error) {
-    console.error('更新資料錯誤:', error);
-    if (error instanceof multer.MulterError) {
-      return res.status(400).json({ message: error.message });
-    }
-    res.status(500).json({ message: '伺服器錯誤' });
+    console.error('上傳大頭貼錯誤:', error)
+    res.status(500).json({ 
+      message: error.message || '上傳大頭貼失敗'
+    })
   }
-});
+})
 
 export default router
