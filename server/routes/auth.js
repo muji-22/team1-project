@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import pool from '../config/db.js'
 import { authenticateToken } from '../middlewares/auth.js'
+import multer from 'multer'
+import path from 'path'
 
 const router = express.Router()
 
@@ -238,5 +240,66 @@ router.put('/password', authenticateToken, async (req, res) => {
     res.status(500).json({ message: '伺服器錯誤' })
   }
 })
+
+// 設定 大頭貼 用來儲存上傳的圖片
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // 儲存圖片的目錄
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    // 設定圖片檔名,Date.now()
+    cb(null,Date.now()+ path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
+
+// 更新大頭貼 (只更新 avatar_url)
+router.put('/avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
+  try {
+    let avatarUrl = req.user.avatar_url;
+
+    if (req.file) {
+      // 如果舊的 avatar_url 存在，刪除舊的檔案
+      if (avatarUrl && fs.existsSync(avatarUrl)) {
+        fs.unlinkSync(avatarUrl);  // 刪除舊的圖片檔案
+      }
+
+      // 設定新檔案的路徑
+      avatarUrl = req.file.path;  // 儲存檔案的相對路徑
+    }
+
+    // 更新資料庫中的 avatar_url
+    const [result] = await pool.query(
+      'UPDATE users SET avatar_url = ? WHERE id = ?',
+      [avatarUrl, req.user.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: '使用者不存在' });
+    }
+
+    // 確保返回的是完整的 URL
+    const fullAvatarUrl = `${req.protocol}://${req.get('host')}/${avatarUrl}`;
+
+    // 返回更新後的用戶資料
+    const [updatedUser] = await pool.query(
+      'SELECT id, avatar_url FROM users WHERE id = ?',
+      [req.user.id]
+    );
+
+    res.json({
+      message: '大頭貼更新成功',
+      avatar_url: fullAvatarUrl,  // 返回完整的 URL
+    });
+  } catch (error) {
+    console.error('更新資料錯誤:', error);
+    if (error instanceof multer.MulterError) {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: '伺服器錯誤' });
+  }
+});
 
 export default router
