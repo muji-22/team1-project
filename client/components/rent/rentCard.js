@@ -1,11 +1,18 @@
 import React from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
-import styles from "./productCard.module.css";
+import styles from "./rentCard.module.css";
 import { FaCartPlus } from "react-icons/fa";
 // // 定義產品資料型別
 
 // // 元件接收產品資料作為props
-const ProductCard = ({ id, name, price, onAddToCart, onAddToWishlist }) => {
+const RentCard = ({  id, 
+    name, 
+    rental_fee,    // 改用租金
+    deposit,       // 押金
+    penalty_fee,   // 罰金
+    image,         // 圖片路徑
+    onAddToCart, 
+    onAddToWishlist  }) => {
     // 取得商品第一張圖片（主圖）的路徑
     const imageUrl = `http://localhost:3005/productImages/${id}/${id}-1.jpg`;
     const handleImageError = (e) => {
@@ -24,7 +31,7 @@ const ProductCard = ({ id, name, price, onAddToCart, onAddToWishlist }) => {
                         alt={name}
                     />
                     <div className="card-body">
-                    <h5 className={`card-title ${styles.cardTitle}`}>{name}</h5>
+                    <h5 className={`card-title ${styles.cardTitle}`}>(租借){name}</h5>
                         <p className="card-text price origin text-danger ">
                             <del> </del>
                             {/* 要放打折後原價的位子] */}
@@ -33,7 +40,7 @@ const ProductCard = ({ id, name, price, onAddToCart, onAddToWishlist }) => {
                             <div className="col">
                                 <p className="card-text price mb-0">
                                     {" "}
-                                    NT$ {price?.toLocaleString()}
+                                    NT$ {rental_fee?.toLocaleString()}/日
                                 </p>
                             </div>
                             <div className="col-auto">
@@ -59,4 +66,4 @@ const ProductCard = ({ id, name, price, onAddToCart, onAddToWishlist }) => {
     );
 };
 
-export default ProductCard;
+export default RentCard;

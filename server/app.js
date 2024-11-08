@@ -3,6 +3,7 @@ import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import productRouter from './routes/products.js'
+import rentsRouter from './routes/rents.js'
 import authRouter from './routes/auth.js'
 import couponRouter from './routes/coupons.js'
 import productImagesRouter from './routes/productImages.js'
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // API 路由
 app.use('/api/products', productRouter)
+app.use('/api/rents', rentsRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/coupons', couponRouter)
 app.use('/api/product-images', productImagesRouter)
