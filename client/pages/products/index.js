@@ -1,9 +1,9 @@
+    //pages/products/index.js
     import React, { useState, useEffect } from "react";
     import CategorySidebar from "@/components/product/category";
-    import ProductCard from "@/components/product/productCard";
+    import ProductCard from "@/components/product/ProductCard";
     import { GrFilter } from "react-icons/gr";
 
-    import MayFavorite from "@/components/product/mayFavorite";
     function ProductList() {
         const [products, setProducts] = useState([]);
         const [loading, setLoading] = useState(true);

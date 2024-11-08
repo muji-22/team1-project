@@ -5,26 +5,3 @@
 .img {
     width: 100%;
 }
-.cardTitle {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    height: 50px; /* 根據實際行高調整 */
-    margin-bottom: 8px;
-  }
-  
-  .card {
-    height: 100%;
-    transition: transform 0.2s;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .img {
-    aspect-ratio: 1;
-    object-fit: contain;
-    padding: 10px;
-  }

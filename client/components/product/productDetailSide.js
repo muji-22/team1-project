@@ -1,129 +1,155 @@
+// components/product/productDetailSide.js
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { IoMdHeartEmpty } from "react-icons/io";
+import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { FaCartPlus } from "react-icons/fa";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
 import styles from "./productDetailSide.module.css";
 import AddProduct from "@/components/cart/addProduct";
-import AddFavProduct from "@/components/cart/addFavProduct";
+import { useAuth } from '@/contexts/AuthContext';
+import Swal from "sweetalert2";
+import Link from "next/link";
 
 const ProductDetailSide = ({
-  
+  id,
   name,
   price,
-  description, // 注意：資料庫中的欄位名稱是 descrition
+  description,
   min_age,
   min_users,
   max_users,
   playtime,
-  onAddToCart,
-  onAddToWishlist,
+  quantity,
+  onQuantityChange,
 }) => {
-  const router = useRouter();
-    const { id } = router.query;
+  const { user } = useAuth();
+  const [isFavorite, setIsFavorite] = useState(false);
 
-    const [product, setProduct] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  // 檢查是否已收藏
+  useEffect(() => {
+    const checkFavorite = async () => {
+      if (!user || !id) return;
 
-    // 獲取商品資料
-    useEffect(() => {
-        const fetchProduct = async () => {
-            if (!id) return;
-
-            try {
-                setLoading(true);
-                const response = await fetch(
-                    `http://localhost:3005/api/products/${id}`
-                );
-
-                if (response.status === 404) {
-                    setError("找不到該商品");
-                    return;
-                }
-
-                if (!response.ok) {
-                    throw new Error("網路回應不正確");
-                }
-
-                const data = await response.json();
-
-                // 處理標籤字串
-                data.tagList = data.tags ? data.tags.split(",") : [];
-                setProduct(data);
-            } catch (error) {
-                console.error("獲取商品失敗:", error);
-                setError(error.message || "無法載入商品資料");
-            } finally {
-                setLoading(false);
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(
+          `http://localhost:3005/api/favorites/check/${id}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
             }
-        };
-
-        fetchProduct();
-    }, [id]);
-
-    // 載入中畫面
-    if (loading) {
-        return (
-            <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ height: "50vh" }}
-            >
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">載入中...</span>
-                </div>
-            </div>
+          }
         );
+
+        if (response.ok) {
+          const data = await response.json();
+          setIsFavorite(data.data.isFavorited);
+        }
+      } catch (error) {
+        console.error('檢查收藏狀態失敗:', error);
+      }
+    };
+
+    checkFavorite();
+  }, [id, user]);
+
+  // 處理收藏/取消收藏
+  const handleFavorite = async () => {
+    if (!user) {
+      Swal.fire({
+        title: '請先登入',
+        text: '需要登入才能收藏商品',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: '前往登入',
+        cancelButtonText: '取消'
+      });
+      return;
     }
 
-    // 錯誤畫面
-    if (error) {
-        return (
-            <div className="alert alert-danger m-3" role="alert">
-                {error}
-            </div>
-        );
-    }
+    try {
+      const token = localStorage.getItem('token');
+      const method = isFavorite ? 'DELETE' : 'POST';
+      
+      const response = await fetch(
+        `http://localhost:3005/api/favorites/${id}`,
+        {
+          method: method,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
 
-    // 商品不存在
-    if (!product) return null;
-    
+      if (response.ok) {
+        setIsFavorite(!isFavorite);
+        Swal.fire({
+          title: isFavorite ? '已取消收藏' : '已加入收藏',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    } catch (error) {
+      console.error('收藏操作失敗:', error);
+      Swal.fire({
+        title: '操作失敗',
+        text: '請稍後再試',
+        icon: 'error',
+      });
+    }
+  };
+
   return (
     <>
-      <div class="row">
-        <div class="col-9">
+      <div className="row">
+        <div className="col-9">
           <h4 style={{ fontWeight: "700" }}>{name}</h4>
         </div>
-        <div class="col-3">
-          <a href="#" className="btn">
-            <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
-          </a>
+        <div className="col-3">
+          <button 
+            onClick={handleFavorite} 
+            className="btn"
+            aria-label={isFavorite ? "取消收藏" : "加入收藏"}
+          >
+            {isFavorite ? (
+              <IoMdHeart className="fs-4 text-danger" />
+            ) : (
+              <IoMdHeartEmpty className="fs-4 text-danger" />
+            )}
+          </button>
         </div>
-        <h5 class="col-3">${price}</h5>
-        <div class="col-9 mt-3"></div>
+        <h5 className="col-3">${price}</h5>
+        <div className="col-9 mt-3"></div>
         <div className="col-8 mt-3">
-          商品數量 <QuantityAdjuster />
+          商品數量 
+          <QuantityAdjuster 
+            value={quantity}
+            onChange={onQuantityChange}
+          />
         </div>
       </div>
 
       <div className="row align-items-center g-2 mt-4 mb-2">
         <div className="col-sm-5">
-          <AddProduct />
+          <AddProduct 
+            productId={id}
+            quantity={quantity}
+          />
         </div>
         <div className="col-sm-5">
-          <a
-            href="#"
-            className="btn btn-success  w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto "
-          >
-            切換至租借商品
-          </a>
+        <Link
+  href={`/rent/${id}`}  // 假設租借商品的路由是 /rent/[id]
+  className="btn btn-success w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto"
+>
+  切換至租借商品
+</Link>
         </div>
       </div>
 
       {/* 商品敘述 */}
       <p className="mt-5">{description}</p>
 
-      <div class="row mt-4">
+      <div className="row mt-4">
         <p className={`${styles.subtitle}`}>規格</p>
         <div></div>
 
