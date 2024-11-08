@@ -1,3 +1,4 @@
+// pages/product/[id].js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import style from "@/styles/productDetail.module.css";
@@ -17,6 +18,8 @@ function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // 新增數量管理狀態
+  const [quantity, setQuantity] = useState(1);
 
   // 獲取商品資料
   useEffect(() => {
@@ -53,6 +56,11 @@ function ProductDetail() {
 
     fetchProduct();
   }, [id]);
+
+  // 處理數量變更
+  const handleQuantityChange = (newQuantity) => {
+    setQuantity(newQuantity);
+  };
 
   // 載入中畫面
   if (loading) {
@@ -169,6 +177,7 @@ function ProductDetail() {
           className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
         >
           <ProductDetailSide
+            id={product.id}
             name={product.name}
             price={product.price}
             description={product.description}
@@ -176,17 +185,22 @@ function ProductDetail() {
             min_users={product.min_users}
             max_users={product.max_users}
             playtime={product.playtime}
+            quantity={quantity}
+            onQuantityChange={handleQuantityChange}
           />
         </div>
         <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
           <ProductDetailSideMobile
+            id={product.id}
             name={product.name}
             price={product.price}
-            descrition={product.descrition}
+            description={product.description}
             min_age={product.min_age}
             min_users={product.min_users}
             max_users={product.max_users}
             playtime={product.playtime}
+            quantity={quantity}
+            onQuantityChange={handleQuantityChange}
           />
         </div>
       </div>
@@ -196,7 +210,7 @@ function ProductDetail() {
         <ProductDetailMainNotice
           name={product.name}
           price={product.price}
-          descrition={product.descrition}
+          description={product.description}
           min_age={product.min_age}
           min_users={product.min_users}
           max_users={product.max_users}
@@ -205,7 +219,7 @@ function ProductDetail() {
         <ProductDetailMainNotice2
           name={product.name}
           price={product.price}
-          descrition={product.descrition}
+          description={product.description}
           min_age={product.min_age}
           min_users={product.min_users}
           max_users={product.max_users}
@@ -219,7 +233,7 @@ function ProductDetail() {
 
       {/* 可能喜歡 */}
       <div className="d-flex justify-content-center">
-        <MayFavorite />
+      <MayFavorite currentProduct={product} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductList from '@/components/JZ_test/ProductList'
+import ProductList from '@/components/product/ProductList'
 // import Register from '@/components/JZ_test/Register'
 function Test() {
     return (
