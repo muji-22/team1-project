@@ -171,7 +171,7 @@ function ProductDetail() {
           <ProductDetailSide
             name={product.name}
             price={product.price}
-            descrition={product.descrition}
+            description={product.description}
             min_age={product.min_age}
             min_users={product.min_users}
             max_users={product.max_users}
