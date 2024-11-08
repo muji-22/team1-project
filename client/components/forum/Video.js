@@ -1,18 +1,20 @@
 import React from "react";
-
-export default function Articles() {
+import Image from "next/image";
+import styles from "@/components/forum/Video.module.css"
+export default function Video() {
   return (
     <>
-    <div className = "article-row d-flex">
-        <div className="article-card col">
-        <div className="img-container">
-          <img
-            className="img"
-            src="/public/images/product_img/5a5f970ae84dd70001593509_DIXIT_7_Box_CH.jpg"
+      <div className={`${styles.videoCard}`}>
+        <div className="imgVid">
+        <Image
+            className={`${styles.img}`}
+            src="/images/forum_img/hq720.jpg"
             alt=""
+            width={420}
+            height={420}
           />
         </div>
-        <div className="text-container">
+        <div className={styles.textContainer}>
           <h4 className="text-content">
             財務記者信心樓上我會這段傳說選手案件信箱運輸
           </h4>
@@ -35,8 +37,6 @@ export default function Articles() {
           </div>
         </div>
       </div>
-    </div>
-      
     </>
   );
 }

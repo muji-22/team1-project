@@ -60,13 +60,7 @@ function Header() {
                 </Link>
               </li>
               <li className="nav-item mx-3">
-<<<<<<< HEAD
                 <Link className="nav-link" href="/forum">文章</Link>
-=======
-                <Link className={`nav-link ${styles.navLink}`} href="/articles">
-                  文章
-                </Link>
->>>>>>> 18e1594c94bdac46f3fb09413ffdaf59f0cab79c
               </li>
               <li className="nav-item mx-3">
                 <Link className={`nav-link ${styles.navLink}`} href="/products">
