@@ -1,0 +1,9 @@
+.cartBGc{
+    background-color: #40CBCE;
+    color: white;
+    border-radius: 25px;
+}
+.cartBGc:hover{
+    background-color: #2DACAE;
+    color: white;
+}

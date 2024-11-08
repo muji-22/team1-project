@@ -19,9 +19,9 @@
   }
   
   /* 自定義日期輸入框樣式 */
-  input[type="date"] {
+  /* input[type="date"] {
     cursor: pointer;
-  }
+  } */
   
   /* 自定義核取方塊樣式 */
   .form-check-input:checked {

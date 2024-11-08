@@ -1,9 +1,10 @@
 .cartBGc{
-    background-color: rgb(45, 172, 174, 0.55);
+    background-color: #40CBCE;
     color: white;
+    border-radius: 25px;
 }
 .cartBGc:hover{
-    background-color: rgb(45, 172, 174);
+    background-color: #2DACAE;
     color: white;
 }
 

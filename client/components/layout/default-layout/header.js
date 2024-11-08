@@ -1,22 +1,34 @@
+// components/layout/default-layout/header.js
 import React from "react";
 import Link from "next/link";
+import styles from "@/styles/Header.module.scss";
 import { IoCartOutline } from "react-icons/io5";
-import { IoMdHeartEmpty } from "react-icons/io";
-import { FaRegUser } from "react-icons/fa";
+import { LuUser2 } from "react-icons/lu";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
+import Avatar from "@/components/Avatar";
+import FavoriteDropdown from "@/components/favorite/FavoriteDropdown";
+
 
 function Header() {
-  const { user, logout } = useAuth();
   const router = useRouter();
+  const { user, logout, isAuthenticated } = useAuth();
+  const { cartCount } = useCart();
 
+  // 處理登出
   const handleLogout = async () => {
     await logout();
-    router.push("/login");
+    router.push("/auth/login");
+  };
+
+  // 判斷當前路徑的函式
+  const isActive = (path) => {
+    return router.pathname === path;
   };
 
   return (
-    <header className="bg-light w-100 sticky-top shadow">
+    <header className="bg-light w-100 sticky-top shadow-sm">
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light">
           <button
@@ -38,16 +50,33 @@ function Header() {
           <div className="collapse navbar-collapse order-3" id="navbarNav">
             <ul className="navbar-nav mx-auto">
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/">首頁</Link>
+                <Link
+                  className={`nav-link ${styles.navLink} ${
+                    isActive("/") ? styles.active : ""
+                  }`}
+                  href="/"
+                >
+                  首頁
+                </Link>
               </li>
               <li className="nav-item mx-3">
+<<<<<<< HEAD
                 <Link className="nav-link" href="/forum">文章</Link>
+=======
+                <Link className={`nav-link ${styles.navLink}`} href="/articles">
+                  文章
+                </Link>
+>>>>>>> 18e1594c94bdac46f3fb09413ffdaf59f0cab79c
               </li>
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/products">商品列表</Link>
+                <Link className={`nav-link ${styles.navLink}`} href="/products">
+                  商品列表
+                </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className="nav-link" href="/rental">商品租借</Link>
+                <Link className={`nav-link ${styles.navLink}`} href="/rental">
+                  商品租借
+                </Link>
               </li>
             </ul>
 
@@ -56,34 +85,42 @@ function Header() {
               {/* 未登入狀態 */}
               {!user ? (
                 <>
-                  <Link href="/login" className="nav-link px-3">登入</Link>
-                  <Link href="/register" className="btn btn-primary">註冊</Link>
+                  <Link href="/auth/login" className="btn buttonCustomB">
+                    登入
+                  </Link>
                 </>
               ) : (
                 <>
                   {/* 已登入狀態：會員中心下拉選單 */}
                   <div className="nav-item dropdown">
-                    <a 
-                      className="nav-link dropdown-toggle"
+                    <a
+                      className="nav-link"
                       href="#"
                       id="navbarDropdown"
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <FaRegUser className="fs-4" />
+                      <LuUser2 className="fs-3" />
                     </a>
-                    
+
                     {/* 下拉選單內容 */}
-                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                      <li>
+                    <ul
+                      className="dropdown-menu dropdown-menu-end text-center"
+                      style={{ minWidth: "200px" }}
+                      aria-labelledby="navbarDropdown"
+                    >
+                      <li className="d-flex align-items-center gap-2 px-3 py-2">
+                      <Avatar src={user?.avatar_url} size="small" />
                         <span className="dropdown-item-text">
-                          你好，{user.name || user.account}
+                          {user.name || user.account}
                         </span>
                       </li>
-                      <li><hr className="dropdown-divider" /></li>
                       <li>
-                        <Link href="/member/profile" className="dropdown-item">
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <Link href="/auth/user" className="dropdown-item">
                           會員資料
                         </Link>
                       </li>
@@ -92,9 +129,11 @@ function Header() {
                           訂單查詢
                         </Link>
                       </li>
-                      <li><hr className="dropdown-divider" /></li>
                       <li>
-                        <a 
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <a
                           className="dropdown-item text-danger"
                           href="#"
                           onClick={handleLogout}
@@ -106,12 +145,15 @@ function Header() {
                   </div>
 
                   {/* 購物車和收藏圖示 */}
-                  <a className="nav-link" href="#">
+                  <Link className="nav-link position-relative" href="/cart">
                     <IoCartOutline className="fs-3 text-custom" />
-                  </a>
-                  <a className="nav-link" href="#">
-                    <IoMdHeartEmpty className="fs-3 text-danger" />
-                  </a>
+                    {cartCount > 0 && (
+                      <span className="position-absolute translate-middle badge rounded-pill bg-danger">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+                  <FavoriteDropdown />
                 </>
               )}
             </div>
@@ -128,7 +170,7 @@ function Header() {
       >
         <div className="offcanvas-header bg-dark d-flex justify-content-between align-items-center">
           <div
-            className="offcanvas-title flex-grow-1 text-center"
+            className="offcanvas-title flex-grow-1 text-center ps-4"
             id="offcanvasMenuLabel"
           >
             <img src="/images/LOGO-W.svg" alt="Logo" className="img-fluid" />
@@ -142,24 +184,24 @@ function Header() {
         </div>
 
         <div className="offcanvas-body p-0">
-          <div className="p-4 border-bottom border text-center">
+          <div className="p-3 border-bottom border text-center">
             {user ? (
               <>
-                <span className="fs-4">{user.name || user.account}</span>
+              <div className="d-flex justify-content-center">
+              <Avatar src={user?.avatar_url} size="medium" />
+              </div>
+                <span className="fs-6 d-block py-2">{user.name || user.account}</span>
                 <button
-                  className="btn btn-outline-danger ms-3"
+                  className="btn btn-sm buttonCustomB"
                   onClick={handleLogout}
                 >
                   登出
                 </button>
               </>
             ) : (
-              <div className="d-flex justify-content-center gap-2">
-                <Link href="/login" className="btn btn-outline-primary">
+              <div className="d-flex justify-content-center">
+                <Link href="/auth/login" className="btn buttonCustomB">
                   登入
-                </Link>
-                <Link href="/register" className="btn btn-primary">
-                  註冊
                 </Link>
               </div>
             )}
@@ -190,13 +232,22 @@ function Header() {
               >
                 <div className="accordion-body p-0">
                   <div className="list-group list-group-flush">
-                    <Link href="/member/profile" className="list-group-item list-group-item-action">
+                    <Link
+                      href="/member/profile"
+                      className="list-group-item list-group-item-action"
+                    >
                       會員資料
                     </Link>
-                    <Link href="/member/orders" className="list-group-item list-group-item-action">
+                    <Link
+                      href="/member/orders"
+                      className="list-group-item list-group-item-action"
+                    >
                       訂單查詢
                     </Link>
-                    <Link href="/member/favorites" className="list-group-item list-group-item-action">
+                    <Link
+                      href="/member/favorites"
+                      className="list-group-item list-group-item-action"
+                    >
                       收藏清單
                     </Link>
                   </div>
