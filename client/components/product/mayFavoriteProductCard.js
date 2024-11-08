@@ -11,29 +11,26 @@ const MayFavoriteProductCard = ({
   onSale,
   salePrice,
   descrition, // 注意：資料庫中的欄位名稱是 descrition
-  min_age,
-  min_users,
-  max_users,
-  playtime,
+  image,
   onAddToCart,
   onAddToWishlist,
 }) => {
   const router = useRouter();
-  const { id } = router.query;
+  // const { id } = router.query;
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const random = Math.floor(Math.random() * 548);
+  const randomId = Math.floor(Math.random() * 547);
   // 獲取商品資料
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!id) return;
+      if (!randomId) return;
 
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:3005/api/products/${id}`
+          `http://localhost:3005/api/products/${randomId}`
         );
 
         if (response.status === 404) {
@@ -59,7 +56,7 @@ const MayFavoriteProductCard = ({
     };
 
     fetchProduct();
-  }, [id]);
+  }, []);
 
   // 載入中畫面
   if (loading) {
@@ -97,21 +94,23 @@ const MayFavoriteProductCard = ({
             alt="產品圖片"
           />
           <div className="card-body">
-            <h5 className="card-title">{name}</h5>
+            <h5 className="card-title text-truncate" title={`${product.name}`}>{product.name}</h5>
             <p className="card-text price origin text-danger">
               <del>{salePrice}</del>
             </p>
             <div className="row align-items-center g-2 mb-2">
               <div className="col">
-                <p className="card-text price mb-0">{price}</p>
+                <p className="card-text price mb-0">{product.price}</p>
               </div>
               <div className="col-auto">
                 <a href="#" className="btn">
                   <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
                 </a>
               </div>
+              <div className="mt-3"><AddFavProduct /></div>
             </div>
-            <AddFavProduct />
+            
+            
           </div>
         </div>
       </div>
