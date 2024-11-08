@@ -61,7 +61,7 @@ export default function index() {
             <span>購物車</span>
           </div>
           </Col>
-          <Col className={styles.step}>
+          <Col className={`${styles.step} ${stepType === 2 && styles.nowStep}`}>
           <div className={styles.stepBox}>
             <div className={styles.stepNum}>2</div>
           </div>
@@ -71,7 +71,7 @@ export default function index() {
             <span>填寫資料</span>
           </div>
           </Col>
-          <Col className={styles.step}>
+          <Col className={`${styles.step} ${stepType === 3 && styles.nowStep}`}>
           <div className={styles.stepBox}>
             <div className={styles.stepNum}>3</div>
           </div>
@@ -94,6 +94,30 @@ export default function index() {
         setCartProductDtl={setCartProductDtl}
         setCartOriginDtl={setCartOriginDtl}
         />}
+        {/* {stepType === 2 &&
+        <StepTwo
+        setstepType={handleStepChange} 
+        discountPrice={discountPrice} 
+        discountAmount={discountAmount}
+        setOrderAddress={setOrderAddress}
+        setOrderName={setOrderName}
+        setOrderPhone={setOrderPhone}   
+        />}
+        {stepType === 3 && 
+        <StepFour 
+        setstepType={handleStepChange} 
+        discountPrice={discountPrice} 
+        discountAmount={discountAmount} 
+        payment={payment}
+        orderName={orderName}
+        orderAddress={orderAddress}
+        orderPhone={orderPhone}
+        cartCouponId={cartCouponId}
+        cartOriginDtl={cartOriginDtl}
+        cartProducDtl={cartProducDtl}
+        />
+        } */}
+
       </CartProvider>
       <Container>
         <Row className={`d-flex justify-content-center align-items-center`}>
