@@ -18,7 +18,9 @@
 
 
 .banner {
+  padding-top: 20px;
   width: 100%;
+  color: #fff;
   background-color: #40CBCE;
 }
 .videoContainer {

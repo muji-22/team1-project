@@ -18,6 +18,12 @@
       justify-self: start;
       margin-top: 20px;
     }
-.text-content {
+.textContent {
       margin-bottom: 10px;
+     font-weight: 600;
+      color: #40CBCE;
     }
+.link{
+      text-decoration: none;
+      color: #40CBCE;
+}

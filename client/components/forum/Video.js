@@ -5,10 +5,10 @@ export default function Video() {
   return (
     <>
       <div className={`${styles.videoCard}`}>
-        <div className="img-vid">
+        <div className="imgVid">
         <Image
-            className="img"
-            src="/images/product_img/5ab8f317e294a05d944783e4_CarcEx1_Box_2017.jpg"
+            className={`${styles.img}`}
+            src="/images/forum_img/hq720.jpg"
             alt=""
             width={420}
             height={420}

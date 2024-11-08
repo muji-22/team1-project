@@ -1,11 +1,18 @@
 
 
   .videoCard {
-   margin-left: 80px;
+   margin-top: 20px;
     padding-top: 0px;
     padding-bottom: 70px;
+  margin-right: 35px;
   
   }
+  .img{
+    object-fit: cover;
+  }
+ 
   .textContainer{
     margin-top: 10px;
+    font-weight: 700;
+    color: #fff;
   }
