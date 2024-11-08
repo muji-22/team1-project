@@ -11,7 +11,7 @@ const ProductDetailSide = ({
   
   name,
   price,
-  descrition, // 注意：資料庫中的欄位名稱是 descrition
+  description, // 注意：資料庫中的欄位名稱是 descrition
   min_age,
   min_users,
   max_users,
@@ -121,7 +121,7 @@ const ProductDetailSide = ({
       </div>
 
       {/* 商品敘述 */}
-      <p className="mt-5">{descrition}</p>
+      <p className="mt-5">{description}</p>
 
       <div class="row mt-4">
         <p className={`${styles.subtitle}`}>規格</p>
