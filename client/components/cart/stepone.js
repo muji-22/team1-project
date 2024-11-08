@@ -5,20 +5,26 @@ import { useRouter } from "next/router";
 import axios, { all } from "axios";
 import style from "@/components/cart/step.module.css";
 import CartItemList from "@/components/cart/list.js"; // 引入新的商品列表元件
+import CartRentItemList from "@/components/cart/rentlist.js";
 
 //icon區
 import { FaTrashCan } from "react-icons/fa6";
 import { GiReturnArrow } from "react-icons/gi";
 
-export default function Cart() {
+export default function StepOne({
+  setstepType,
+  setDiscountPrice,
+  setDiscountAmount,
+  setCouponId,
+  setRentProductDtl,
+  setProductDtl,
+}) {
   // 原本的 state
   const [cart, setCart] = useState({ items: [] });
   const [isLoading, setIsLoading] = useState(true);
-  const [couponCode, setCouponCode] = useState("");
+  const [, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState("");
-  // 用來存儲已選取的商品 ID (新增)
-  const [selectedItems, setSelectedItems] = useState([]);
 
   // 新增這兩個 state
   const [showCouponSelector, setShowCouponSelector] = useState(false);
@@ -43,6 +49,7 @@ export default function Cart() {
         // 處理每個項目的圖片路徑
         const itemsWithImages = data.data.items.map((item) => ({
           ...item,
+          type: item.isRental ? "rent" : "regular", // 根據 isRental 設置 type
           imageUrl: `http://localhost:3005/productImages/${item.product_id}/${item.product_id}-1.jpg`,
         }));
 
@@ -61,6 +68,9 @@ export default function Cart() {
       setIsLoading(false);
     }
   };
+  // 根據商品的 type 分配給不同的商品詳細組件
+  const regularItems = cart.items.filter((item) => item.type === "regular");
+  const rentItems = cart.items.filter((item) => item.type === "rent");
 
   // 取得優惠券列表
   useEffect(() => {
@@ -139,27 +149,25 @@ export default function Cart() {
     }
   };
   // 清空購物車
-const deleteAllItems = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(`http://localhost:3005/api/cart/clear`, {
-      method: "DELETE", 
-      credentials: "include",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
+  const deleteAllItems = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:3005/api/cart/clear`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
 
-    if (data.status === "success") {
-      fetchCart(); 
+      if (data.status === "success") {
+        fetchCart();
+      }
+    } catch (error) {
+      console.error("清空購物車錯誤:", error);
     }
-  } catch (error) {
-    console.error("清空購物車錯誤:", error);
-  }
-};
-  
-
+  };
 
   // 計算商品總數
   const calculateTotalItems = () => {
@@ -251,29 +259,41 @@ const deleteAllItems = async () => {
 
   // 最後匯出資料
   const sendDiscount = () => {
-    setDiscountPrice(discountPrice);
-    setDiscountAmount(discountAmount);
+    const total = calculateTotal(); // 最終折扣後的價格
+    const subTotal = calculateSubTotal(); // 未套用折扣的原始金額
+    const discountAmount = subTotal - total; // 計算折扣金額
+    setDiscountPrice(total); // 設置最終折扣後的價格
+    setDiscountAmount(discountAmount); // 設置折扣金額
   };
 
   const sendCouponId = () => {
-    setCartCouponId(couponId);
+    if (appliedCoupon) {
+      setAppliedCoupon(data.data.coupon); // 傳遞已套用的優惠券 ID
+    }
   };
 
   const sendData = () => {
-    // 在子组件中调用父组件传递的回调函数，并传递数据
-    setstepType(2);
+    setstepType(2); // 切換到下一步
+    sendDiscount();
+    sendCouponId();
+    sendProductDetails(); // 傳遞商品詳細資料
   };
 
-  const sendProductDtl = () => {};
+  const sendProductDetails = () => {
+    const regularProducts = cart.items.filter(
+      (item) => item.type === "regular"
+    );
+    const rentProducts = cart.items.filter((item) => item.type === "rent");
+
+    setProductDtl(regularProducts); // 傳遞一般商品
+    setRentProductDtl(rentProducts); // 傳遞租借商品
+  };
 
   return (
     <Container className="container">
       {/*-----------商品區---------- */}
       <div className={style.listTitle}>
         <Col xs={10}>商品</Col>
-        <Col xs={1}>
-          <span className={`expand ${style.phoneDNone}`}>縮</span>
-        </Col>
       </div>
 
       <div className={`${style.productList} d-none d-lg-flex px-4 `}>
@@ -304,13 +324,10 @@ const deleteAllItems = async () => {
           deleteItem={deleteItem}
         />
       </div>
-
+      <div>小計</div>
       {/* -----------租借商品區---------- */}
       <div className={style.listTitle}>
         <Col xs={10}>租借商品</Col>
-        <Col xs={1}>
-          <span className={`expand ${style.phoneDNone}`}>縮</span>
-        </Col>
       </div>
 
       <div className={`${style.productList} d-none d-lg-flex px-4`}>
@@ -320,28 +337,25 @@ const deleteAllItems = async () => {
         <Col xs={2}>
           <span className={`${style.phoneDNone} pe-5`}>商品圖片&nbsp;</span>
         </Col>
-        <Col xs={1}>
-          <span className={`${style.phoneDNone} pe-4`}>規格&nbsp;</span>
-        </Col>
         <Col xs={2}>
           <span className={`${style.phoneDNone} ps-2`}>單價</span>
         </Col>
         <Col xs={2}>
-          <span className={`${style.phoneDNone} ps-4`}>數量</span>
+          <span className={`${style.phoneDNone} ps-4`}>數量/天數</span>
         </Col>
         <Col xs={2}>
           <span className={`${style.phoneDNone} ps-4`}>小計</span>
         </Col>
       </div>
-      {/* -------------租借商品清單匯入區 */}
-      {/* <div>
-        <List
-          mode={"rentproduct"}
-          setCartOriginDtl={setCartOriginDtl}
-          setCartProductDtl={setCartProductDtl}
-        />
-      </div> */}
 
+      <div className={style.border}>
+        <CartRentItemList
+          items={cart.items}
+          updateQuantity={updateQuantity}
+          deleteItem={deleteItem}
+        />
+      </div>
+      <div>小計</div>
       <div className={style.productList}>
         <Col className={style.deleteSection}>
           <div className="d-flex flex-column">
@@ -372,12 +386,14 @@ const deleteAllItems = async () => {
       <div className={style.totalSection}>
         <label></label>
         <div className={style.total}>
+          <div>購買商品金額$</div>
+          <div>租借商品金額$</div>
           <div>
             {`總金額(共 ${calculateTotalItems()} 件)`}${calculateSubTotal()}
             {/* <span>${`${discountPrice + cart.rentproductTotal}`}</span> */}
           </div>
           <div className="discount">
-            {`優惠券折抵 $ `}
+            {`優惠券折抵 $`}
             {/* {`${discountAmount}`} */}
           </div>
           <span className="">
@@ -386,12 +402,7 @@ const deleteAllItems = async () => {
             </span>
             <button
               className={style.nextStepBtn}
-              onClick={() => {
-                sendData();
-                sendDiscount();
-                sendCouponId();
-                sendProductDtl();
-              }}
+              onClick={sendData}
               disabled={cart.totalItems === 0}
             >
               下一步
