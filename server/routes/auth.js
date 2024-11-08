@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import pool from '../config/db.js'
 import { authenticateToken } from '../middlewares/auth.js'
+import multer from 'multer'
+import path from 'path'
+import fs from 'fs'
 
 const router = express.Router()
 
@@ -11,14 +14,12 @@ const router = express.Router()
 router.post('/login', async (req, res) => {
   try {
     const { account, password } = req.body
-    console.log('Login attempt:', { account, password }) // 除錯用
 
     // 查詢使用者
     const [users] = await pool.query(
       'SELECT * FROM users WHERE account = ? AND valid = 1',
       [account]
     )
-    console.log('Found users:', users) // 除錯用
     
     if (users.length === 0) {
       return res.status(401).json({ message: '帳號或密碼錯誤' })
@@ -28,7 +29,6 @@ router.post('/login', async (req, res) => {
 
     // 驗證密碼
     const isValid = await bcrypt.compare(password, user.password)
-    console.log('Password validation:', isValid) // 除錯用
 
     if (!isValid) {
       return res.status(401).json({ message: '帳號或密碼錯誤' })
@@ -45,13 +45,17 @@ router.post('/login', async (req, res) => {
       { expiresIn: req.body.remember ? '7d' : '24h' }
     )
 
-    // 清除敏感資訊
+    // 清除敏感資訊並加入其他需要的資料
     const safeUser = {
       id: user.id,
       account: user.account,
       name: user.name,
       email: user.email,
-      role: user.role || 'user'
+      role: user.role || 'user',
+      avatar_url: user.avatar_url,
+      phone: user.phone,
+      birthday: user.birthday,
+      address: user.address
     }
 
     res.json({
@@ -112,15 +116,31 @@ router.post('/register', async (req, res) => {
 })
 
 // 檢查 token
-router.get('/check', authenticateToken, (req, res) => {
-  const safeUser = {
-    id: req.user.id,
-    account: req.user.account,
-    name: req.user.name,
-    email: req.user.email,
-    role: req.user.role || 'user'
+router.get('/check', authenticateToken, async (req, res) => {
+  try {
+    // 從資料庫獲取最新的使用者資料
+    const [users] = await pool.query(
+      'SELECT id, account, name, email, phone, birthday, address, avatar_url FROM users WHERE id = ?',
+      [req.user.id]
+    )
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: '使用者不存在' })
+    }
+
+    const safeUser = {
+      ...users[0],
+      role: req.user.role || 'user'
+    }
+
+    res.json({ 
+      valid: true, 
+      user: safeUser 
+    })
+  } catch (error) {
+    console.error('檢查認證錯誤:', error)
+    res.status(500).json({ message: '伺服器錯誤' })
   }
-  res.json({ valid: true, user: safeUser })
 })
 
 // 取得使用者資料
@@ -219,6 +239,80 @@ router.put('/password', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('更改密碼錯誤:', error)
     res.status(500).json({ message: '伺服器錯誤' })
+  }
+})
+
+// 設定檔案儲存
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // 設定儲存路徑
+    cb(null, 'public/avatar')
+  },
+  filename: (req, file, cb) => {
+    // 確保檔名是唯一的，並保留原始副檔名
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+// 設定檔案過濾
+const fileFilter = (req, file, cb) => {
+  // 只允許 image 類型
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true)
+  } else {
+    cb(new Error('只允許上傳圖片檔案！'), false)
+  }
+}
+
+// 設定 multer
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1024 * 1024 * 5 // 限制 5MB
+  }
+})
+
+// 上傳大頭貼
+router.post('/upload-avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: '請選擇要上傳的圖片' })
+    }
+
+    // 處理舊的大頭貼檔案
+    const [user] = await pool.query(
+      'SELECT avatar_url FROM users WHERE id = ?',
+      [req.user.id]
+    )
+
+    if (user[0].avatar_url) {
+      const oldPath = path.join('public', user[0].avatar_url)
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath)
+      }
+    }
+
+    // 設定新的大頭貼路徑 (存入資料庫的是相對路徑)
+    const avatarUrl = `/avatar/${req.file.filename}`
+
+    // 更新資料庫
+    await pool.query(
+      'UPDATE users SET avatar_url = ? WHERE id = ?',
+      [avatarUrl, req.user.id]
+    )
+
+    res.json({
+      message: '大頭貼上傳成功',
+      avatar_url: avatarUrl
+    })
+
+  } catch (error) {
+    console.error('上傳大頭貼錯誤:', error)
+    res.status(500).json({ 
+      message: error.message || '上傳大頭貼失敗'
+    })
   }
 })
 

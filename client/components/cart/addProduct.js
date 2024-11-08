@@ -5,7 +5,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import axios from 'axios';
 import style from '@/components/cart/addProduct.module.css'
 
-export default function AddCartProduct({ cartQty, productId, activeValues, memberData }) {
+export default function AddProduct({ cartQty, productId, activeValues, memberData }) {
 
     const AddCartClick = () => {
         if (cartQty > 0) {
@@ -67,7 +67,7 @@ export default function AddCartProduct({ cartQty, productId, activeValues, membe
 
     return (
         <>
-            <Col md="2"  className={`cart-btn btn ${style.cartBGc}`} onClick={AddCartClick}>
+            <Col md="auto"  className={`cart-btn w-auto btn ${style.cartBGc}`} onClick={AddCartClick}>
                 加入購物車
                 <FaShoppingCart className="mx-2" />
             </Col>
@@ -77,5 +77,5 @@ export default function AddCartProduct({ cartQty, productId, activeValues, membe
 
 
 //使用方式:
-//import AddCartProduct from '@/components/cart/addProduct';
-//<AddCartProduct/>
+// import AddProduct from '@/components/cart/addProduct';
+// <AddProduct/>

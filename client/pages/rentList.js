@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CategorySidebar from "@/components/product/category";
 import ProductCard from "@/components/product/productCard";
-import MayFavorite from "@/components/product/mayFavorite";
+import ProductCard from "@/components/product/ProductList";
 function RentList() {
     return (
         <div className="container mb-5">
@@ -19,18 +19,7 @@ function RentList() {
                 <div className="col-10">
                     <div className="row">
                         {/* 這裡可以放置商品列表或其他內容 */}
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
+                        <productList/>
                     </div>
                 </div>
             </div>

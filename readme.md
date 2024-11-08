@@ -28,7 +28,7 @@ git add .
 git commit -m "備註"
 
 5. 切換分支到dev並把Name_dev合併過去<br>
-git checkout dev
+git checkout dev<br>
 git merge --no-ff -m "備註" Name_dev
 
 6. 把更動push上github<br>
