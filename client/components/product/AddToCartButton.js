@@ -8,14 +8,14 @@ import { toast } from "react-toastify";
 
 const AddToCartButton = ({ 
   productId,
-  className, // 支援自定義樣式
-  buttonText = "加入購物車", // 可自定義按鈕文字
-  quantity = 1, // 預設數量
-  type = "sale" // 預設類型
+  className,
+  buttonText = "加入購物車",
+  quantity = 1,
+  type = "sale"
 }) => {
   const [isAdding, setIsAdding] = useState(false);
   const { isAuthenticated } = useAuth();
-  const { updateCartCount } = useCart();
+  const { addToCart } = useCart(); // 改用 addToCart 方法
   const router = useRouter();
 
   const handleAddToCart = async (e) => {
@@ -31,23 +31,10 @@ const AddToCartButton = ({
 
     setIsAdding(true);
     try {
-      const response = await fetch("http://localhost:3005/api/cart/items", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          productId,
-          quantity,
-          type,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.status === "success") {
-        updateCartCount();
+      // 使用 CartContext 提供的 addToCart 方法
+      const result = await addToCart(productId, quantity, type);
+      
+      if (result.status === "success") {
         toast.success("成功加入購物車！", {
           position: "bottom-center",
           autoClose: 1000,
@@ -59,11 +46,12 @@ const AddToCartButton = ({
           progressStyle: { backgroundColor: "#40CBCE" },
         });
       } else {
-        throw new Error(data.message || "加入購物車失敗");
+        throw new Error(result.message || "加入購物車失敗");
       }
     } catch (error) {
       console.error("加入購物車錯誤:", error);
       toast.error("加入購物車失敗，請稍後再試", {
+        position: "bottom-center",
         autoClose: 1500,
       });
     } finally {
