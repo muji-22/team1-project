@@ -1,23 +1,18 @@
 // components/product/ProductCard.js
 import React, { useState, useEffect } from "react";
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
-import { FaCartPlus } from "react-icons/fa";
+import { IoCartOutline } from "react-icons/io5";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import styles from "./productCard.module.css";
 
-const ProductCard = ({
-  id,
-  name,
-  price,
-  description,
-}) => {
+const ProductCard = ({ id, name, price, description }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { isAuthenticated } = useAuth();
   const { updateCartCount } = useCart();
   const router = useRouter();
@@ -136,21 +131,6 @@ const ProductCard = ({
     <Link href={`/product/${id}`} className="text-decoration-none">
       <div className={`card h-100 ${styles.card}`}>
         <div className="position-relative">
-          {/* 收藏按鈕 */}
-          <button
-            className={`btn btn-outline-danger border-0 position-absolute top-0 end-0 m-2 z-1 ${
-              isLoading ? "disabled" : ""
-            }`}
-            onClick={handleToggleFavorite}
-            disabled={isLoading}
-          >
-            {isFavorited ? (
-              <IoMdHeart className="fs-4" />
-            ) : (
-              <IoMdHeartEmpty className="fs-4" />
-            )}
-          </button>
-          
           {/* 商品圖片 */}
           <div className={`position-relative ${styles.imageContainer}`}>
             <img
@@ -166,16 +146,40 @@ const ProductCard = ({
 
         <div className="card-body d-flex flex-column">
           <h5 className="card-title text-dark">{name}</h5>
-          <p className="card-text text-secondary text-truncate">{description}</p>
-          
+          <p className="card-text text-secondary text-truncate">
+            {description}
+          </p>
+
           <div className="mt-auto">
-            <p className="card-text fs-5 mb-2 text-primary">
-              NT$ {price?.toLocaleString()}
-            </p>
-            
+            <div className="d-flex justify-content-between align-items-center">
+              {/* 商品價格 */}
+              <span className="card-text fs-5 m-2">
+                NT$ {price?.toLocaleString()}
+              </span>
+
+              {/* 收藏按鈕 */}
+              <div
+                className={`pe-2  ${
+                  isLoading ? "pe-none" : "pe-auto"
+                }`}
+                onClick={handleToggleFavorite}
+                role="button"
+              >
+                {isFavorited ? (
+                  <IoMdHeart
+                    className={`fs-3 text-danger ${styles.favoriteIcon}`}
+                  />
+                ) : (
+                  <IoMdHeartEmpty
+                    className={`fs-3 text-danger ${styles.favoriteIcon}`}
+                  />
+                )}
+              </div>
+            </div>
+
             {/* 加入購物車按鈕 */}
             <button
-              className={`btn btn-primary w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 ${
+              className={`btn buttonCustomC w-100  d-flex align-items-center justify-content-center gap-2 ${
                 isAdding ? "disabled" : ""
               }`}
               onClick={handleAddToCart}
@@ -184,13 +188,16 @@ const ProductCard = ({
               {isAdding ? (
                 <>
                   加入中...
-                  <div className="spinner-border spinner-border-sm" role="status">
+                  <div
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                  >
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 </>
               ) : (
                 <>
-                  加入購物車 <FaCartPlus size={20} />
+                  加入購物車 <IoCartOutline size={25} />
                 </>
               )}
             </button>
