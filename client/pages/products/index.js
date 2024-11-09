@@ -1,10 +1,11 @@
     //pages/products/index.js
     import React, { useState, useEffect } from "react";
     import CategorySidebar from "@/components/product/category";
-    import ProductCard from "@/components/product/ProductCard";
+    import ProductList from "@/components/product/ProductList";
     import { GrFilter } from "react-icons/gr";
 
-    function ProductList() {
+
+    function Products() {
         const [products, setProducts] = useState([]);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
@@ -114,14 +115,7 @@
                                 </div>
                             ) : (
                                 <div className="row">
-                                    {products.map((product) => (
-                                        <ProductCard
-                                            key={product.id}
-                                            {...product}
-                                            onAddToCart={handleAddToCart}
-                                            onAddToWishlist={handleAddToWishlist}
-                                        />
-                                    ))}
+                                    <ProductList />
                                 </div>
                             )}
                         </div>
@@ -131,4 +125,4 @@
         );
     }
 
-    export default ProductList;
+    export default Products;

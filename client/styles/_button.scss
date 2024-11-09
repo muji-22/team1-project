@@ -32,3 +32,21 @@
         border: 1px solid black;
     }
 }
+
+
+// 青底白字
+.buttonCustomC {
+    color: white;
+    background-color: #40CBCE;
+    border: 1px solid #40CBCE;
+    border-radius: 100px;
+    padding: 8px 23px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: white;
+        background-color: #36a5a5;
+        border: 1px solid #36a5a5;
+    }
+}
