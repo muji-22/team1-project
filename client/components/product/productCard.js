@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
+import { FaCheckCircle } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import styles from "./productCard.module.css";
+import { toast } from "react-toastify";
 
 const ProductCard = ({ id, name, price, description }) => {
   const [isAdding, setIsAdding] = useState(false);
@@ -77,13 +79,24 @@ const ProductCard = ({ id, name, price, description }) => {
 
       if (data.status === "success") {
         updateCartCount();
-        alert("成功加入購物車！");
+        toast.success("成功加入購物車！", {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          progress: undefined,
+          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+          progressStyle: { backgroundColor: "#40CBCE" },
+        });
       } else {
         throw new Error(data.message || "加入購物車失敗");
       }
     } catch (error) {
       console.error("加入購物車錯誤:", error);
-      alert(error.message || "加入購物車失敗");
+      toast.error("加入購物車失敗，請稍後再試", {
+        autoClose: 1500,
+      });
     } finally {
       setIsAdding(false);
     }
@@ -159,9 +172,7 @@ const ProductCard = ({ id, name, price, description }) => {
 
               {/* 收藏按鈕 */}
               <div
-                className={`pe-2  ${
-                  isLoading ? "pe-none" : "pe-auto"
-                }`}
+                className={`pe-2  ${isLoading ? "pe-none" : "pe-auto"}`}
                 onClick={handleToggleFavorite}
                 role="button"
               >
