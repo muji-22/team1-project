@@ -1,6 +1,6 @@
     //pages/products/index.js
     import React, { useState, useEffect } from "react";
-    import CategorySidebar from "@/components/product/category";
+    import ProductFilter from "@/components/product/ProductFilter";
     import ProductList from "@/components/product/ProductList";
     import { GrFilter } from "react-icons/gr";
 
@@ -98,15 +98,15 @@
                 </div>
 
                 {/* 主要內容區 */}
-                <div className="row ">
+                <div className="row">
                     {/* 左側篩選欄 */}
-                    <div className="col-2 pt-4">
-                        <CategorySidebar />
+                    <div className="col-3 pt-4 d-none d-lg-block">
+                        <ProductFilter />
                     </div>
 
                     {/* 右側內容區 */}
 
-                    <div className="col-10">
+                    <div className="col col-lg-9">
                         <div className="row">
                             {/* 這裡可以放置商品列表或其他內容 */}
                             {products.length === 0 ? (
@@ -114,9 +114,9 @@
                                     <h3>目前沒有商品</h3>
                                 </div>
                             ) : (
-                                <div className="row">
+                                
                                     <ProductList />
-                                </div>
+                                
                             )}
                         </div>
                     </div>

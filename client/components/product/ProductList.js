@@ -1,6 +1,6 @@
 // components/product/ProductList.js
 import React, { useState, useEffect } from "react";
-import ProductCard from "./productCard";
+import ProductCard from "@/components/product/ProductCard";
 import { useAuth } from "@/contexts/AuthContext";
 
 function ProductList() {
@@ -61,9 +61,12 @@ function ProductList() {
           <h3>目前沒有商品</h3>
         </div>
       ) : (
-        <div className="row">
+        <div className="row g-4"> {/* 使用 g-4 設定間距 */}
           {products.map((product) => (
-            <div key={product.id} className="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div 
+              key={product.id} 
+              className="col-6 col-lg-3" // col-6 在手機是2欄，col-lg-3 在PC是4欄
+            >
               <ProductCard {...product} />
             </div>
           ))}
