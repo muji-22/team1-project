@@ -1,0 +1,31 @@
+/* styles/ScrollToTop.module.css */
+
+.scrollButton {
+  background-color: #40CBCE;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.scrollButton:hover {
+  background-color: #40CBCE;
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+/* 增加動畫效果 */
+.fadeIn {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+}
