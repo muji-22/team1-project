@@ -1,19 +1,43 @@
-import React from 'react';
+// components/product/FavoriteButton.js
+import React, { useState, useEffect } from 'react';
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
+import { toast } from "react-toastify";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import styles from "./productCard.module.css";
 
-const FavoriteButton = ({ 
-  productId, 
-  isFavorited, 
-  setIsFavorited, 
-  isLoading, 
-  setIsLoading,
-  className // 新增className prop以支援自定義樣式
-}) => {
+
+const FavoriteButton = ({ productId, className }) => {
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+
+  // 檢查收藏狀態
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!isAuthenticated()) return;
+      
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/favorites/check/${productId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setIsFavorited(data.data.isFavorited);
+        }
+      } catch (error) {
+        console.error("檢查收藏狀態失敗:", error);
+      }
+    };
+
+    checkFavoriteStatus();
+  }, [productId, isAuthenticated]);
 
   const handleToggleFavorite = async (e) => {
     e.preventDefault();
@@ -45,8 +69,10 @@ const FavoriteButton = ({
         throw new Error("操作失敗");
       }
     } catch (error) {
-      console.error("切換收藏狀態失敗:", error);
-      alert("操作失敗，請稍後再試");
+      toast.error("加入收藏失敗，請稍後再試", {
+        position: "bottom-center",
+        autoClose: 1500,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +80,7 @@ const FavoriteButton = ({
 
   return (
     <div
-      className={`${className} ${isLoading ? "pe-none" : "pe-auto"}`}
+      className={`${className} ${isLoading ? "pe-none opacity-50" : "pe-auto"}`}
       onClick={handleToggleFavorite}
       role="button"
     >
