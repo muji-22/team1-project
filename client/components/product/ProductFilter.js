@@ -1,5 +1,6 @@
+// components/product/ProductFilter.js
 import React, { useState, useEffect } from "react";
-import ProductFilterMobile from "./ProductFilterMobile";
+import { GrFilter } from "react-icons/gr";
 
 const ProductFilter = ({ onSelectTags = () => {} }) => {
     const [gametypesTags, setGametypesTags] = useState(new Set());
@@ -71,7 +72,7 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
     };
 
     const handleSearch = (e) => {
-        e.preventDefault();
+        e?.preventDefault();
         const filters = {
             search: searchQuery,
             gametypes: Array.from(gametypesTags),
@@ -83,6 +84,7 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
         onSelectTags(filters);
     };
 
+    // 篩選條件改變時自動更新
     useEffect(() => {
         const filters = {
             gametypes: Array.from(gametypesTags),
@@ -102,70 +104,61 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
         searchQuery,
     ]);
 
-    const filterProps = {
-        searchQuery,
-        setSearchQuery,
-        handleSearch,
-        tags,
-        gametypesTags,
-        handleTagsChange,
-        playersOptions,
-        selectedPlayers,
-        setSelectedPlayers,
-        playtimeOptions,
-        selectedPlaytime,
-        setSelectedPlaytime,
-        ageOptions,
-        selectedAge,
-        setSelectedAge,
-        priceRange,
-        handlePriceChange,
-        handleSingleSelect
-    };
-
-    return (
+    // 篩選器內容
+    const FilterContent = ({ isMobile = false }) => (
         <>
-            {/* 桌面版側邊欄 (lg以上顯示) */}
-            <div className="d-none d-lg-block" style={{ top: '2rem' }}>
-                {/* 搜尋欄 */}
-                <div className="mb-3">
-                    <form onSubmit={handleSearch}>
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="請輸入商品名稱..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            <button className="btn btn-primary" type="submit">
-                                搜尋
-                            </button>
-                        </div>
-                    </form>
-                </div>
+            {/* 搜尋欄 */}
+            <div className="mb-3">
+                <form onSubmit={handleSearch}>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="請輸入商品名稱..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button className="btn btn-primary" type="submit">
+                            搜尋
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-                <div className="accordion" id="filterAccordionDesktop">
-                    {/* 遊戲類型 */}
-                    <div className="accordion-item">
-                        <h3 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseGameTypesDesktop"
-                            >
-                                遊戲類型
-                            </button>
-                        </h3>
-                        <div
-                            id="collapseGameTypesDesktop"
-                            className="accordion-collapse collapse show"
+            <div className="accordion" id="filterAccordion">
+                {/* 遊戲類型 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseGameTypes"
                         >
-                            <div className="accordion-body">
-                                <ul className="list-unstyled mb-0">
-                                    {tags.map((tag) => (
-                                        <li key={tag.id} className="mb-2">
+                            遊戲類型 {gametypesTags.size > 0 && `(${gametypesTags.size})`}
+                        </button>
+                    </h3>
+                    <div
+                        id="collapseGameTypes"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <div className={`${isMobile ? 'd-flex flex-wrap gap-2' : ''}`}>
+                                {tags.map((tag) => (
+                                    isMobile ? (
+                                        <button
+                                            key={tag.id}
+                                            onClick={() => handleTagsChange(tag.id)}
+                                            className={`btn ${
+                                                gametypesTags.has(tag.id)
+                                                    ? "btn-primary"
+                                                    : "btn-outline-primary"
+                                            }`}
+                                        >
+                                            {tag.name}
+                                        </button>
+                                    ) : (
+                                        <div key={tag.id} className="mb-2">
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="checkbox"
@@ -175,150 +168,236 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
                                                 />
                                                 <span>{tag.name}</span>
                                             </label>
-                                        </li>
-                                    ))}
-                                </ul>
+                                        </div>
+                                    )
+                                ))}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* 人數 */}
-                    <div className="accordion-item">
-                        <h3 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapsePlayersDesktop"
-                            >
-                                人數
-                            </button>
-                        </h3>
-                        <div
-                            id="collapsePlayersDesktop"
-                            className="accordion-collapse collapse show"
+                {/* 人數 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapsePlayers"
                         >
-                            <div className="accordion-body">
-                                <ul className="list-unstyled mb-0">
-                                    {playersOptions.map((option) => (
-                                        <li key={option.id} className="mb-2">
+                            人數 {selectedPlayers && "(1)"}
+                        </button>
+                    </h3>
+                    <div
+                        id="collapsePlayers"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <div className={`${isMobile ? 'd-flex flex-wrap gap-2' : ''}`}>
+                                {playersOptions.map((option) => (
+                                    isMobile ? (
+                                        <button
+                                            key={option.id}
+                                            onClick={() => handleSingleSelect(option.id, setSelectedPlayers)}
+                                            className={`btn ${
+                                                selectedPlayers === option.id
+                                                    ? "btn-primary"
+                                                    : "btn-outline-primary"
+                                            }`}
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ) : (
+                                        <div key={option.id} className="mb-2">
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="radio"
                                                     checked={selectedPlayers === option.id}
                                                     onChange={() => handleSingleSelect(option.id, setSelectedPlayers)}
-                                                    name="playersDesktop"
+                                                    name="players"
                                                     className="me-2"
                                                 />
                                                 <span>{option.label}</span>
                                             </label>
-                                        </li>
-                                    ))}
-                                </ul>
+                                        </div>
+                                    )
+                                ))}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* 遊玩時間 */}
-                    <div className="accordion-item">
-                        <h3 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapsePlaytimeDesktop"
-                            >
-                                遊玩時間
-                            </button>
-                        </h3>
-                        <div
-                            id="collapsePlaytimeDesktop"
-                            className="accordion-collapse collapse show"
+                {/* 遊玩時間 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapsePlaytime"
                         >
-                            <div className="accordion-body">
-                                <ul className="list-unstyled mb-0">
-                                    {playtimeOptions.map((option) => (
-                                        <li key={option.id} className="mb-2">
+                            遊玩時間 {selectedPlaytime && "(1)"}
+                        </button>
+                    </h3>
+                    <div
+                        id="collapsePlaytime"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <div className={`${isMobile ? 'd-flex flex-wrap gap-2' : ''}`}>
+                                {playtimeOptions.map((option) => (
+                                    isMobile ? (
+                                        <button
+                                            key={option.id}
+                                            onClick={() => handleSingleSelect(option.id, setSelectedPlaytime)}
+                                            className={`btn ${
+                                                selectedPlaytime === option.id
+                                                    ? "btn-primary"
+                                                    : "btn-outline-primary"
+                                            }`}
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ) : (
+                                        <div key={option.id} className="mb-2">
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="radio"
                                                     checked={selectedPlaytime === option.id}
                                                     onChange={() => handleSingleSelect(option.id, setSelectedPlaytime)}
-                                                    name="playtimeDesktop"
+                                                    name="playtime"
                                                     className="me-2"
                                                 />
                                                 <span>{option.label}</span>
                                             </label>
-                                        </li>
-                                    ))}
-                                </ul>
+                                        </div>
+                                    )
+                                ))}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* 適合年齡 */}
-                    <div className="accordion-item">
-                        <h3 className="accordion-header">
-                            <button
-                                className="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseAgeDesktop"
-                            >
-                                適合年齡
-                            </button>
-                        </h3>
-                        <div
-                            id="collapseAgeDesktop"
-                            className="accordion-collapse collapse show"
+                {/* 適合年齡 */}
+                <div className="accordion-item">
+                    <h3 className="accordion-header">
+                        <button
+                            className="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseAge"
                         >
-                            <div className="accordion-body">
-                                <ul className="list-unstyled mb-0">
-                                    {ageOptions.map((option) => (
-                                        <li key={option.id} className="mb-2">
+                            適合年齡 {selectedAge && "(1)"}
+                        </button>
+                    </h3>
+                    <div
+                        id="collapseAge"
+                        className="accordion-collapse collapse show"
+                    >
+                        <div className="accordion-body">
+                            <div className={`${isMobile ? 'd-flex flex-wrap gap-2' : ''}`}>
+                                {ageOptions.map((option) => (
+                                    isMobile ? (
+                                        <button
+                                            key={option.id}
+                                            onClick={() => handleSingleSelect(option.id, setSelectedAge)}
+                                            className={`btn ${
+                                                selectedAge === option.id
+                                                    ? "btn-primary"
+                                                    : "btn-outline-primary"
+                                            }`}
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ) : (
+                                        <div key={option.id} className="mb-2">
                                             <label className="d-flex align-items-center">
                                                 <input
                                                     type="radio"
                                                     checked={selectedAge === option.id}
                                                     onChange={() => handleSingleSelect(option.id, setSelectedAge)}
-                                                    name="ageDesktop"
+                                                    name="age"
                                                     className="me-2"
                                                 />
                                                 <span>{option.label}</span>
                                             </label>
-                                        </li>
-                                    ))}
-                                </ul>
+                                        </div>
+                                    )
+                                ))}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* 價格範圍 */}
-                    <div className="mt-3">
-                        <h4 className="mb-2">價格範圍</h4>
-                        <div className="d-flex align-items-center gap-2">
-                            <input
-                                type="number"
-                                value={priceRange.min}
-                                onChange={(e) => handlePriceChange("min", e.target.value)}
-                                placeholder="最低價格"
-                                className="form-control"
-                            />
-                            <span>-</span>
-                            <input
-                                type="number"
-                                value={priceRange.max}
-                                onChange={(e) => handlePriceChange("max", e.target.value)}
-                                placeholder="最高價格"
-                                className="form-control"
-                            />
-                        </div>
+                {/* 價格範圍 */}
+                <div className="mt-3">
+                    <h4 className="mb-2">價格範圍 {(priceRange.min || priceRange.max) && "(1)"}</h4>
+                    <div className="d-flex align-items-center gap-2">
+                        <input
+                            type="number"
+                            value={priceRange.min}
+                            onChange={(e) => handlePriceChange("min", e.target.value)}
+                            placeholder="最低價格"
+                            className="form-control"
+                        />
+                        <span>-</span>
+                        <input
+                            type="number"
+                            value={priceRange.max}
+                            onChange={(e) => handlePriceChange("max", e.target.value)}
+                            placeholder="最高價格"
+                            className="form-control"
+                        />
                     </div>
                 </div>
             </div>
+        </>
+    );
 
-            {/* 手機版側邊欄 */}
-            <ProductFilterMobile {...filterProps} />
+    return (
+        <>
+            {/* 桌面版側邊欄 */}
+            <div className="d-none d-lg-block" style={{ top: '2rem' }}>
+                <FilterContent />
+            </div>
+
+            {/* 手機版 Offcanvas */}
+            <div className="d-lg-none">
+                <div
+                    className="offcanvas offcanvas-end"
+                    tabIndex="-1"
+                    id="filterOffcanvas"
+                    aria-labelledby="filterOffcanvasLabel"
+                    style={{ width: '80%' }}
+                >
+                    <div className="offcanvas-header border-bottom">
+                        <h5 className="offcanvas-title" id="filterOffcanvasLabel">
+                            <GrFilter className="me-2" />
+                            商品過濾
+                        </h5>
+                        <button
+                            type="button"
+                            className="btn-close"
+                            data-bs-dismiss="offcanvas"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+
+                    <div className="offcanvas-body">
+                        <FilterContent isMobile={true} />
+                    </div>
+
+                    <div className="offcanvas-footer border-top p-3">
+                        <button 
+                            className="btn btn-primary w-100"
+                            data-bs-dismiss="offcanvas"
+                            onClick={handleSearch}
+                        >
+                            套用篩選
+                        </button>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };
