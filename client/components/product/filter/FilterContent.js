@@ -1,123 +1,29 @@
-// components/product/ProductFilter.js
-import React, { useState, useEffect } from "react";
-import { GrFilter } from "react-icons/gr";
+// components/product/filter/FilterContent.js
+import React from "react";
 
-const ProductFilter = ({ onSelectTags = () => {} }) => {
-  const [gametypesTags, setGametypesTags] = useState(new Set());
-  const [selectedPlayers, setSelectedPlayers] = useState(null);
-  const [selectedPlaytime, setSelectedPlaytime] = useState(null);
-  const [selectedAge, setSelectedAge] = useState(null);
-  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // 選項數據
-  const tags = [
-    { id: 1, name: "大腦" },
-    { id: 2, name: "派對" },
-    { id: 3, name: "樂齡" },
-    { id: 4, name: "幼兒" },
-    { id: 5, name: "紙牌" },
-    { id: 6, name: "猜心" },
-    { id: 7, name: "輕策略" },
-    { id: 8, name: "競速" },
-    { id: 9, name: "台灣作家" },
-    { id: 10, name: "骰子" },
-    { id: 11, name: "巧手" },
-    { id: 12, name: "合作" },
-    { id: 13, name: "言語" },
-    { id: 14, name: "陣營" },
-    { id: 15, name: "中策略" },
-    { id: 16, name: "重策略" },
-  ];
-
-  const playersOptions = [
-    { id: 1, label: "1-2人" },
-    { id: 2, label: "3-5人" },
-    { id: 3, label: "6人以上" },
-  ];
-
-  const playtimeOptions = [
-    { id: 1, label: "30分鐘以下" },
-    { id: 2, label: "30-60分鐘" },
-    { id: 3, label: "60分鐘以上" },
-  ];
-
-  const ageOptions = [
-    { id: 1, label: "0-6歲" },
-    { id: 2, label: "6+" },
-    { id: 3, label: "12+" },
-    { id: 4, label: "18+" },
-  ];
-
-  // 處理函數
-  const handleTagsChange = (tagId) => {
-    const newTags = new Set(gametypesTags);
-    if (newTags.has(tagId)) {
-      newTags.delete(tagId);
-    } else {
-      newTags.add(tagId);
-    }
-    setGametypesTags(newTags);
-  };
-
-  const handleSingleSelect = (id, setter) => {
-    setter((prevId) => (prevId === id ? null : id));
-  };
-
-  const handlePriceChange = (type, value) => {
-    setPriceRange((prev) => ({
-      ...prev,
-      [type]: value,
-    }));
-  };
-
-  // 清除所有篩選
-  const handleClearFilters = () => {
-    setGametypesTags(new Set());
-    setSelectedPlayers(null);
-    setSelectedPlaytime(null);
-    setSelectedAge(null);
-    setPriceRange({ min: "", max: "" });
-    setSearchQuery("");
-
-    // 更新父組件
-    onSelectTags({
-      search: "",
-      gametypes: [],
-      players: null,
-      playtime: null,
-      age: null,
-      price: { min: "", max: "" },
-    });
-  };
-
-  // 套用篩選
-  const handleApplyFilters = () => {
-    const filters = {
-      search: searchQuery,
-      gametypes: Array.from(gametypesTags),
-      players: selectedPlayers,
-      playtime: selectedPlaytime,
-      age: selectedAge,
-      price: priceRange,
-    };
-    onSelectTags(filters);
-  };
-
-  // 篩選條件改變時自動更新
-  useEffect(() => {
-    handleApplyFilters();
-  }, [
-    gametypesTags,
-    selectedPlayers,
-    selectedPlaytime,
-    selectedAge,
-    priceRange,
-    searchQuery,
-  ]);
-
-  // 篩選器內容
-  const FilterContent = ({ isMobile = false }) => (
+const FilterContent = ({
+  isMobile = false,
+  gametypesTags,
+  handleTagsChange,
+  selectedPlayers,
+  setSelectedPlayers,
+  selectedPlaytime,
+  setSelectedPlaytime,
+  selectedAge,
+  setSelectedAge,
+  priceRange,
+  handlePriceChange,
+  searchQuery,
+  setSearchQuery,
+  handleApplyFilters,
+  handleClearFilters,
+  handleSingleSelect,
+  tags,
+  playersOptions,
+  playtimeOptions,
+  ageOptions,
+}) => {
+  return (
     <>
       {/* 搜尋欄 */}
       <div className="mb-3">
@@ -135,7 +41,7 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
         </div>
       </div>
 
-      <div className="accordion" id="filterAccordion">
+      <div className="accordion" id="filterAccordion" data-bs-parent="">
         {/* 遊戲類型 */}
         <div className="accordion-item">
           <h3 className="accordion-header">
@@ -198,10 +104,7 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
               人數 {selectedPlayers && "(1)"}
             </button>
           </h3>
-          <div
-            id="collapsePlayers"
-            className="accordion-collapse collapse show"
-          >
+          <div id="collapsePlayers" className="accordion-collapse collapse show">
             <div className="accordion-body">
               <div className={`${isMobile ? "d-flex flex-wrap gap-2" : ""}`}>
                 {playersOptions.map((option) =>
@@ -253,10 +156,7 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
               遊玩時間 {selectedPlaytime && "(1)"}
             </button>
           </h3>
-          <div
-            id="collapsePlaytime"
-            className="accordion-collapse collapse show"
-          >
+          <div id="collapsePlaytime" className="accordion-collapse collapse show">
             <div className="accordion-body">
               <div className={`${isMobile ? "d-flex flex-wrap gap-2" : ""}`}>
                 {playtimeOptions.map((option) =>
@@ -315,9 +215,7 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
                   isMobile ? (
                     <button
                       key={option.id}
-                      onClick={() =>
-                        handleSingleSelect(option.id, setSelectedAge)
-                      }
+                      onClick={() => handleSingleSelect(option.id, setSelectedAge)}
                       className={`btn ${
                         selectedAge === option.id
                           ? "btn-primary"
@@ -371,65 +269,26 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
             />
           </div>
         </div>
-      </div>
-    </>
-  );
 
-  return (
-    <>
-      {/* 桌面版側邊欄 */}
-      <div className="d-none d-lg-block" style={{ top: "2rem" }}>
-        <FilterContent />
-      </div>
-
-      {/* 手機版 Offcanvas */}
-      <div className="d-lg-none">
-        <div
-          className="offcanvas offcanvas-bottom"
-          tabIndex="-1"
-          id="filterOffcanvasBottom"
-          aria-labelledby="filterOffcanvasBottomLabel"
-          data-bs-backdrop="true"
-          style={{ height: "85vh", visibility: "visible" }}
-        >
-          <div className="offcanvas-header border-bottom">
-            <h5 className="offcanvas-title" id="filterOffcanvasBottomLabel">
-              <GrFilter className="me-2" />
-              商品篩選
-            </h5>
+        {!isMobile && (
+          <div className="mt-4 d-flex gap-2">
             <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
+              className="btn btn-outline-secondary flex-grow-1"
+              onClick={handleClearFilters}
+            >
+              清除全部
+            </button>
+            <button
+              className="btn btn-primary flex-grow-1"
+              onClick={handleApplyFilters}
+            >
+              套用篩選
+            </button>
           </div>
-
-          <div className="offcanvas-body overflow-y-auto py-0">
-            <FilterContent isMobile={true} />
-          </div>
-
-          <div className="offcanvas-footer border-top p-3 sticky-bottom bg-white">
-            <div className="d-flex gap-2">
-              <button
-                className="btn btn-outline-secondary flex-grow-1"
-                onClick={handleClearFilters}
-              >
-                清除全部
-              </button>
-              <button
-                className="btn btn-primary flex-grow-1"
-                data-bs-dismiss="offcanvas"
-                onClick={handleApplyFilters}
-              >
-                套用篩選
-              </button>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </>
   );
 };
 
-export default ProductFilter;
+export default FilterContent;

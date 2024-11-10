@@ -1,6 +1,6 @@
 //pages/products/index.js
 import React, { useState, useEffect } from "react";
-import ProductFilter from "@/components/product/ProductFilter";
+import ProductFilter from "@/components/product/filter";
 import ProductList from "@/components/product/ProductList";
 import { GrFilter } from "react-icons/gr";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -148,34 +148,6 @@ function Products() {
             <GrFilter />
             <span>所有篩選</span>
           </button>
-
-          {/* 快速篩選按鈕 */}
-          <div className="d-flex gap-2">
-            <button
-              className="btn btn-outline-primary"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#filterOffcanvasBottom"
-              aria-controls="filterOffcanvasBottom"
-            >
-              價格
-            </button>
-            <button
-              className="btn btn-outline-primary"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#filterOffcanvasBottom"
-              aria-controls="filterOffcanvasBottom"
-            >
-              人數
-            </button>
-            <button
-              className="btn btn-outline-primary"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#filterOffcanvasBottom"
-              aria-controls="filterOffcanvasBottom"
-            >
-              年齡
-            </button>
-          </div>
         </div>
 
         {/* 已選擇的篩選標籤 */}
@@ -201,27 +173,15 @@ function Products() {
 
       {/* 主要內容區 */}
       <div className="row">
-        {/* 左側篩選欄 - 桌機版 */}
-        <div className="col-3 pt-4 d-none d-lg-block">
+        {/* 左側-篩選欄 */}
+        <div className="col-3 pt-4">
           <ProductFilter onSelectTags={handleFilterChange} />
         </div>
 
-        {/* 右側內容區 */}
+        {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
           <ProductList filters={filters} />
         </div>
-      </div>
-
-      <div
-        className="offcanvas offcanvas-bottom"
-        tabIndex="-1"
-        id="filterOffcanvasBottom"
-        aria-labelledby="filterOffcanvasBottomLabel"
-        style={{ 
-          height: "85vh",
-          zIndex: 1050
-        }}
-      >
       </div>
     </div>
   );

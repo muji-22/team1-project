@@ -10,6 +10,4 @@
 
 5. quantityAdjuster 數量組件
 
-6. ProductFilter 側邊篩選，category 複製修改
-
-7. ProductFilterMobile 側邊篩選(手機)，categoryMobile 複製修改
+6. filter資料夾下放所有篩選相關組件
