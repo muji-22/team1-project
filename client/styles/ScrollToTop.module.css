@@ -1,11 +1,20 @@
-/* styles/ScrollToTop.module.css */
-
 .scrollButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
   background-color: #40CBCE;
   border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   opacity: 0.6;
+  cursor: pointer;
+  z-index: 1000;
 }
 
 .scrollButton:hover {
@@ -14,7 +23,11 @@
   opacity: 1;
 }
 
-/* 增加動畫效果 */
+.scrollButton svg {
+  color: white;
+  font-size: 20px;
+}
+
 .fadeIn {
   animation: fadeIn 0.3s ease-in;
 }

@@ -10,6 +10,7 @@ import ProductDetailMainNotice2 from "@/components/product/productDetailMainNoti
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 import MayFavorite from "@/components/product/mayFavorite";
 import AddProduct from "@/components/cart/addProduct";
+import Breadcrumb from "@/components/Breadcrumb";
 
 function ProductDetail() {
   const router = useRouter();
@@ -89,19 +90,16 @@ function ProductDetail() {
   if (!product) return null;
 
   return (
-    <div className="container mt-5">
-      {/* 麵包屑 */}
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <a href="/">首頁</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href="/products">商品購買列表</a>
-          </li>
-          <li className="breadcrumb-item active">{product.name}</li>
-        </ol>
-      </nav>
+    <div className="container mt-3">
+      {/* 麵包屑 */}            
+      <Breadcrumb
+        items={[
+          { label: "首頁", href: "/" },
+          { label: "商品列表", href: "/products" },
+          { label: `${product.name}`, active: true },
+        ]}
+      />
+
 
       {/* 內容區 */}
       <div className={`row mainContain ${style.mainContain}`}>
