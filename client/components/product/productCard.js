@@ -6,8 +6,6 @@ import FavoriteButton from "./FavoriteButton";
 import AddToCartButton from "./AddToCartButton";
 
 const ProductCard = ({ id, name, price, description, className }) => {
-  // 圖片路徑
-  const imageUrl = `/productImages/${id}/${id}-1.jpg`;
 
   return (
     <Link href={`/product/${id}`} className="text-decoration-none">
@@ -16,11 +14,11 @@ const ProductCard = ({ id, name, price, description, className }) => {
           {/* 商品圖片 */}
           <div className={`position-relative ${styles.imageContainer}`}>
             <img
-              src={imageUrl}
+              src={`http://localhost:3005/productImages/${id}/${id}-1.jpg`}
               className={`card-img-top ${styles.productImage}`}
               alt={name}
               onError={(e) => {
-                e.target.src = "/productImages/default-product.png";
+                e.target.src = "http://localhost:3005/productImages/default-product.png";
               }}
             />
           </div>

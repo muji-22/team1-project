@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import styles from "./productCard.module.css";
 
-
 const FavoriteButton = ({ productId, className }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +37,21 @@ const FavoriteButton = ({ productId, className }) => {
 
     checkFavoriteStatus();
   }, [productId, isAuthenticated]);
+
+  // 新增：監聽收藏移除事件
+  useEffect(() => {
+    const handleFavoriteRemove = (e) => {
+      if(e.detail.productId === productId) {
+        setIsFavorited(false);
+      }
+    };
+
+    window.addEventListener('favoriteRemoved', handleFavoriteRemove);
+    
+    return () => {
+      window.removeEventListener('favoriteRemoved', handleFavoriteRemove);
+    };
+  }, [productId]);
 
   const handleToggleFavorite = async (e) => {
     e.preventDefault();
