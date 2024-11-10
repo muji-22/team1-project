@@ -11,3 +11,5 @@
 5. quantityAdjuster 數量組件
 
 6. filter資料夾下放所有篩選相關組件
+
+7. Pagination 分頁導覽列組件
