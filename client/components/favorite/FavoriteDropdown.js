@@ -1,3 +1,4 @@
+// components/favorite/FavoriteDropdown.js
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
@@ -72,6 +73,12 @@ function FavoriteDropdown() {
 
       if (response.ok) {
         setFavorites(favorites.filter(item => item.product_id !== productId));
+        // 發送自定義事件，通知其他組件更新
+        window.dispatchEvent(
+          new CustomEvent('favoriteRemoved', { 
+            detail: { productId } 
+          })
+        );
       }
     } catch (error) {
       console.error('移除收藏失敗:', error);
