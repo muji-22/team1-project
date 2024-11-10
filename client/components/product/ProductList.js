@@ -1,6 +1,6 @@
 // components/product/ProductList.js
 import React, { useState, useEffect } from "react";
-import ProductCard from "@/components/product/ProductCard";
+import ProductCard from "@/components/product/productCard";
 import { useAuth } from "@/contexts/AuthContext";
 
 function ProductList() {

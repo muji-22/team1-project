@@ -113,7 +113,6 @@ export default function CartPage() {
       </div>
 
       <Container>
-        <h4 className="text-center mb-4">你可能會喜歡</h4>
         <Row className="d-flex justify-content-center align-items-center">
           <MayFavorite />
         </Row>
