@@ -6,10 +6,13 @@ import axios, { all } from "axios";
 import style from "@/components/cart/step.module.css";
 import CartItemList from "@/components/cart/list.js"; // 引入新的商品列表元件
 import CartRentItemList from "@/components/cart/rentlist.js";
+import Link from "next/link";
+
 
 //icon區
 import { FaTrashCan } from "react-icons/fa6";
 import { GiReturnArrow } from "react-icons/gi";
+import { RiCoupon2Fill } from "react-icons/ri";
 
 export default function StepOne({
   setstepType,
@@ -280,17 +283,20 @@ export default function StepOne({
   };
 
   const sendProductDetails = () => {
-    const regularProducts = cart.items.filter(
-      (item) => item.type === "regular"
-    );
-    const rentProducts = cart.items.filter((item) => item.type === "rent");
 
-    setProductDtl(regularProducts); // 傳遞一般商品
-    setRentProductDtl(rentProducts); // 傳遞租借商品
   };
 
   return (
-    <Container className="container">
+    <Container className="container py-5">
+      {cart.items.length === 0 ? (
+        <div className="text-center">
+          <h3 className="pb-2">購物車是空的</h3>
+          <Link href="/products" className={`btn ${style.keepshoping}`}>
+            繼續購物
+          </Link>
+        </div>
+      ) : (
+        <>
       {/*-----------商品區---------- */}
       <div className={style.listTitle}>
         <Col xs={10}>商品</Col>
@@ -356,9 +362,126 @@ export default function StepOne({
         />
       </div>
       <div>小計</div>
-      <div className={style.productList}>
+
+
+      {/* ---------結帳區---------- */}
+      <div className={style.totalSection}>
+
+        {/* 優惠券輸入 */}
+
         <Col className={style.deleteSection}>
           <div className="d-flex flex-column">
+          <div className=" py-3">
+            <h4>選擇您的優惠券</h4>
+
+            {/* 優惠券輸入區 */}
+            <div className="mb-3">
+              {!appliedCoupon ? (
+                <div>
+                  <div className="dropdown ">
+                    {/* 觸發按鈕 */}
+                    <button
+                      className={`btn ${style.Couponbtn} btn-outline-secondary d-flex justify-content-center align-items-center `}
+                      type="button"
+                      onClick={() =>
+                        setShowCouponSelector(!showCouponSelector)
+                      }
+                    >
+                      <RiCoupon2Fill />
+                      <span>選擇優惠券</span>
+                      <i className="bi bi-chevron-down"></i>
+                    </button>
+
+                    {/* 下拉選單內容 */}
+                    {showCouponSelector && (
+                      <div
+                        className="dropdown-menu show w-100 p-3 shadow-lg"
+                        style={{ maxHeight: "400px", overflowY: "auto" }}
+                      >
+                        {/* 搜尋框 */}
+                        <div className="mb-3 sticky-top bg-white pt-1">
+                          <div className="input-group input-group-sm">
+                            <span className="input-group-text">
+                              <i className="bi bi-search"></i>
+                            </span>
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="搜尋優惠券..."
+                              value={searchTerm}
+                              onChange={(e) =>
+                                setSearchTerm(e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
+
+                        {/* 優惠券列表 */}
+                        {filteredCoupons.length > 0 ? (
+                          filteredCoupons.map((coupon) => (
+                            <div
+                              key={coupon.id}
+                              className="coupon-item card mb-2 cursor-pointer"
+                              onClick={() => handleSelectCoupon(coupon)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <div className="row g-0">
+                                <div className="col-3 bg-primary d-flex align-items-center justify-content-center p-2">
+                                  <i className="bi bi-ticket-perforated text-white fs-4"></i>
+                                </div>
+                                <div className="col-9 bg-white text-dark">
+                                  <div className="card-body p-2">
+                                    <h6 className="card-title mb-1 fw-bold text-truncate">
+                                      {coupon.name}
+                                    </h6>
+                                    <p className="card-text mb-1 text-danger fw-bold">
+                                      {coupon.type === "percentage"
+                                        ? `${coupon.discount}% OFF`
+                                        : `$${coupon.discount} OFF`}
+                                    </p>
+                                    <small className="text-muted">
+                                      到期日：
+                                      {new Date(
+                                        coupon.end_date
+                                      ).toLocaleDateString()}
+                                    </small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-center text-muted py-3">
+                            沒有符合條件的優惠券
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="d-flex justify-content-between align-items-center bg-success bg-opacity-10 p-2 rounded">
+                  <div>
+                    <div className="fw-bold">{appliedCoupon.name}</div>
+                    <small className="text-danger">
+                      {appliedCoupon.type === "percentage"
+                        ? `${appliedCoupon.discount}% OFF`
+                        : `$${appliedCoupon.discount} OFF`}
+                    </small>
+                  </div>
+                  <button
+                    className="btn btn-link btn-sm text-danger p-0 phoneDnone"
+                    onClick={removeCoupon}
+                  >
+                    移除
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 金額計算 */}
+            
+          </div>
             <button
               className={`${style.backBtn} my-2 `}
               onClick={() => deleteAllItems()}
@@ -375,41 +498,39 @@ export default function StepOne({
               <GiReturnArrow />
             </button>
           </div>
-
-          <div className={style.couponSection}>
-            <span>優惠券匯入區</span>
-          </div>
         </Col>
-      </div>
+        
 
-      {/* ---------結帳區---------- */}
-      <div className={style.totalSection}>
-        <label></label>
+
         <div className={style.total}>
+
           <div>購買商品金額$</div>
           <div>租借商品金額$</div>
-          <div>
-            {`總金額(共 ${calculateTotalItems()} 件)`}${calculateSubTotal()}
-            {/* <span>${`${discountPrice + cart.rentproductTotal}`}</span> */}
-          </div>
           <div className="discount">
-            {`優惠券折抵 $`}
+            {`優惠券折抵 ${(calculateSubTotal() - calculateTotal()).toFixed(2)}`}
             {/* {`${discountAmount}`} */}
           </div>
-          <span className="">
+          <div>
             <span>
-              {`確認訂單金額 `} ${calculateTotal()}
+              {`總金額(共 ${calculateTotalItems()} 件)`}${calculateTotal()}
+              {/* <span>${`${discountPrice + cart.rentproductTotal}`}</span> */}
             </span>
+          </div>
+
+          <span className="">
+
             <button
               className={style.nextStepBtn}
               onClick={sendData}
               disabled={cart.totalItems === 0}
             >
-              下一步
+              前往結帳
             </button>
           </span>
         </div>
       </div>
+      </>
+      )}
     </Container>
   );
 }

@@ -1,6 +1,6 @@
 // components/product/mayFavorite.js
 import React, { useState, useEffect } from "react";
-import ProductCard from "@/components/product/ProductCard";
+import ProductCard from "@/components/product/productCard";
 
 const MayFavorite = ({ currentProduct }) => {
   const [recommendProducts, setRecommendProducts] = useState([]);
