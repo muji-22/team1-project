@@ -9,12 +9,17 @@ router.get('/test', (req, res) => {
   res.json({ message: 'products router 運作正常' })
 })
 
-// 取得所有商品(含篩選)
+// 取得所有商品(含篩選和分頁)
 router.get('/', async (req, res) => {
   try {
-    // 1. 建立基礎 SQL 查詢
+    // 0. 取得分頁參數
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 12
+    const offset = (page - 1) * limit
+
+    // 1. 建立基礎 SQL 查詢 (加入 SQL_CALC_FOUND_ROWS 來計算總筆數)
     let sql = `
-      SELECT p.*, GROUP_CONCAT(t.name) as tags
+      SELECT SQL_CALC_FOUND_ROWS p.*, GROUP_CONCAT(t.name) as tags
       FROM product p
       LEFT JOIN product_tags pt ON p.id = pt.product_id
       LEFT JOIN tags t ON pt.tag_id = t.id
@@ -99,23 +104,41 @@ router.get('/', async (req, res) => {
       values.push(parseFloat(req.query.price_max))
     }
 
-    // 3. 添加分組和排序
-    sql += ` GROUP BY p.id ORDER BY p.id DESC`
+    // 3. 添加分組、排序和分頁
+    sql += ` GROUP BY p.id ORDER BY p.id DESC LIMIT ? OFFSET ?`
+    values.push(limit, offset)
 
-    // 4. 執行查詢
+    // 4. 執行主要查詢
     const [rows] = await pool.query(sql, values)
     
-    // 5. 處理標籤字串轉陣列
+    // 5. 獲取總記錄數
+    const [totalRows] = await pool.query('SELECT FOUND_ROWS() as total')
+    const total = totalRows[0].total
+
+    // 6. 處理標籤字串轉陣列
     const products = rows.map(product => ({
       ...product,
       tags: product.tags ? product.tags.split(',') : []
     }))
 
-    res.json(products)
+    // 7. 回傳結果，包含分頁資訊
+    res.json({
+      status: 'success',
+      data: {
+        products,
+        pagination: {
+          current_page: page,
+          total_pages: Math.ceil(total / limit),
+          total_items: total,
+          items_per_page: limit
+        }
+      }
+    })
 
   } catch (error) {
     console.error('Error:', error)
     res.status(500).json({ 
+      status: 'error',
       message: '伺服器錯誤',
       error: error.message 
     })
@@ -138,11 +161,17 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: '找不到商品' })
     }
 
-    res.json(rows[0])
+    // 處理標籤字串轉陣列
+    const product = {
+      ...rows[0],
+      tags: rows[0].tags ? rows[0].tags.split(',') : []
+    }
+
+    res.json(product)
   } catch (error) {
     console.error('Error:', error)
     res.status(500).json({ message: '伺服器錯誤' })
   }
-});
+})
 
-export default router;
+export default router

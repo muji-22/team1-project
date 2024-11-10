@@ -50,3 +50,40 @@
         border: 1px solid #36a5a5;
     }
 }
+
+// btn-custom 樣式
+.btn-custom {
+    background-color: #40CBCE;
+    color: white;
+    
+    &:hover,
+    &:focus {
+      background-color: #36a5a5;
+      color: white;
+    }
+    
+    &:active {
+      background-color: #36a5a5 !important;
+      color: white !important;
+    }
+  }
+  
+  // btn-outline-custom 樣式
+  .btn-outline-custom {
+    color: #40CBCE;
+    border-color: #40CBCE;
+    background-color: transparent;
+  
+    &:hover,
+    &:focus {
+      color: white;
+      background-color: #40CBCE;
+      border-color: #40CBCE;
+    }
+  
+    &:active {
+      color: white !important;
+      background-color: #40CBCE !important;
+      border-color: #40CBCE !important;
+    }
+  }

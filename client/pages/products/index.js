@@ -16,12 +16,23 @@ function Products() {
     price: { min: "", max: "" },
   });
 
+  // 分頁相關狀態
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   // 活動篩選器狀態
   const [activeFilters, setActiveFilters] = useState([]);
   const hasActiveFilters = activeFilters.length > 0;
 
+  // 處理分頁變更
+  const handlePageChange = (page) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentPage(page);
+  };
+
   // 處理篩選條件變更
   const handleFilterChange = (newFilters) => {
+    setCurrentPage(1); // 重設頁碼到第一頁
     setFilters(newFilters);
 
     // 更新活動的篩選器
@@ -114,13 +125,8 @@ function Products() {
         newFilters.price = { min: "", max: "" };
         break;
     }
+    setCurrentPage(1); // 重設頁碼到第一頁
     handleFilterChange(newFilters);
-  };
-
-  // 快速篩選處理
-  const handleQuickFilter = (type) => {
-    // 直接使用 data attributes 觸發
-    document.querySelector(`[data-bs-target="#filterOffcanvasBottom"]`).click();
   };
 
   return (
@@ -174,13 +180,19 @@ function Products() {
       {/* 主要內容區 */}
       <div className="row">
         {/* 左側-篩選欄 */}
-        <div className="col-3 pt-4">
+        <div className="col-3 d-none d-lg-block pt-4">
           <ProductFilter onSelectTags={handleFilterChange} />
         </div>
 
         {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
-          <ProductList filters={filters} />
+          <ProductList 
+            filters={filters}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setTotalPages={setTotalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>

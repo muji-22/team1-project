@@ -81,7 +81,7 @@ git merge dev
 7. 瀏覽器中開啟 http://localhost:3000/ 或 http://localhost:3000/testLogin 測試登入功能
 
 <br><br>
-目前頁面路由還沒完成，所以直接點登入會找不到頁面，必須手動更改網頁
+登入
 <br>
 測試帳號：test1
 <br>
