@@ -19,19 +19,13 @@ function forumPage() {
         </div>
         <div className="article-container container text-center">
           <div className="article-row d-flex">
-            <Articles></Articles>
-            <Articles></Articles>
-            <Articles></Articles>
+            
           </div>
           <div className="article-row d-flex">
-            <Articles></Articles>
-            <Articles></Articles>
-            <Articles></Articles>
+            
           </div>
           <div className="article-row d-flex">
-            <Articles></Articles>
-            <Articles></Articles>
-            <Articles></Articles>
+            
           </div>
         </div>
         <div className={`${styles.page} container d-flex`}>
