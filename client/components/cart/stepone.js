@@ -91,8 +91,7 @@ export default function StepOne({
     fetchCoupons();
   }, []);
 
-  const P_Items = cart.items.filter((item) => item.type === "product");
-  const R_Items = cart.items.filter((item) => item.type === "rent");
+  
 
   // 更新一般商品數量
   const newProductQuantity = async (itemId, newQuantity) => {
@@ -125,11 +124,12 @@ export default function StepOne({
   // 更新租借商品數量
   const newRentQuantity = async (itemId, newQuantity) => {
     if (newQuantity < 1) return;
-
+  
     try {
       const token = localStorage.getItem("token");
+      console.log("Token:", token); // 檢查 Token 是否有效
       const response = await fetch(
-        `http://localhost:3005/api/cart/rent-items/${itemId}`, // 指向租借商品 API 路徑
+        `http://localhost:3005/api/cart/rent-items/${itemId}`, // 檢查 API 路徑是否正確
         {
           method: "PUT",
           credentials: "include",
@@ -140,8 +140,17 @@ export default function StepOne({
           body: JSON.stringify({ quantity: newQuantity }),
         }
       );
+  
+      console.log("Response:", response); // 檢查回應是否正常
+  
+      if (!response.ok) {
+        console.error(`錯誤狀態碼: ${response.status}`);
+        return;
+      }
+  
       const data = await response.json();
-
+      console.log("伺服器回應:", data); // 檢查回傳資料
+  
       if (data.status === "success") {
         fetchCart(); // 更新購物車
       }
@@ -149,6 +158,7 @@ export default function StepOne({
       console.error("更新租借商品數量錯誤:", error);
     }
   };
+  
 
   // 刪除商品
   const deleteItem = async (itemId) => {
@@ -353,12 +363,11 @@ export default function StepOne({
 
           <div className={style.border}>
             <CartItemList
-              items={P_Items}
+              items={cart.items}
               updateQuantity={newProductQuantity}
               deleteItem={deleteItem}
             />
           </div>
-          <div>小計</div>
           {/* -----------租借商品區---------- */}
           <div className={style.listTitle}>
             <Col xs={10}>租借商品</Col>
@@ -384,12 +393,11 @@ export default function StepOne({
 
           <div className={style.border}>
             <CartRentItemList
-              items={R_Items}
-              updateQuantity={newRentQuantity}
+              items={cart.items}
+              updateRQuantity={newRentQuantity}
               deleteItem={deleteItem}
             />
           </div>
-          <div>小計</div>
 
           {/* ---------結帳區---------- */}
           <div className={style.totalSection}>

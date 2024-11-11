@@ -31,7 +31,7 @@ CREATE TABLE `cart_items` (
   `id` int(10) NOT NULL,
   `cart_id` int(10) NOT NULL,
   `product_id` int(5) UNSIGNED NOT NULL,
-  `type` enum('sale','rental') NOT NULL COMMENT '商品類型:販售or租借',
+  `type` enum('product','rent') NOT NULL COMMENT '商品類型:販售or租借',
   `quantity` int(3) NOT NULL DEFAULT 1,
   `rental_start_date` date DEFAULT NULL COMMENT '租借開始日期',
   `rental_end_date` date DEFAULT NULL COMMENT '租借結束日期',
