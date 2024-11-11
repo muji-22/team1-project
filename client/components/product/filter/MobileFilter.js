@@ -31,7 +31,7 @@ const MobileFilter = ({
           ></button>
         </div>
 
-        <div className="offcanvas-body overflow-y-auto py-0">
+        <div className="offcanvas-body overflow-y-auto py-4">
           <FilterContent 
             {...filterProps}
             isMobile={true} 
@@ -47,7 +47,7 @@ const MobileFilter = ({
               清除全部
             </button>
             <button
-              className="btn btn-primary flex-grow-1"
+              className="btn btn-custom flex-grow-1"
               data-bs-dismiss="offcanvas"
               onClick={handleApplyFilters}
             >

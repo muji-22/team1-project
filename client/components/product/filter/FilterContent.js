@@ -29,7 +29,7 @@ const FilterContent = ({
     <>
       {/* 搜尋欄 */}
       <div className="mb-3">
-        <div className="input-group rounded-pill overflow-hidden border">
+        <div className="input-group rounded-pill overflow-hidden border px-2">
           <input
             type="text"
             className="form-control border-0 shadow-none"
@@ -37,7 +37,7 @@ const FilterContent = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="btn" onClick={handleApplyFilters}>
+          <button className="btn shadow-none border-0" onClick={handleApplyFilters}>
           <FiSearch className="fs-5 d-flex align-items-center text-custom"/>
           </button>
         </div>
@@ -69,8 +69,8 @@ const FilterContent = ({
                       onClick={() => handleTagsChange(tag.id)}
                       className={`btn ${
                         gametypesTags.has(tag.id)
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom"
+                          : "btn-outline-custom"
                       }`}
                     >
                       {tag.name}
@@ -118,8 +118,8 @@ const FilterContent = ({
                       }
                       className={`btn ${
                         selectedPlayers === option.id
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom"
+                          : "btn-outline-custom"
                       }`}
                     >
                       {option.label}
@@ -170,8 +170,8 @@ const FilterContent = ({
                       }
                       className={`btn ${
                         selectedPlaytime === option.id
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom"
+                          : "btn-outline-custom"
                       }`}
                     >
                       {option.label}
@@ -220,8 +220,8 @@ const FilterContent = ({
                       onClick={() => handleSingleSelect(option.id, setSelectedAge)}
                       className={`btn ${
                         selectedAge === option.id
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom"
+                          : "btn-outline-custom"
                       }`}
                     >
                       {option.label}
@@ -250,16 +250,16 @@ const FilterContent = ({
 
         {/* 價格範圍 */}
         <div className="mt-3">
-          <h4 className="mb-2">
+          <div className="mb-2">
             價格範圍 {(priceRange.min || priceRange.max) && "(1)"}
-          </h4>
+          </div>
           <div className="d-flex align-items-center gap-2">
             <input
               type="number"
               value={priceRange.min}
               onChange={(e) => handlePriceChange("min", e.target.value)}
               placeholder="最低價格"
-              className="form-control"
+              className="form-control shadow-none"
             />
             <span>-</span>
             <input
@@ -267,7 +267,7 @@ const FilterContent = ({
               value={priceRange.max}
               onChange={(e) => handlePriceChange("max", e.target.value)}
               placeholder="最高價格"
-              className="form-control"
+              className="form-control shadow-none"
             />
           </div>
         </div>
@@ -281,7 +281,7 @@ const FilterContent = ({
               清除全部
             </button>
             <button
-              className="btn btn-primary flex-grow-1"
+              className="btn btn-custom flex-grow-1"
               onClick={handleApplyFilters}
             >
               套用篩選
