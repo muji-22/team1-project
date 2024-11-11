@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 export default function CartRentItemList({
   items,
-  updateQuantity,
+  updateRQuantity,
   deleteItem,
 }) {
   // 新增一個狀態來追蹤每個商品的租借天數
@@ -48,7 +48,7 @@ export default function CartRentItemList({
                 <div className="d-flex justify-content-center align-items-center">
                   <button
                     className="btn btn-outline-secondary btn-sm"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    onClick={() => updateRQuantity(item.id, item.quantity - 1)}
                     disabled={item.quantity <= 1}
                   >
                     -
@@ -56,7 +56,7 @@ export default function CartRentItemList({
                   <span className="mx-2">{item.quantity}</span>
                   <button
                     className="btn btn-outline-secondary btn-sm"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    onClick={() => updateRQuantity(item.id, item.quantity + 1)}
                   >
                     +
                   </button>
