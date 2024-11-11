@@ -1,5 +1,7 @@
 // components/product/filter/FilterContent.js
 import React from "react";
+import { FiSearch } from "react-icons/fi";
+
 
 const FilterContent = ({
   isMobile = false,
@@ -27,16 +29,16 @@ const FilterContent = ({
     <>
       {/* 搜尋欄 */}
       <div className="mb-3">
-        <div className="input-group">
+        <div className="input-group rounded-pill overflow-hidden border">
           <input
             type="text"
-            className="form-control"
+            className="form-control border-0 shadow-none"
             placeholder="請輸入商品名稱..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="btn btn-primary" onClick={handleApplyFilters}>
-            搜尋
+          <button className="btn" onClick={handleApplyFilters}>
+          <FiSearch className="fs-5 d-flex align-items-center text-custom"/>
           </button>
         </div>
       </div>
