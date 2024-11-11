@@ -10,7 +10,7 @@ import styles from "./productDetailNotice.module.css";
 const ProductDetailNotice = ({
   name,
   price,
-  descrition, // 注意：資料庫中的欄位名稱是 descrition
+  description, // 注意：資料庫中的欄位名稱是 descrition
   min_age,
   min_users,
   max_users,
@@ -24,6 +24,8 @@ const ProductDetailNotice = ({
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // 新增數量管理狀態
+  const [quantity, setQuantity] = useState(1);
 
   // 獲取商品資料
   useEffect(() => {
@@ -48,7 +50,7 @@ const ProductDetailNotice = ({
         const data = await response.json();
 
         // 處理標籤字串
-        data.tagList = data.tags ? data.tags.split(",") : [];
+        // data.tagList = data.tags ? data.tags.split(',').filter(Boolean) : [];
         setProduct(data);
       } catch (error) {
         console.error("獲取商品失敗:", error);
@@ -60,6 +62,11 @@ const ProductDetailNotice = ({
 
     fetchProduct();
   }, [id]);
+
+  // 處理數量變更
+  const handleQuantityChange = (newQuantity) => {
+    setQuantity(newQuantity);
+  };
 
   // 載入中畫面
   if (loading) {
@@ -94,7 +101,7 @@ const ProductDetailNotice = ({
           <h5 className="mt-2">說明</h5>
         </div>
 
-        <p className="mt-5">{descrition}</p>
+        <p className="mt-5">{description}</p>
       </div>
     </>
   );
