@@ -6,11 +6,13 @@ const DesktopFilter = ({
   filterProps
 }) => {
   return (
-    <div className="d-none d-lg-block" style={{ top: "2rem" }}>
+    <div className="col-3 d-none d-lg-block pt-4">
+    <div className="d-none d-lg-block " style={{ top: "2rem" }}>
       <FilterContent 
         {...filterProps} 
         isMobile={false}
       />
+    </div>
     </div>
   );
 };

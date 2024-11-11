@@ -180,9 +180,9 @@ function Products() {
       {/* 主要內容區 */}
       <div className="row">
         {/* 左側-篩選欄 */}
-        <div className="col-3 d-none d-lg-block pt-4">
+        
           <ProductFilter onSelectTags={handleFilterChange} />
-        </div>
+        
 
         {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
