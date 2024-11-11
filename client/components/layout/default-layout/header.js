@@ -60,9 +60,7 @@ function Header() {
                 </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className={`nav-link ${styles.navLink}`} href="/articles">
-                  文章
-                </Link>
+                <Link className="nav-link" href="/forum">文章</Link>
               </li>
               <li className="nav-item mx-3">
                 <Link className={`nav-link ${styles.navLink}`} href="/products">
@@ -146,6 +144,7 @@ function Header() {
                     {cartCount > 0 && (
                       <span className="position-absolute translate-middle badge rounded-pill bg-danger">
                         {cartCount}
+                        <span className="visually-hidden">購物車商品數量</span>
                       </span>
                     )}
                   </Link>

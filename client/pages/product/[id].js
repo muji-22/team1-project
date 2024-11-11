@@ -1,3 +1,4 @@
+// pages/product/[id].js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import style from "@/styles/productDetail.module.css";
@@ -9,6 +10,7 @@ import ProductDetailMainNotice2 from "@/components/product/productDetailMainNoti
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 import MayFavorite from "@/components/product/mayFavorite";
 import AddProduct from "@/components/cart/addProduct";
+import Breadcrumb from "@/components/Breadcrumb";
 
 function ProductDetail() {
   const router = useRouter();
@@ -17,6 +19,8 @@ function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // 新增數量管理狀態
+  const [quantity, setQuantity] = useState(1);
 
   // 獲取商品資料
   useEffect(() => {
@@ -54,6 +58,11 @@ function ProductDetail() {
     fetchProduct();
   }, [id]);
 
+  // 處理數量變更
+  const handleQuantityChange = (newQuantity) => {
+    setQuantity(newQuantity);
+  };
+
   // 載入中畫面
   if (loading) {
     return (
@@ -81,19 +90,16 @@ function ProductDetail() {
   if (!product) return null;
 
   return (
-    <div className="container mt-5">
-      {/* 麵包屑 */}
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <a href="/">首頁</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href="/products">商品購買列表</a>
-          </li>
-          <li className="breadcrumb-item active">{product.name}</li>
-        </ol>
-      </nav>
+    <div className="container mt-3">
+      {/* 麵包屑 */}            
+      <Breadcrumb
+        items={[
+          { label: "首頁", href: "/" },
+          { label: "商品列表", href: "/products" },
+          { label: `${product.name}`, active: true },
+        ]}
+      />
+
 
       {/* 內容區 */}
       <div className={`row mainContain ${style.mainContain}`}>
@@ -169,24 +175,30 @@ function ProductDetail() {
           className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
         >
           <ProductDetailSide
+            id={product.id}
             name={product.name}
             price={product.price}
-            descrition={product.descrition}
+            description={product.description}
             min_age={product.min_age}
             min_users={product.min_users}
             max_users={product.max_users}
             playtime={product.playtime}
+            quantity={quantity}
+            onQuantityChange={handleQuantityChange}
           />
         </div>
         <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
           <ProductDetailSideMobile
+            id={product.id}
             name={product.name}
             price={product.price}
-            descrition={product.descrition}
+            description={product.description}
             min_age={product.min_age}
             min_users={product.min_users}
             max_users={product.max_users}
             playtime={product.playtime}
+            quantity={quantity}
+            onQuantityChange={handleQuantityChange}
           />
         </div>
       </div>
@@ -196,7 +208,7 @@ function ProductDetail() {
         <ProductDetailMainNotice
           name={product.name}
           price={product.price}
-          descrition={product.descrition}
+          description={product.description}
           min_age={product.min_age}
           min_users={product.min_users}
           max_users={product.max_users}
@@ -205,7 +217,7 @@ function ProductDetail() {
         <ProductDetailMainNotice2
           name={product.name}
           price={product.price}
-          descrition={product.descrition}
+          description={product.description}
           min_age={product.min_age}
           min_users={product.min_users}
           max_users={product.max_users}
@@ -219,7 +231,7 @@ function ProductDetail() {
 
       {/* 可能喜歡 */}
       <div className="d-flex justify-content-center">
-        <MayFavorite />
+      <MayFavorite currentProduct={product} />
       </div>
     </div>
   );
