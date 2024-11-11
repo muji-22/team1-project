@@ -28,15 +28,11 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // API 路由
 app.use('/api/products', productRouter)
-<<<<<<< HEAD
-//app.use('/api/auth', authRouter)  // 新增授權相關路由
-=======
 app.use('/api/auth', authRouter)
 app.use('/api/coupons', couponRouter)
 app.use('/api/product-images', productImagesRouter)
 app.use('/api/cart', cartRoutes)
 app.use('/api/favorites', favoritesRouter)
->>>>>>> 18e1594c94bdac46f3fb09413ffdaf59f0cab79c
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {
