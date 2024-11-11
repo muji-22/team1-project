@@ -1,51 +1,46 @@
-import { createRouter } from "next-connect";
-import { Low } from "lowdb";
-import { JSONFile } from "lowdb/node";
-import { v4 as uuidv4 } from 'uuid';
 
-const defaultData = { articles: []};
-const db = new Low(new JSONFile('./data/db.json'), defaultData);
-await db.read();
+import article_db from "../../../server/routes/articledb";
 
-const router = createRouter();
 
-router.post(async (req, res) => {
-  const { title, author, article } = req.body;
-  const createTime = new Date();
-  const id = uuidv4();
+
+export default async function testread() {
   try {
-    db.data.articles.push({id, title, author, article, createTime});
-    await db.write();
-    res.status(200).json({message: "寫入成功"});
-  } catch (error) {
-    console.error("處理過程中發生錯誤:", error);
-    console.error("id:", id);
-    res.status(500).json({ message: "伺服器錯誤", id });
+    const result= await article_db.query(
+      'SELECT * FROM `article_main` WHERE `id` = 1 '
+    );
+    console.log(result);
+    
   }
-});
-
-router.get(async (req, res) => {
-  const { id } = req.query;
-  try {
-    if (!db.data) {
-      db.data = { articles: [] };
-    }
-
-    const article = db.data.articles.find(article => article.id === id);
-    if (article) {
-      res.status(200).json(article);
-    } else {
-      res.status(404).json({ message: "文章未找到" });
-    }
-  } catch (error) {
-    console.error("處理過程中發生錯誤:", error);
-    res.status(500).json({ message: "伺服器錯誤" });
+  catch(err){
+    console.log(err);
   }
-});
+}
 
-export default router.handler({
-    onError: (err, req, res) => {
-      console.error(err.stack);
-      res.status(err.statusCode || 500).end(err.message);
-    },
-  });
+
+// const router = createRouter();
+
+// router.get(async (req, res) => {
+//   const { id } = req.query;
+//   try {
+//     if (!db.data) {
+//       db.data = { articles: [] };
+//     }
+
+//     const article = db.data.articles.find(article => article.id === id);
+//     if (article) {
+//       res.status(200).json(article);
+//     } else {
+//       res.status(404).json({ message: "文章未找到" });
+//     }
+//   } catch (error) {
+//     console.error("處理過程中發生錯誤:", error);
+//     res.status(500).json({ message: "伺服器錯誤" });
+//   }
+// });
+
+// export default router.handler({
+//     onError: (err, req, res) => {
+//       console.error(err.stack);
+//       res.status(err.statusCode || 500).end(err.message);
+//     },
+//   });

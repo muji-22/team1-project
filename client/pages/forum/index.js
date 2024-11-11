@@ -4,6 +4,7 @@ import Link from "next/link";
 import styles from "@/styles/forum.module.css";
 import Articles from "@/components/forum/ArticleCard";
 import Video from "@/components/forum/Video";
+import ArticleList from "@/components/forum/aaaa";
 function forumPage() {
   return (
     <>
@@ -12,6 +13,9 @@ function forumPage() {
         <div className={styles.searchbar}>
           搜尋
           <input type="text" />
+        </div>
+        <div>
+        <ArticleList></ArticleList>
         </div>
         <div className="article-container container text-center">
           <div className="article-row d-flex">
