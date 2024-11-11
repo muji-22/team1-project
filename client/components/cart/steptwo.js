@@ -4,13 +4,17 @@ import axios from 'axios';
 import CreditCard from './creditCard'
 import OrderList from './orderList'
 import Swal from "sweetalert2";
+import CartItemList from "@/components/cart/list.js"; // 引入新的商品列表元件
+import { useCart } from '@/hooks/use_cart';
 
 export default function StepTwo({ setstepType, discountPrice, discountAmount, setPayment }) {
   const [selectedOption, setSelectedOption] = useState('');
 
-  const [cardSelectedOption, setCardSelectedOption] = useState('')
+  const [cart, setCart] = useState({ items: [] });
 
-  const { cart, items } = useCart();
+  const {items, updateQuantity, deleteItem,} = CartItemList();
+
+  const [cardSelectedOption, setCardSelectedOption] = useState('')
 
   const [accordionState, setAccordionState] = useState(true)
 
@@ -34,10 +38,8 @@ export default function StepTwo({ setstepType, discountPrice, discountAmount, se
 
   //console.log(cardState)
 
-  const detectOnlyCourse = items.filter((item) => item.product_id === null && item.isChecked === true);
-  const detectNullProduct = items.filter((item) => item.course_id === null && item.isChecked === true);
 
-  const detectCourse = items.filter((item) => item.course_id != null && item.isChecked === true )
+  const detectCourse = items.filter((item) => cart.items.course_id != null && cart.items.isChecked === true )
 
   
 
