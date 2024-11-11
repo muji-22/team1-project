@@ -156,7 +156,7 @@ const Footer = () => {
               <div className="input-group">
                 <input
                   type="email"
-                  className="form-control"
+                  className="form-control shadow-none"
                   placeholder="輸入您的電子郵件"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
