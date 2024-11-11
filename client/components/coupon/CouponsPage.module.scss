@@ -1,0 +1,124 @@
+.mainContent {
+  height: calc(100% - 60px); /* 扣掉navUser的高度 */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 10px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 8px 15px;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+}
+
+.activeTab {
+  color: #40CBCE;
+  font-weight: bold;
+}
+
+.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #40CBCE;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-left: 5px;
+  color: white;
+}
+
+.valid { background-color: #40CBCE; }
+.used { background-color: #6c757d; }
+.expired { background-color: #dc3545; }
+
+.listWrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 大螢幕時顯示2欄 */
+  gap: 20px;
+  padding-right: 10px;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px;
+  grid-column: 1 / -1; /* 讓空狀態訊息橫跨兩欄 */
+}
+
+.spinnerContainer,
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+}
+
+/* RWD 樣式 */
+@media(max-width: 992px) {
+  .mainContent {
+    height: calc(100% - 60px);
+    padding: 10px;
+  }
+
+  .tabs {
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+
+  .tab {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .list {
+    grid-template-columns: 1fr; /* 小螢幕時改為單欄 */
+    gap: 10px;
+  }
+
+  .emptyMessage {
+    font-size: 14px;
+    padding: 15px;
+    margin: 10px;
+  }
+}
+
+/* 確保最後一行對齊 */
+.list::after {
+  content: '';
+  grid-column: 1 / -1;
+  height: 20px;
+}

@@ -1,15 +1,15 @@
 import React from 'react'
-// import ProductList from '@/components/product/ProductList'
-// import Register from '@/components/JZ_test/Register'
-import MayFavorite from '@/components/product/mayFavorite'
+import CouponsPage from '@/components/coupon/CouponsPage'
+import ClaimCouponButton from '@/components/coupon/ClaimCouponButton'
 function Test() {
     return (
       <>
       <main className='container min-vh-100'>
 
-      {/* <ProductList /> */}
-      {/* <Register/> */}
-      <MayFavorite />
+      <CouponsPage />
+      <br></br>
+      <ClaimCouponButton couponId={8}/>
+
       </main>
       </>
     )

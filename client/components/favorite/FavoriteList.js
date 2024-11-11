@@ -5,6 +5,8 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { BsTrash } from 'react-icons/bs';
 import { BiLoaderAlt } from 'react-icons/bi';
 import { useAuth } from '@/contexts/AuthContext';
+import styles from './FavoriteList.module.scss';
+import { toast } from 'react-toastify';
 
 function FavoriteList() {
   const { isAuthenticated } = useAuth();
@@ -32,6 +34,7 @@ function FavoriteList() {
         }
       } catch (error) {
         console.error('獲取收藏列表失敗:', error);
+        toast.error('獲取收藏列表失敗');
       } finally {
         setIsLoading(false);
       }
@@ -55,12 +58,13 @@ function FavoriteList() {
 
       if (response.ok) {
         setFavorites(favorites.filter(item => item.product_id !== productId));
+        toast.success('成功移除收藏');
       } else {
         throw new Error('移除失敗');
       }
     } catch (error) {
       console.error('移除收藏失敗:', error);
-      alert('移除失敗，請稍後再試');
+      toast.error('移除失敗，請稍後再試');
     }
   };
 
@@ -76,54 +80,52 @@ function FavoriteList() {
 
   if (isLoading) {
     return (
-      <div className="text-center p-4">
-        <BiLoaderAlt className="spin-animation text-primary" size={40} />
-        <p className="mt-2">載入中...</p>
+      <div className={styles.loadingContainer}>
+        <BiLoaderAlt className={styles.spinner} size={40} />
+        <p>載入中...</p>
       </div>
     );
   }
 
   if (favorites.length === 0) {
     return (
-      <div className="text-center p-4">
-        <IoMdHeartEmpty className="text-muted" size={40} />
-        <p className="mt-2">尚無收藏商品</p>
+      <div className={styles.emptyContainer}>
+        <IoMdHeartEmpty size={40} />
+        <p>尚無收藏商品</p>
       </div>
     );
   }
 
   return (
-    <div className="container py-4">
-      <h2 className="mb-4">我的收藏</h2>
-      <div className="row">
+    <div className={styles.mainContent}>
+      <div className={styles.listWrapper}>
         {favorites.map((item) => (
-          <div key={item.id} className="col-md-6 col-lg-4 mb-4">
-            <div className="card h-100 position-relative">
+          <div key={item.id} className={styles.cardWrapper}>
+            <div className={styles.card}>
               <Link 
                 href={`/product/${item.product_id}`}
-                className="text-decoration-none"
+                className={styles.imageLink}
               >
                 <img
                   src={getImageUrl(item.product_id)}
                   alt={item.name}
-                  className="card-img-top"
-                  style={{ height: '200px', objectFit: 'cover' }}
+                  className={styles.productImage}
                   onError={handleImageError}
                 />
               </Link>
-              <div className="card-body">
+              <div className={styles.cardBody}>
                 <Link 
                   href={`/product/${item.product_id}`}
-                  className="text-decoration-none text-dark"
+                  className={styles.titleLink}
                 >
-                  <h5 className="card-title text-truncate mb-2">{item.name}</h5>
+                  <h5 className={styles.productTitle}>{item.name}</h5>
                 </Link>
-                <p className="card-text text-danger mb-0">
+                <p className={styles.price}>
                   NT$ {parseInt(item.price).toLocaleString()}
                 </p>
               </div>
               <button
-                className="btn btn-outline-danger position-absolute top-0 end-0 m-2"
+                className={styles.removeButton}
                 onClick={() => removeFavorite(item.product_id)}
                 title="移除收藏"
               >
@@ -133,25 +135,6 @@ function FavoriteList() {
           </div>
         ))}
       </div>
-
-      <style jsx>{`
-        .spin-animation {
-          animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        .card {
-          transition: transform 0.2s ease-in-out;
-        }
-        
-        .card:hover {
-          transform: translateY(-5px);
-        }
-      `}</style>
     </div>
   );
 }
