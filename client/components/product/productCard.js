@@ -45,7 +45,7 @@ const ProductCard = ({ id, name, price, description, className }) => {
             </div>
 
             {/* 加入購物車按鈕 */}
-            <AddToCartButton productId={id} className="buttonCustomC w-100" />
+            <AddToCartButton productId={id} className="buttonCustomC w-100 text-nowrap"/>
           </div>
         </div>
       </div>

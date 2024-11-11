@@ -41,13 +41,13 @@ const MobileFilter = ({
         <div className="offcanvas-footer border-top p-3 sticky-bottom bg-white">
           <div className="d-flex gap-2">
             <button
-              className="btn btn-outline-secondary flex-grow-1"
+              className="btn btn-outline-secondary rounded-pill flex-grow-1"
               onClick={handleClearFilters}
             >
               清除全部
             </button>
             <button
-              className="btn btn-custom flex-grow-1"
+              className="btn btn-custom rounded-pill flex-grow-1"
               data-bs-dismiss="offcanvas"
               onClick={handleApplyFilters}
             >

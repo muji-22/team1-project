@@ -145,7 +145,7 @@ function Products() {
       <div className="d-lg-none mb-4">
         <div className="d-flex justify-content-end gap-2 overflow-auto pb-2">
           <button
-            className="btn btn-custom d-flex align-items-center gap-2 flex-shrink-0"
+            className="btn btn-custom d-flex align-items-center gap-2 flex-shrink-0 rounded-pill"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#filterOffcanvasBottom"

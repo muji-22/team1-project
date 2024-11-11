@@ -69,8 +69,8 @@ const FilterContent = ({
                       onClick={() => handleTagsChange(tag.id)}
                       className={`btn ${
                         gametypesTags.has(tag.id)
-                          ? "btn-custom"
-                          : "btn-outline-custom"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {tag.name}
@@ -118,8 +118,8 @@ const FilterContent = ({
                       }
                       className={`btn ${
                         selectedPlayers === option.id
-                          ? "btn-custom"
-                          : "btn-outline-custom"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {option.label}
@@ -170,8 +170,8 @@ const FilterContent = ({
                       }
                       className={`btn ${
                         selectedPlaytime === option.id
-                          ? "btn-custom"
-                          : "btn-outline-custom"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {option.label}
@@ -220,8 +220,8 @@ const FilterContent = ({
                       onClick={() => handleSingleSelect(option.id, setSelectedAge)}
                       className={`btn ${
                         selectedAge === option.id
-                          ? "btn-custom"
-                          : "btn-outline-custom"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {option.label}
@@ -275,13 +275,13 @@ const FilterContent = ({
         {!isMobile && (
           <div className="mt-4 d-flex gap-2">
             <button
-              className="btn btn-outline-secondary flex-grow-1"
+              className="btn btn-outline-secondary rounded-pill flex-grow-1"
               onClick={handleClearFilters}
             >
               清除全部
             </button>
             <button
-              className="btn btn-custom flex-grow-1"
+              className="btn btn-custom rounded-pill flex-grow-1"
               onClick={handleApplyFilters}
             >
               套用篩選
