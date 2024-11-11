@@ -1,5 +1,7 @@
 // components/product/filter/FilterContent.js
 import React from "react";
+import { FiSearch } from "react-icons/fi";
+
 
 const FilterContent = ({
   isMobile = false,
@@ -27,16 +29,16 @@ const FilterContent = ({
     <>
       {/* 搜尋欄 */}
       <div className="mb-3">
-        <div className="input-group">
+        <div className="input-group rounded-pill overflow-hidden border px-2">
           <input
             type="text"
-            className="form-control"
+            className="form-control border-0 shadow-none"
             placeholder="請輸入商品名稱..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="btn btn-primary" onClick={handleApplyFilters}>
-            搜尋
+          <button className="btn shadow-none border-0" onClick={handleApplyFilters}>
+          <FiSearch className="fs-5 d-flex align-items-center text-custom"/>
           </button>
         </div>
       </div>
@@ -67,8 +69,8 @@ const FilterContent = ({
                       onClick={() => handleTagsChange(tag.id)}
                       className={`btn ${
                         gametypesTags.has(tag.id)
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {tag.name}
@@ -116,8 +118,8 @@ const FilterContent = ({
                       }
                       className={`btn ${
                         selectedPlayers === option.id
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {option.label}
@@ -168,8 +170,8 @@ const FilterContent = ({
                       }
                       className={`btn ${
                         selectedPlaytime === option.id
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {option.label}
@@ -218,8 +220,8 @@ const FilterContent = ({
                       onClick={() => handleSingleSelect(option.id, setSelectedAge)}
                       className={`btn ${
                         selectedAge === option.id
-                          ? "btn-primary"
-                          : "btn-outline-primary"
+                          ? "btn-custom rounded-pill"
+                          : "btn-outline-custom rounded-pill"
                       }`}
                     >
                       {option.label}
@@ -248,16 +250,16 @@ const FilterContent = ({
 
         {/* 價格範圍 */}
         <div className="mt-3">
-          <h4 className="mb-2">
+          <div className="mb-2">
             價格範圍 {(priceRange.min || priceRange.max) && "(1)"}
-          </h4>
+          </div>
           <div className="d-flex align-items-center gap-2">
             <input
               type="number"
               value={priceRange.min}
               onChange={(e) => handlePriceChange("min", e.target.value)}
               placeholder="最低價格"
-              className="form-control"
+              className="form-control shadow-none"
             />
             <span>-</span>
             <input
@@ -265,7 +267,7 @@ const FilterContent = ({
               value={priceRange.max}
               onChange={(e) => handlePriceChange("max", e.target.value)}
               placeholder="最高價格"
-              className="form-control"
+              className="form-control shadow-none"
             />
           </div>
         </div>
@@ -273,13 +275,13 @@ const FilterContent = ({
         {!isMobile && (
           <div className="mt-4 d-flex gap-2">
             <button
-              className="btn btn-outline-secondary flex-grow-1"
+              className="btn btn-outline-secondary rounded-pill flex-grow-1"
               onClick={handleClearFilters}
             >
               清除全部
             </button>
             <button
-              className="btn btn-primary flex-grow-1"
+              className="btn btn-custom rounded-pill flex-grow-1"
               onClick={handleApplyFilters}
             >
               套用篩選

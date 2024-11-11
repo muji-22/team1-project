@@ -143,26 +143,26 @@ function Products() {
 
       {/* 手機版篩選按鈕區 */}
       <div className="d-lg-none mb-4">
-        <div className="d-flex gap-2 overflow-auto pb-2">
+        <div className="d-flex justify-content-end gap-2 overflow-auto pb-2">
           <button
-            className="btn btn-primary d-flex align-items-center gap-2 flex-shrink-0"
+            className="btn btn-custom d-flex align-items-center gap-2 flex-shrink-0 rounded-pill"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#filterOffcanvasBottom"
             aria-controls="filterOffcanvasBottom"
           >
             <GrFilter />
-            <span>所有篩選</span>
+            <span>篩選</span>
           </button>
         </div>
 
         {/* 已選擇的篩選標籤 */}
         {hasActiveFilters && (
-          <div className="d-flex flex-wrap gap-2 mt-2">
+          <div className="d-flex flex-wrap gap-2 mt-2 justify-content-end">
             {activeFilters.map((filter, index) => (
               <span
                 key={index}
-                className="badge bg-primary d-flex align-items-center gap-2"
+                className="badge bg-custom d-flex align-items-center gap-2"
               >
                 {filter.label}
                 <button
@@ -180,9 +180,9 @@ function Products() {
       {/* 主要內容區 */}
       <div className="row">
         {/* 左側-篩選欄 */}
-        <div className="col-3 d-none d-lg-block pt-4">
+        
           <ProductFilter onSelectTags={handleFilterChange} />
-        </div>
+        
 
         {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
