@@ -1,12 +1,11 @@
-//pages/products/index.js
-import React, { useState, useEffect } from "react";
+//pages/rents/index.js
+import React, { useState } from "react";
 import ProductFilter from "@/components/product/filter";
-import ProductList from "@/components/product/ProductList";
+import RentList from "@/components/rent/RentList";
 import { GrFilter } from "react-icons/gr";
 import Breadcrumb from "@/components/Breadcrumb";
 
-function Products() {
-  // 篩選條件狀態
+function Rents() {
   const [filters, setFilters] = useState({
     search: "",
     gametypes: [],
@@ -16,26 +15,11 @@ function Products() {
     price: { min: "", max: "" },
   });
 
-  // 分頁相關狀態
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  // 活動篩選器狀態
   const [activeFilters, setActiveFilters] = useState([]);
   const hasActiveFilters = activeFilters.length > 0;
 
-  // 處理分頁變更
-  const handlePageChange = (page) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setCurrentPage(page);
-  };
-
-  // 處理篩選條件變更
   const handleFilterChange = (newFilters) => {
-    setCurrentPage(1); // 重設頁碼到第一頁
     setFilters(newFilters);
-
-    // 更新活動的篩選器
     const active = [];
 
     if (newFilters.search) {
@@ -95,14 +79,13 @@ function Products() {
       if (newFilters.price.max) priceLabel.push(`${newFilters.price.max}元`);
       active.push({
         id: "price",
-        label: `價格: ${priceLabel.join("-")}`,
+        label: `租金: ${priceLabel.join("-")}`,
       });
     }
 
     setActiveFilters(active);
   };
 
-  // 移除篩選標籤
   const removeFilter = (filterId) => {
     const newFilters = { ...filters };
     switch (filterId) {
@@ -125,44 +108,40 @@ function Products() {
         newFilters.price = { min: "", max: "" };
         break;
     }
-    setCurrentPage(1); // 重設頁碼到第一頁
     handleFilterChange(newFilters);
   };
 
   return (
     <div className="container mt-3">
-      {/* 麵包屑 */}
       <Breadcrumb
         items={[
           { label: "首頁", href: "/" },
-          { label: "商品列表", active: true },
+          { label: "租賃商品列表", active: true },
         ]}
       />
 
-      <h2 className="mb-5">商品列表</h2>
+      <h2 className="mb-5">租賃商品列表</h2>
 
-      {/* 手機版篩選按鈕區 */}
       <div className="d-lg-none mb-4">
-        <div className="d-flex justify-content-end gap-2 overflow-auto pb-2">
+        <div className="d-flex gap-2 overflow-auto pb-2">
           <button
-            className="btn btn-custom d-flex align-items-center gap-2 flex-shrink-0 rounded-pill"
+            className="btn btn-primary d-flex align-items-center gap-2 flex-shrink-0"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#filterOffcanvasBottom"
             aria-controls="filterOffcanvasBottom"
           >
             <GrFilter />
-            <span>篩選</span>
+            <span>所有篩選</span>
           </button>
         </div>
 
-        {/* 已選擇的篩選標籤 */}
         {hasActiveFilters && (
-          <div className="d-flex flex-wrap gap-2 mt-2 justify-content-end">
+          <div className="d-flex flex-wrap gap-2 mt-2">
             {activeFilters.map((filter, index) => (
               <span
                 key={index}
-                className="badge bg-custom d-flex align-items-center gap-2"
+                className="badge bg-primary d-flex align-items-center gap-2"
               >
                 {filter.label}
                 <button
@@ -177,26 +156,17 @@ function Products() {
         )}
       </div>
 
-      {/* 主要內容區 */}
       <div className="row">
-        {/* 左側-篩選欄 */}
-        
+        <div className="col-3 pt-4">
           <ProductFilter onSelectTags={handleFilterChange} />
-        
+        </div>
 
-        {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
-          <ProductList 
-            filters={filters}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setTotalPages={setTotalPages}
-            onPageChange={handlePageChange}
-          />
+          <RentList filters={filters} />
         </div>
       </div>
     </div>
   );
 }
 
-export default Products;
+export default Rents;

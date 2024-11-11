@@ -3,14 +3,13 @@ import { useRouter } from "next/router";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaCartPlus } from "react-icons/fa";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
+import styles from "./productDetailRent.module.css";
 import AddProduct from "@/components/cart/addProduct";
-import AddFavProduct from "@/components/cart/addFavProduct";
-import styles from "./productDetailNotice.module.css";
 
-const ProductDetailNotice = ({
+const ProductDetailSideMobile = ({
   name,
   price,
-  description, // 注意：資料庫中的欄位名稱是 descrition
+  descrition, // 注意：資料庫中的欄位名稱是 descrition
   min_age,
   min_users,
   max_users,
@@ -96,15 +95,38 @@ const ProductDetailNotice = ({
 
   return (
     <>
-      <div className={`row mt-5 `}>
-        <div className={`${styles.noticeLine}`}>
-          <h5 className="mt-2">說明</h5>
+      <div class="row mt-5">
+        <div class="col-12 text-center">
+          <h4 style={{ fontWeight: "700" }}>
+            {name}
+            <a href="#" className="btn">
+              <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
+            </a>
+          </h4>
         </div>
+        <h6 class="col-12 text-center">${price}</h6>
+        <div className="col-12 mt-2 text-center">
+          商品數量 <QuantityAdjuster />
+        </div>
+      </div>
 
-        <p className="mt-5">{description}</p>
+      <div className="row align-items-center g-2 mt-4 mb-2">
+        <div className="col-2"></div>
+        <div className="col-4 pe-5">
+          <AddProduct />
+        </div>
+        <div className="col-4 ps-5">
+          <a
+            href={`/product/${id}`}
+            className="btn btn-success  w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto "
+          >
+            切換至購買商品
+          </a>
+        </div>
+        <div className="col-2"></div>
       </div>
     </>
   );
 };
 
-export default ProductDetailNotice;
+export default ProductDetailSideMobile;

@@ -2,17 +2,22 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import style from "@/styles/productDetail.module.css";
-import ProductDetailSide from "@/components/product/productDetailSide";
-import ProductDetailNotice from "@/components/product/productDetailNotice";
-import ProductDetailNotice2 from "@/components/product/productDetailNotice2";
+import ProductDetailRent from "@/components/rent/productDetailRent";
+import ProductDetailRentMobile from "@/components/rent/productDetailRentMobile";
 import ProductDetailMainNotice from "@/components/product/productDetailMainNotice";
 import ProductDetailMainNotice2 from "@/components/product/productDetailMainNotice2";
-import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 import MayFavorite from "@/components/product/mayFavorite";
 import AddProduct from "@/components/cart/addProduct";
 import Breadcrumb from "@/components/Breadcrumb";
+import RentNotice from "@/components/rent/rentNotice";
+import RentNotice2 from "@/components/rent/rentNotice2";
+import MayFavoriteRent from "@/components/rent/mayFavoriteRent";
+import AddToCartButton from "@/components/rent/AddToCartButton";
+import { useAuth } from '@/contexts/AuthContext';
+import FavoriteButton from "@/components/rent/FavoriteButton";
+import Link from "next/link";
 
-function ProductDetail() {
+function ProductRent() {
   const router = useRouter();
   const { id } = router.query;
 
@@ -21,6 +26,7 @@ function ProductDetail() {
   const [error, setError] = useState(null);
   // 新增數量管理狀態
   const [quantity, setQuantity] = useState(1);
+  const [days, setDays] = useState(3);
 
   // 獲取商品資料
   useEffect(() => {
@@ -30,7 +36,7 @@ function ProductDetail() {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:3005/api/products/${id}`
+          `http://localhost:3005/api/rents/${id}`
         );
 
         if (response.status === 404) {
@@ -61,6 +67,10 @@ function ProductDetail() {
   // 處理數量變更
   const handleQuantityChange = (newQuantity) => {
     setQuantity(newQuantity);
+  };
+
+  const handleDaysChange = (newDays) => {
+    setDays(newDays);
   };
 
   // 載入中畫面
@@ -174,10 +184,12 @@ function ProductDetail() {
         <div
           className={`d-none d-lg-block col-md-12 col-lg-6 ${style.rightSide}`}
         >
-          <ProductDetailSide
+          <ProductDetailRent
             id={product.id}
             name={product.name}
             price={product.price}
+            deposit={product.deposit}
+            rental_fee={product.rental_fee}
             description={product.description}
             min_age={product.min_age}
             min_users={product.min_users}
@@ -185,13 +197,16 @@ function ProductDetail() {
             playtime={product.playtime}
             quantity={quantity}
             onQuantityChange={handleQuantityChange}
+            onDaysChange={handleDaysChange}
           />
         </div>
         <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
-          <ProductDetailSideMobile
+          <ProductDetailRentMobile
             id={product.id}
             name={product.name}
             price={product.price}
+            deposit={product.deposit}
+            rental_fee={product.rental_fee}
             description={product.description}
             min_age={product.min_age}
             min_users={product.min_users}
@@ -199,6 +214,7 @@ function ProductDetail() {
             playtime={product.playtime}
             quantity={quantity}
             onQuantityChange={handleQuantityChange}
+            onDaysChange={handleDaysChange}
           />
         </div>
       </div>
@@ -226,15 +242,15 @@ function ProductDetail() {
       </div>
 
       {/* 注意事項 */}
-      <ProductDetailNotice />
-      <ProductDetailNotice2 />
+      <RentNotice/>
+      <RentNotice2/>
 
       {/* 可能喜歡 */}
       <div className="d-flex justify-content-center">
-      <MayFavorite currentProduct={product} />
+      <MayFavoriteRent currentProduct={product} />
       </div>
     </div>
   );
 }
 
-export default ProductDetail;
+export default ProductRent;

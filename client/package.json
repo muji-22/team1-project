@@ -9,7 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-react": "^9.3.1",
+    "@ckeditor/ckeditor5-build-classic": "^41.3.1",
+    "@ckeditor/ckeditor5-react": "^6.2.0",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "ckeditor5": "^43.3.0",

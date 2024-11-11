@@ -10,7 +10,6 @@ import { useRouter } from "next/router";
 import Avatar from "@/components/Avatar";
 import FavoriteDropdown from "@/components/favorite/FavoriteDropdown";
 
-
 function Header() {
   const router = useRouter();
   const { user, logout, isAuthenticated } = useAuth();
@@ -60,17 +59,30 @@ function Header() {
                 </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className={`nav-link ${styles.navLink}`} href="/articles">
+                <Link
+                  className={`nav-link ${styles.navLink} ${
+                    isActive("/forum") ? styles.active : ""
+                  }`}
+                  href="/forum"
+                >
                   文章
                 </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className={`nav-link ${styles.navLink}`} href="/products">
+                <Link
+                  className={`nav-link ${styles.navLink} ${
+                    isActive("/products") ? styles.active : ""
+                  }`}
+                  href="/products"
+                >
                   商品列表
                 </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className={`nav-link ${styles.navLink}`} href="/rental">
+                <Link className={`nav-link ${styles.navLink} ${
+                  isActive("/rental") ? styles.active : ""
+                }
+                `} href="/rental">
                   商品租借
                 </Link>
               </li>
@@ -107,7 +119,7 @@ function Header() {
                       aria-labelledby="navbarDropdown"
                     >
                       <li className="d-flex align-items-center gap-2 px-3 py-2">
-                      <Avatar src={user?.avatar_url} size="small" />
+                        <Avatar src={user?.avatar_url} size="small" />
                         <span className="dropdown-item-text">
                           {user.name || user.account}
                         </span>
@@ -184,10 +196,12 @@ function Header() {
           <div className="p-3 border-bottom border text-center">
             {user ? (
               <>
-              <div className="d-flex justify-content-center">
-              <Avatar src={user?.avatar_url} size="medium" />
-              </div>
-                <span className="fs-6 d-block py-2">{user.name || user.account}</span>
+                <div className="d-flex justify-content-center">
+                  <Avatar src={user?.avatar_url} size="medium" />
+                </div>
+                <span className="fs-6 d-block py-2">
+                  {user.name || user.account}
+                </span>
                 <button
                   className="btn btn-sm buttonCustomB"
                   onClick={handleLogout}

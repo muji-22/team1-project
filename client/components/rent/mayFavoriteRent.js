@@ -1,8 +1,8 @@
 // components/product/mayFavorite.js
 import React, { useState, useEffect } from "react";
-import ProductCard from "@/components/product/productCard";
+import RentCard from "./rentCard";
 
-const MayFavorite = ({ currentProduct }) => {
+const MayFavoriteRent = ({ currentProduct }) => {
   const [recommendProducts, setRecommendProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,7 +79,7 @@ const MayFavorite = ({ currentProduct }) => {
       <div className="row g-4 justify-content-center">
         {recommendProducts.map((product) => (
           <div key={product.id} className="col-xl-3 col-lg-3 col-md-6 col-sm-12">
-            <ProductCard
+            <RentCard
               id={product.id}
               name={product.name}
               price={product.price}
@@ -92,4 +92,4 @@ const MayFavorite = ({ currentProduct }) => {
   );
 };
 
-export default MayFavorite;
+export default MayFavoriteRent;
