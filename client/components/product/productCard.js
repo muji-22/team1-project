@@ -33,7 +33,7 @@ const ProductCard = ({ id, name, price, description, className }) => {
           <div className="mt-auto">
             <div className="d-flex justify-content-between align-items-center">
               {/* 商品價格 */}
-              <span className="card-text fs-5 m-2">
+              <span className="card-text fs-5 m-2 fw-bold">
                 NT$ {(price || 0).toLocaleString()}
               </span>
 

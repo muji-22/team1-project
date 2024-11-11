@@ -80,10 +80,10 @@ function Header() {
               </li>
               <li className="nav-item mx-3">
                 <Link className={`nav-link ${styles.navLink} ${
-                  isActive("/rental") ? styles.active : ""
+                  isActive("/rents") ? styles.active : ""
                 }
-                `} href="/rental">
-                  商品租借
+                `} href="/rents">
+                  商品租賃
                 </Link>
               </li>
             </ul>

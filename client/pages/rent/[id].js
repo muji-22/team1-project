@@ -105,7 +105,7 @@ function ProductRent() {
       <Breadcrumb
         items={[
           { label: "首頁", href: "/" },
-          { label: "商品列表", href: "/products" },
+          { label: "商品租賃", href: "/rents" },
           { label: `${product.name}`, active: true },
         ]}
       />

@@ -15,6 +15,9 @@ function Rents() {
     price: { min: "", max: "" },
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
   const [activeFilters, setActiveFilters] = useState([]);
   const hasActiveFilters = activeFilters.length > 0;
 
@@ -116,12 +119,13 @@ function Rents() {
       <Breadcrumb
         items={[
           { label: "首頁", href: "/" },
-          { label: "租賃商品列表", active: true },
+          { label: "商品租賃列表", active: true },
         ]}
       />
 
-      <h2 className="mb-5">租賃商品列表</h2>
+      <h2 className="mb-5">商品租賃列表</h2>
 
+      {/* 手機版篩選按鈕區 */}
       <div className="d-lg-none mb-4">
         <div className="d-flex gap-2 overflow-auto pb-2">
           <button
@@ -132,7 +136,7 @@ function Rents() {
             aria-controls="filterOffcanvasBottom"
           >
             <GrFilter />
-            <span>所有篩選</span>
+            <span>篩選</span>
           </button>
         </div>
 
@@ -157,12 +161,16 @@ function Rents() {
       </div>
 
       <div className="row">
-        <div className="col-3 pt-4">
-          <ProductFilter onSelectTags={handleFilterChange} />
-        </div>
+        <ProductFilter onSelectTags={handleFilterChange} />
 
         <div className="col-12 col-lg-9">
-          <RentList filters={filters} />
+          <RentList
+            filters={filters}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setTotalPages={setTotalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
     </div>
