@@ -45,7 +45,7 @@ function ProductDetail() {
         const data = await response.json();
 
         // 處理標籤字串
-        data.tagList = data.tags ? data.tags.split(",") : [];
+        // data.tagList = data.tags ? data.tags.split(',').filter(Boolean) : [];
         setProduct(data);
       } catch (error) {
         console.error("獲取商品失敗:", error);
