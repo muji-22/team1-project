@@ -1,0 +1,44 @@
+/* productCard.module.css */
+.card {
+    transition: all 0.3s ease-in-out;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.img {
+    width: 100%;
+}
+
+.favoriteIcon {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.favoriteIcon:hover {
+    transform: scale(1.2);
+    filter: brightness(0.8);
+}
+
+/* 商品圖片容器 */
+.imageContainer {
+    overflow: hidden;
+    aspect-ratio: 1; /* 保持正方形 */
+}
+
+/* 商品圖片 */
+.productImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 圖片hover效果 */
+.card:hover .productImage {
+    transform: scale(1.05);
+}
