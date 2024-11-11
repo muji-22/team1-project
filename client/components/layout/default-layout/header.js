@@ -144,6 +144,7 @@ function Header() {
                     {cartCount > 0 && (
                       <span className="position-absolute translate-middle badge rounded-pill bg-danger">
                         {cartCount}
+                        <span className="visually-hidden">購物車商品數量</span>
                       </span>
                     )}
                   </Link>

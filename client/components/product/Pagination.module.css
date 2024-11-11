@@ -1,0 +1,28 @@
+/* components/product/Pagination.module.css */
+.paginationContainer :global(.pagination .page-link) {
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 4px;
+  }
+  
+  .paginationContainer :global(.pagination .page-item.active .page-link) {
+    background-color: #40CBCE;
+    color: #fff;
+    border: none;
+  }
+  
+  .paginationContainer :global(.pagination .page-item.disabled .page-link) {
+    background-color: transparent;
+    color: #6c757d;
+  }
+  
+  .paginationContainer :global(.pagination .page-link:hover) {
+    background-color: #f8f9fa;
+    color: #000;
+  }
+  
+  .paginationContainer :global(.pagination .page-link:focus) {
+    box-shadow: none;
+    background-color: #f8f9fa;
+  }

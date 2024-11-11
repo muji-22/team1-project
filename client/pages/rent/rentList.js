@@ -1,11 +1,10 @@
     import React, { useState, useEffect } from "react";
     import CategorySidebar from "@/components/product/category";
-    import ProductCard from "@/components/product/productCard";
+    import RentCard from "@/components/rent/rentCard";
     import { GrFilter } from "react-icons/gr";
 
-    import MayFavorite from "@/components/product/mayFavorite";
-    function ProductList() {
-        const [products, setProducts] = useState([]);
+    function RentList() {
+        const [rents, setRents] = useState([]);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
 
@@ -13,12 +12,12 @@
             const fetchProducts = async () => {
                 try {
                     setLoading(true);
-                    const response = await fetch('http://localhost:3005/api/products');
+                    const response = await fetch('http://localhost:3005/api/rents');
                     if (!response.ok) {
                         throw new Error('網路回應不正確');
                     }
                     const data = await response.json();
-                    setProducts(data);
+                    setRents(data);
                 } catch (error) {
                     console.error('獲取商品失敗:', error);
                     setError('無法載入商品資料，請稍後再試');
@@ -108,14 +107,14 @@
                     <div className="col-10">
                         <div className="row">
                             {/* 這裡可以放置商品列表或其他內容 */}
-                            {products.length === 0 ? (
+                            {rents.length === 0 ? (
                                 <div className="text-center">
                                     <h3>目前沒有商品</h3>
                                 </div>
                             ) : (
                                 <div className="row">
-                                    {products.map((product) => (
-                                        <ProductCard
+                                    {rents.map((product) => (
+                                        <RentCard
                                             key={product.id}
                                             {...product}
                                             onAddToCart={handleAddToCart}
@@ -131,4 +130,4 @@
         );
     }
 
-    export default ProductList;
+    export default RentList;

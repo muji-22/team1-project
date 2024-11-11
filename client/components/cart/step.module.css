@@ -73,7 +73,7 @@
 }
 .productList .deleteSection{
     justify-content: space-between;
-    padding-inline: 15px;
+    
 }
 @media (max-width: 393px) {
     .productList .deleteSection{
@@ -129,12 +129,7 @@
         font-size: 14px;
     }
 }
-.courseList div{
-    margin-block: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 .deleteBtn {
     background-color: #40CBCE;
     border: #40CBCE 1px solid;
@@ -174,7 +169,7 @@
 }
 
 .totalSection {
-    margin-block: 100px 20px;
+    margin-block: 20px 20px;
     padding-inline: 20px;
     border-top: 2px solid #969696;
     display: flex;
@@ -208,6 +203,7 @@
     background: #40CBCE;
     color: #fff;
     letter-spacing: 5px;
+    width: 100%;
 }
 
 .nextStepBtn:hover {
@@ -254,12 +250,12 @@
     color: red;
 }
 
-.total :first-child {
+.total :last-child {
     font-size: 25px;
 }
 
 @media (max-width: 393px) {
-    .total :first-child {
+    .total :last-child {
         font-size: 16px;
     }
 }
@@ -557,4 +553,17 @@
 
 .border{
     border: 1px solid #d4d4d2;
+}
+
+.Couponbtn{
+    width: 200px;
+}
+.keepshoping{
+    width: 200px;
+    background-color: #40CBCE;
+    color: #e7e7e7;
+}
+.keepshoping:hover{
+    background-color:  rgb(45, 172, 174);
+    color: #fff;
 }
