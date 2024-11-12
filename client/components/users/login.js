@@ -3,6 +3,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import styles from "./login.module.css";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { MdAccountCircle } from "react-icons/md";
+import { RiLockPasswordFill } from "react-icons/ri";
 
 export default function Login({ setCurrentForm }) {
   const { login } = useAuth();
@@ -53,6 +55,9 @@ export default function Login({ setCurrentForm }) {
     
       <form className={styles.resgiter} onSubmit={handleSubmit}>
         <div className={styles.top}>
+
+          <div>
+           <label><MdAccountCircle  className={styles.icon}/></label> 
           <input
             type="text" // 修改：將 "account" 改為 "text"
             name="account" // 修改：添加 name 屬性
@@ -61,6 +66,10 @@ export default function Login({ setCurrentForm }) {
             value={formData.account}
             onChange={handleChange}
           />
+          </div>
+
+          <div>
+          <label><RiLockPasswordFill  className={styles.icon}/></label>
           <input
             type="password"
             name="password" // 修改：添加 name 屬性
@@ -69,6 +78,7 @@ export default function Login({ setCurrentForm }) {
             value={formData.password}
             onChange={handleChange}
           />
+          </div>
 
           <button type="submit" className={styles.btnResgiter}>
             登入
