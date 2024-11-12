@@ -11,6 +11,7 @@ import cartRoutes from './routes/cart.js'
 import favoritesRouter from './routes/favorites.js'
 import newsletterRouter from './routes/newsletter.js'
 import commentRouter from './routes/comment.js'
+import forumRouter from './routes/forumarticle.js'
 import 'dotenv/config'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -39,7 +40,7 @@ app.use('/api/cart', cartRoutes)
 app.use('/api/favorites', favoritesRouter)
 app.use('/api/newsletter', newsletterRouter)
 app.use('/api/comments', commentRouter)
-
+app.use('/api/forumarticle',forumRouter)
 // 錯誤處理中間件
 app.use((err, req, res, next) => {
   console.error(err.stack)

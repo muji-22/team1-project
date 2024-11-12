@@ -1,39 +1,8 @@
-// import mysql from 'mysql2'
-// import pool from '##/config/db'
-// import e from 'express'
-// const router = express.Router()
-// const db = pool.promise()
-// const promisePool = pool.promise()
-// // export default async function handler(req, res) {
-// //   try {
-// //     const [rows] = await article_db.query('SELECT * FROM forum_article ')
-// //     res.status(200).json(rows)
-// //   } catch (error) {
-// //     console.error(error)
-// //     res.status(500).json({ message: 'Error fetching data from database' })
-// //   }
-// // }
-// router.get("/",async (req,res)=>{
-//   try {
-//     const [rows] = await pool.query(`SELECT * FROM forum_article `)
-//     console.log('查詢結果:', rows)  // 檢查結果
-//     res.json(rows)
-// } catch (error) {
-//     console.error('錯誤類型:', error.name)
-//     console.error('錯誤訊息:', error.message)
-//     console.error('SQL語句:', error.sql)
-//     res.status(500).json({
-//         message: '伺服器錯誤',
-//         error: error.message
-//     })
-// }
-// })
-
 import express from 'express'
 import pool from '../config/db.js' // Make sure this is the correct import path
 
 const router = express.Router()
-const db = pool.promise() // You can use this directly for querying
+const db = pool 
 
 router.get('/test', async (req, res) => {
   res.json({ message: 'testing' })
@@ -42,8 +11,8 @@ router.get('/test', async (req, res) => {
 router.get('/', async (req, res) => {
   console.log('GETING....')
   try {
-    const [rows] = await db.query('SELECT * FROM forum_article') // Use db.query with promise pool
-    console.log('Query result:', rows) // Debugging: Log the result
+    const [rows] = await db.query('SELECT * FROM forum_article') 
+   // console.log('Query result:', rows) // 檢查資料
 
     res.json(rows) // Send data back to the client as JSON
   } catch (error) {

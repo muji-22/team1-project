@@ -14,9 +14,19 @@
 	word-break: break-word;
 }
 
-.ck-editor__main {
+/* .ck-editor__main {
 	min-width: 795px;
 	max-width: 795px;
     min-height: 5vh;
-}
+} */
 
+.editorContainer {
+	min-width: 795px;
+	max-width: 100%;
+    min-height: 5vh;
+}
+  
+  
+  .editorContainer :global(.ck-editor__editable) {
+	height: 650px !important;
+  }
