@@ -1,11 +1,15 @@
 //pages/rents/index.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import ProductFilter from "@/components/product/filter";
 import RentList from "@/components/rent/RentList";
 import { GrFilter } from "react-icons/gr";
 import Breadcrumb from "@/components/Breadcrumb";
 
 function Rents() {
+  const router = useRouter();
+
+  // 篩選條件狀態
   const [filters, setFilters] = useState({
     search: "",
     gametypes: [],
@@ -15,14 +19,38 @@ function Rents() {
     price: { min: "", max: "" },
   });
 
+  // 分頁相關狀態
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
+  // 活動篩選器狀態
   const [activeFilters, setActiveFilters] = useState([]);
   const hasActiveFilters = activeFilters.length > 0;
 
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
+  // 監聽 URL 參數變化，只做初始化
+  useEffect(() => {
+    if (router.isReady) {
+      const { gametypes, search, players, playtime, age, price_min, price_max } = router.query;
+
+      const newFilters = {
+        search: search || "",
+        gametypes: gametypes ? JSON.parse(gametypes) : [],
+        players: players ? Number(players) : null,
+        playtime: playtime ? Number(playtime) : null,
+        age: age ? Number(age) : null,
+        price: {
+          min: price_min || "",
+          max: price_max || "",
+        }
+      };
+
+      setFilters(newFilters);
+      updateActiveFilters(newFilters);
+    }
+  }, [router.isReady]);
+
+  // 更新活動篩選器標籤
+  const updateActiveFilters = (newFilters) => {
     const active = [];
 
     if (newFilters.search) {
@@ -89,6 +117,37 @@ function Rents() {
     setActiveFilters(active);
   };
 
+  // 處理分頁變更
+  const handlePageChange = (page) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentPage(page);
+  };
+
+  // 處理篩選條件變更
+  const handleFilterChange = (newFilters) => {
+    setCurrentPage(1);
+    setFilters(newFilters);
+    updateActiveFilters(newFilters);
+
+    // 更新 URL，但不重新加載頁面
+    router.push({
+      pathname: '/rents',
+      query: {
+        ...(newFilters.search && { search: newFilters.search }),
+        ...(newFilters.gametypes?.length > 0 && { 
+          gametypes: JSON.stringify(newFilters.gametypes) 
+        }),
+        ...(newFilters.players && { players: newFilters.players }),
+        ...(newFilters.playtime && { playtime: newFilters.playtime }),
+        ...(newFilters.age && { age: newFilters.age }),
+        ...(newFilters.price?.min && { price_min: newFilters.price.min }),
+        ...(newFilters.price?.max && { price_max: newFilters.price.max }),
+        ...(newFilters.sortPrice && { sort_price: newFilters.sortPrice }),
+      }
+    }, undefined, { shallow: true });
+  };
+
+  // 移除篩選標籤
   const removeFilter = (filterId) => {
     const newFilters = { ...filters };
     switch (filterId) {
@@ -111,6 +170,7 @@ function Rents() {
         newFilters.price = { min: "", max: "" };
         break;
     }
+    setCurrentPage(1);
     handleFilterChange(newFilters);
   };
 
@@ -140,12 +200,13 @@ function Rents() {
           </button>
         </div>
 
+        {/* 已選擇的篩選標籤 */}
         {hasActiveFilters && (
-          <div className="d-flex flex-wrap gap-2 mt-2">
+          <div className="d-flex flex-wrap gap-2 mt-2 justify-content-end">
             {activeFilters.map((filter, index) => (
               <span
                 key={index}
-                className="badge bg-primary d-flex align-items-center gap-2"
+                className="badge bg-custom d-flex align-items-center gap-2"
               >
                 {filter.label}
                 <button
@@ -161,15 +222,28 @@ function Rents() {
       </div>
 
       <div className="row">
-        <ProductFilter onSelectTags={handleFilterChange} />
+        <ProductFilter 
+          onSelectTags={handleFilterChange} 
+          initialFilters={filters}
+        />
 
         <div className="col-12 col-lg-9">
+          <select
+            className="form-select mb-4"
+            onChange={(e) => handleFilterChange({...filters, sortPrice: e.target.value })}
+            value={filters.sortPrice || ""}
+          >
+            <option value="">租金排序</option>
+            <option value="asc">租金：低到高</option>
+            <option value="desc">租金：高到低</option>
+          </select>
+
           <RentList
             filters={filters}
             currentPage={currentPage}
             totalPages={totalPages}
             setTotalPages={setTotalPages}
-            onPageChange={(page) => setCurrentPage(page)}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>

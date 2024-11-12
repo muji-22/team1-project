@@ -1,9 +1,9 @@
 // components/product/filter/index.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DesktopFilter from "./DesktopFilter";
 import MobileFilter from "./MobileFilter";
 
-const ProductFilter = ({ onSelectTags = () => {} }) => {
+const ProductFilter = ({ onSelectTags = () => {}, initialFilters = null }) => {
   // 狀態
   const [gametypesTags, setGametypesTags] = useState(new Set());
   const [selectedPlayers, setSelectedPlayers] = useState(null);
@@ -11,6 +11,18 @@ const ProductFilter = ({ onSelectTags = () => {} }) => {
   const [selectedAge, setSelectedAge] = useState(null);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [searchQuery, setSearchQuery] = useState("");
+
+  // 同步初始篩選條件
+  useEffect(() => {
+    if (initialFilters) {
+      setGametypesTags(new Set(initialFilters.gametypes || []));
+      setSelectedPlayers(initialFilters.players);
+      setSelectedPlaytime(initialFilters.playtime);
+      setSelectedAge(initialFilters.age);
+      setPriceRange(initialFilters.price || { min: "", max: "" });
+      setSearchQuery(initialFilters.search || "");
+    }
+  }, [initialFilters]);
 
   // 選項數據
   const tags = [
