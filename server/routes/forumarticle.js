@@ -9,7 +9,7 @@ router.get('/test', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-  console.log('GETING....')
+  // console.log('GETING....')
   try {
     const [rows] = await db.query('SELECT * FROM forum_article') 
    // console.log('Query result:', rows) // 檢查資料
