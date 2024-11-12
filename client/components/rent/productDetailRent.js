@@ -97,14 +97,14 @@ const ProductDetailRent = ({
 
       <div className="row align-items-center g-2 mt-4 mb-2">
         <div className="col-sm-5">
-          {/* <AddToCartButton
+          <AddToCartButton
             className="btn buttonCustomC w-100  gap-2" 
             productId={id}
             quantity={quantity}
             days={days}
             deposit={deposit}
             rental_fee={rental_fee}
-          /> */}
+          />
         </div>
         <div className="col-sm-5">
           <Link
