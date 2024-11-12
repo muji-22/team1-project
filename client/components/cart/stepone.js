@@ -17,41 +17,75 @@ const StepOne = ({
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const { fetchCartCount } = useCart();
 
   // 獲取購物車數據
   const fetchCartData = async () => {
     try {
+      console.log('開始獲取購物車數據');
       const token = localStorage.getItem('token');
+      if (!token) {
+        console.log('未找到 token');
+        throw new Error('請先登入');
+      }
+  
+      console.log('發送請求到伺服器');
       const response = await fetch('http://localhost:3005/api/cart', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-
-      if (!response.ok) {
-        throw new Error('獲取購物車數據失敗');
-      }
-
+  
+      console.log('收到伺服器響應:', response.status);
       const data = await response.json();
+      console.log('解析後的數據:', data);
       
-      if (data.status === 'success') {
-        setCartItems(data.data.items || []);
+      if (!response.ok) {
+        throw new Error(data.message || '獲取購物車數據失敗');
+      }
+      
+      if (data.status === 'success' && data.data) {
+        console.log('成功獲取購物車數據:', data.data);
         
-        // 計算總金額 - 考慮購買和租借的不同價格計算方式
-        const total = data.data.items.reduce((sum, item) => {
-          const price = item.type === 'rental' ? item.rental_fee : item.price;
-          return sum + (price * item.quantity);
+        // 確保 items 存在且是陣列
+        const items = Array.isArray(data.data.items) ? data.data.items : [];
+        console.log('處理後的商品列表:', items);
+        
+        setCartItems(items);
+        
+        // 計算總金額
+        const total = items.reduce((sum, item) => {
+          console.log('計算商品金額:', item);
+          if (item.type === 'rental') {
+            const depositTotal = (item.deposit || 0) * (item.quantity || 1);
+            const rentalTotal = (item.rental_fee || 0) * ((item.rental_days || 3) * (item.quantity || 1));
+            return sum + depositTotal + rentalTotal;
+          } else {
+            return sum + ((item.price || 0) * (item.quantity || 1));
+          }
         }, 0);
         
+        console.log('計算得到的總金額:', total);
         setTotalAmount(total);
+        setDiscountPrice(total);
         
-        // 更新原始數據
-        setCartOriginDtl(data.data.items || []);
-        setCartProductDtl(data.data.items || []);
+        setCartOriginDtl(items);
+        setCartProductDtl(items);
+  
+        await fetchCartCount();
+      } else {
+        console.log('數據格式不正確:', data);
+        throw new Error('數據格式不正確');
       }
     } catch (error) {
       console.error('獲取購物車數據失敗:', error);
-      toast.error('獲取購物車數據失敗');
+      if (error.message === '請先登入') {
+        toast.error('請先登入');
+      } else {
+        toast.error(error.message || '獲取購物車數據失敗');
+      }
+      setCartItems([]);
+      setTotalAmount(0);
     } finally {
       setLoading(false);
     }
@@ -114,6 +148,7 @@ const StepOne = ({
           {cartItems.length === 0 && (
             <div className="text-center py-5">
               <h4>購物車是空的</h4>
+              <p className="text-muted">快去選購喜歡的商品吧！</p>
             </div>
           )}
         </Col>

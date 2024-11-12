@@ -25,7 +25,7 @@ const CartSummary = ({
     setIsApplying(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3005/api/coupons/check-status/' + couponCode, {
+      const response = await fetch(`http://localhost:3005/api/coupons/detail/${couponCode}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -37,7 +37,7 @@ const CartSummary = ({
         throw new Error(data.message || '優惠券驗證失敗');
       }
 
-      if (data.valid) {
+      if (data.valid && new Date(data.end_date) >= new Date()) {
         setAppliedCoupon(data);
         setCartCouponId(data.id);
 
@@ -53,7 +53,7 @@ const CartSummary = ({
         setDiscountPrice(total - discountAmount);
         toast.success('優惠券套用成功！');
       } else {
-        toast.error(data.message || '優惠券無效');
+        toast.error('優惠券已失效或過期');
       }
     } catch (error) {
       console.error('套用優惠券錯誤:', error);
@@ -70,6 +70,16 @@ const CartSummary = ({
     setDiscountAmount(0);
     setDiscountPrice(total);
     setCouponCode('');
+    toast.success('已移除優惠券');
+  };
+
+  // 檢查是否可以進行結帳
+  const handleNextStep = () => {
+    if (total <= 0) {
+      toast.warning('購物車是空的');
+      return;
+    }
+    onNextStep();
   };
 
   return (
@@ -137,7 +147,7 @@ const CartSummary = ({
             variant="primary"
             size="lg"
             className="w-100"
-            onClick={onNextStep}
+            onClick={handleNextStep}
             disabled={total <= 0}
           >
             前往結帳

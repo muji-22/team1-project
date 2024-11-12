@@ -11,25 +11,38 @@ router.use(authenticateToken)
 // 取得購物車內容
 router.get('/', async (req, res) => {
   const userId = req.user.id
+  console.log('正在獲取購物車，用戶ID:', userId);
 
   try {
     // 1. 先查詢或建立使用者的購物車
+    console.log('開始查詢購物車');
     let [carts] = await pool.execute(
       'SELECT * FROM cart WHERE user_id = ? AND status = 1',
       [userId]
     )
+    console.log('查詢到的購物車:', carts);
 
-    // 如果沒有進行中的購物車，建立一個新的
+    let cartId;
     if (carts.length === 0) {
+      console.log('沒有找到購物車，創建新的');
       const [result] = await pool.execute(
         'INSERT INTO cart (user_id) VALUES (?)',
         [userId]
       )
-      const cartId = result.insertId
-      carts = [{ id: cartId }]
+      cartId = result.insertId;
+      console.log('新創建的購物車ID:', cartId);
+    } else {
+      cartId = carts[0].id;
+      console.log('使用現有購物車ID:', cartId);
     }
 
-    // 2. 取得購物車內的所有項目及商品資訊
+    // 2. 檢查購物車ID是否有效
+    if (!cartId) {
+      throw new Error('無效的購物車ID');
+    }
+
+    // 3. 取得購物車內的所有項目及商品資訊
+    console.log('開始查詢購物車項目');
     const [items] = await pool.execute(
       `SELECT 
         ci.*,
@@ -37,26 +50,63 @@ router.get('/', async (req, res) => {
         COALESCE(p.price, r.rental_fee) as price,
         COALESCE(p.image, r.image) as image,
         r.deposit,
-        ci.type
+        r.rental_fee,
+        ci.type,
+        ci.rental_days,
+        ci.quantity
       FROM cart_items ci
       LEFT JOIN product p ON ci.product_id = p.id AND ci.type = 'sale'
       LEFT JOIN rent r ON ci.product_id = r.id AND ci.type = 'rental'
       WHERE ci.cart_id = ?`,
-      [carts[0].id]
+      [cartId]
     )
+    console.log('查詢到的購物車項目:', items);
 
+    // 4. 處理數據，確保所有必要的字段都存在
+    const processedItems = items.map(item => {
+      const processed = {
+        id: item.id,
+        cart_id: item.cart_id,
+        product_id: item.product_id,
+        name: item.name || '未知商品',
+        type: item.type || 'sale',
+        quantity: parseInt(item.quantity) || 1,
+        price: parseInt(item.price) || 0,
+        image: item.image,
+        created_at: item.created_at,
+        updated_at: item.updated_at
+      };
+
+      if (item.type === 'rental') {
+        processed.deposit = parseInt(item.deposit) || 0;
+        processed.rental_fee = parseInt(item.rental_fee) || 0;
+        processed.rental_days = parseInt(item.rental_days) || 3;
+      }
+
+      return processed;
+    });
+
+    console.log('處理後的購物車項目:', processedItems);
+
+    // 5. 返回成功響應
     return res.json({
       status: 'success',
       data: {
-        cart: carts[0],
-        items: items,
+        cart: {
+          id: cartId,
+          user_id: userId,
+          status: 1
+        },
+        items: processedItems,
       },
     })
+
   } catch (error) {
-    console.error('取得購物車錯誤:', error)
+    console.error('取得購物車詳細錯誤:', error)
     return res.status(500).json({
       status: 'error',
       message: '取得購物車時發生錯誤',
+      error: error.message
     })
   }
 })
@@ -64,7 +114,7 @@ router.get('/', async (req, res) => {
 // 新增商品至購物車
 router.post('/items', async (req, res) => {
   const userId = req.user.id
-  const { productId, quantity = 1, type = 'sale' } = req.body
+  const { productId, quantity = 1, type = 'sale', rental_days = 3 } = req.body
 
   try {
     // 1. 檢查商品是否存在
@@ -109,17 +159,18 @@ router.post('/items', async (req, res) => {
       // 如果已存在，更新數量
       await pool.execute(
         `UPDATE cart_items 
-         SET quantity = quantity + ?
+         SET quantity = quantity + ?,
+             rental_days = ?
          WHERE id = ?`,
-        [quantity, existingItems[0].id]
+        [quantity, rental_days, existingItems[0].id]
       )
     } else {
       // 如果不存在，新增項目
       await pool.execute(
         `INSERT INTO cart_items 
-         (cart_id, product_id, quantity, type)
-         VALUES (?, ?, ?, ?)`,
-        [cartId, productId, quantity, type]
+         (cart_id, product_id, quantity, type, rental_days)
+         VALUES (?, ?, ?, ?, ?)`,
+        [cartId, productId, quantity, type, rental_days]
       )
     }
 
@@ -140,7 +191,7 @@ router.post('/items', async (req, res) => {
 router.put('/items/:itemId', async (req, res) => {
   const userId = req.user.id
   const { itemId } = req.params
-  const { quantity } = req.body
+  const { quantity, rental_days } = req.body
 
   try {
     // 1. 確認這個項目是否屬於該使用者的購物車
@@ -160,13 +211,22 @@ router.put('/items/:itemId', async (req, res) => {
     }
 
     // 2. 更新購物車項目
-    await pool.execute(
-      `UPDATE cart_items 
-      SET quantity = ?,
-          updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?`,
-      [quantity, itemId]
-    )
+    let sql = `UPDATE cart_items 
+               SET quantity = ?,
+                   updated_at = CURRENT_TIMESTAMP`
+    
+    const params = [quantity]
+    
+    // 如果提供了租借天數，則一併更新
+    if (rental_days !== undefined) {
+      sql += `, rental_days = ?`
+      params.push(rental_days)
+    }
+    
+    sql += ` WHERE id = ?`
+    params.push(itemId)
+
+    await pool.execute(sql, params)
 
     return res.json({
       status: 'success',

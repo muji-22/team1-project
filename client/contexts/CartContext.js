@@ -2,7 +2,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
-import { FaCheckCircle } from "react-icons/fa";
 
 const CartContext = createContext();
 
@@ -34,7 +33,6 @@ export function CartProvider({ children }) {
       }
     } catch (error) {
       console.error('獲取購物車數量錯誤:', error);
-      toast.error('獲取購物車數量失敗');
       setCartCount(0);
     }
   };
@@ -52,7 +50,8 @@ export function CartProvider({ children }) {
         body: JSON.stringify({ 
           productId,
           quantity,
-          type 
+          type,
+          rental_days: type === 'rental' ? 3 : undefined // 預設租借天數為3天
         })
       });
 
@@ -65,15 +64,7 @@ export function CartProvider({ children }) {
       
       if (data.status === 'success') {
         await fetchCartCount();
-        toast.success("成功加入購物車！", {
-          position: "bottom-center",
-          autoClose: 1000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          progress: undefined,
-          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
-        });
+        toast.success('成功加入購物車！');
       }
 
       return data;
@@ -85,7 +76,7 @@ export function CartProvider({ children }) {
   };
 
   // 更新購物車項目數量
-  const updateCartItem = async (itemId, quantity) => {
+  const updateCartItem = async (itemId, quantity, rental_days) => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:3005/api/cart/items/${itemId}`, {
@@ -94,7 +85,10 @@ export function CartProvider({ children }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ quantity })
+        body: JSON.stringify({ 
+          quantity,
+          rental_days // 新增租借天數參數
+        })
       });
 
       if (!response.ok) throw new Error('更新購物車失敗');

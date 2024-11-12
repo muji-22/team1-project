@@ -22,6 +22,28 @@ const StepThree = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('credit_card'); // 'credit_card' or 'transfer'
 
+  // 計算各類商品的小計
+  const calculateSubtotals = () => {
+    const subtotals = {
+      sale: 0,
+      rental: {
+        deposit: 0,
+        rental: 0
+      }
+    };
+
+    cartOriginDtl.forEach(item => {
+      if (item.type === 'sale') {
+        subtotals.sale += item.price * item.quantity;
+      } else {
+        subtotals.rental.deposit += item.deposit * item.quantity;
+        subtotals.rental.rental += item.rental_fee * (item.rental_days || 3) * item.quantity;
+      }
+    });
+
+    return subtotals;
+  };
+
   // 確認訂單
   const handleConfirmOrder = async () => {
     if (isProcessing) return;
@@ -45,8 +67,7 @@ const StepThree = ({
           price: item.type === 'rental' ? item.rental_fee : item.price,
           ...(item.type === 'rental' && {
             deposit: item.deposit,
-            rental_start_date: item.rental_start_date,
-            rental_end_date: item.rental_end_date
+            rental_days: item.rental_days || 3
           })
         }))
       };
@@ -93,6 +114,8 @@ const StepThree = ({
     }
   };
 
+  const subtotals = calculateSubtotals();
+
   return (
     <Container>
       <Row className="justify-content-center">
@@ -114,32 +137,80 @@ const StepThree = ({
 
               {/* 商品清單 */}
               <div className="mb-4">
-                <h6 className="text-muted mb-3">商品清單</h6>
-                {cartOriginDtl.map((item, index) => (
-                  <div key={index} className="d-flex align-items-center mb-3">
-                    <img
-                      src={`http://localhost:3005/productImages/${item.product_id}/${item.product_id}-1.jpg`}
-                      alt={item.name}
-                      className="rounded"
-                      style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.target.src = "http://localhost:3005/productImages/default-product.png"
-                      }}
-                    />
-                    <div className="ms-3 flex-grow-1">
-                      <div className="d-flex justify-content-between">
-                        <h6 className="mb-1">{item.name}</h6>
-                        <span className="text-muted">x{item.quantity}</span>
-                      </div>
-                      <p className="mb-0 text-muted">
-                        {item.type === 'rental' 
-                          ? `租金：NT$ ${item.rental_fee.toLocaleString()} /天`
-                          : `NT$ ${item.price.toLocaleString()}`
-                        }
-                      </p>
+                {/* 購買商品列表 */}
+                {cartOriginDtl.filter(item => item.type === 'sale').length > 0 && (
+                  <>
+                    <h6 className="text-muted mb-3">購買商品</h6>
+                    {cartOriginDtl
+                      .filter(item => item.type === 'sale')
+                      .map((item, index) => (
+                        <div key={index} className="d-flex align-items-center mb-3">
+                          <img
+                            src={`http://localhost:3005/productImages/${item.product_id}/${item.product_id}-1.jpg`}
+                            alt={item.name}
+                            className="rounded"
+                            style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.target.src = "http://localhost:3005/productImages/default-product.png"
+                            }}
+                          />
+                          <div className="ms-3 flex-grow-1">
+                            <div className="d-flex justify-content-between">
+                              <h6 className="mb-1">{item.name}</h6>
+                              <span className="text-muted">x{item.quantity}</span>
+                            </div>
+                            <p className="mb-0 text-muted">
+                              NT$ {item.price.toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    }
+                    <div className="text-end mb-3">
+                      <span className="text-muted">小計：NT$ {subtotals.sale.toLocaleString()}</span>
                     </div>
-                  </div>
-                ))}
+                  </>
+                )}
+
+                {/* 租借商品列表 */}
+                {cartOriginDtl.filter(item => item.type === 'rental').length > 0 && (
+                  <>
+                    <h6 className="text-muted mb-3">租借商品</h6>
+                    {cartOriginDtl
+                      .filter(item => item.type === 'rental')
+                      .map((item, index) => (
+                        <div key={index} className="d-flex align-items-center mb-3">
+                          <img
+                            src={`http://localhost:3005/productImages/${item.product_id}/${item.product_id}-1.jpg`}
+                            alt={item.name}
+                            className="rounded"
+                            style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.target.src = "http://localhost:3005/productImages/default-product.png"
+                            }}
+                          />
+                          <div className="ms-3 flex-grow-1">
+                            <div className="d-flex justify-content-between">
+                              <h6 className="mb-1">{item.name}</h6>
+                              <span className="text-muted">x{item.quantity}</span>
+                            </div>
+                            <p className="mb-0 text-muted">
+                              租期：{item.rental_days || 3}天<br />
+                              租金：NT$ {item.rental_fee.toLocaleString()} /天<br />
+                              押金：NT$ {item.deposit.toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    }
+                    <div className="text-end mb-3">
+                      <span className="text-muted">
+                        租金小計：NT$ {subtotals.rental.rental.toLocaleString()}<br />
+                        押金小計：NT$ {subtotals.rental.deposit.toLocaleString()}
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
 
               <hr />
@@ -172,7 +243,7 @@ const StepThree = ({
               <div className="bg-light p-3 rounded">
                 <div className="d-flex justify-content-between mb-2">
                   <span>商品總金額</span>
-                  <span>NT$ {(discountPrice + discountAmount).toLocaleString()}</span>
+                  <span>NT$ {(subtotals.sale + subtotals.rental.rental + subtotals.rental.deposit).toLocaleString()}</span>
                 </div>
                 {discountAmount > 0 && (
                   <div className="d-flex justify-content-between mb-2 text-danger">
@@ -182,9 +253,14 @@ const StepThree = ({
                 )}
                 <hr className="my-2" />
                 <div className="d-flex justify-content-between fw-bold">
-                  <span>應付金額</span>
+                  <span>應付總額</span>
                   <span className="text-primary">NT$ {discountPrice.toLocaleString()}</span>
                 </div>
+                {subtotals.rental.deposit > 0 && (
+                  <div className="small text-muted mt-2">
+                    *含押金 NT$ {subtotals.rental.deposit.toLocaleString()}，將於商品歸還後退還
+                  </div>
+                )}
               </div>
             </Card.Body>
           </Card>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-06 21:46:59
+-- 產生時間： 2024-11-12 12:19:22
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -31,20 +31,14 @@ CREATE TABLE `cart_items` (
   `id` int(10) NOT NULL,
   `cart_id` int(10) NOT NULL,
   `product_id` int(5) UNSIGNED NOT NULL,
-  `type` enum('product','rent') NOT NULL COMMENT '商品類型:販售or租借',
+  `type` enum('sale','rental') NOT NULL COMMENT '商品類型:販售or租借',
   `quantity` int(3) NOT NULL DEFAULT 1,
   `rental_start_date` date DEFAULT NULL COMMENT '租借開始日期',
   `rental_end_date` date DEFAULT NULL COMMENT '租借結束日期',
   `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `rental_days` int(11) DEFAULT 3 COMMENT '租借天數'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 傾印資料表的資料 `cart_items`
---
-
-INSERT INTO `cart_items` (`id`, `cart_id`, `product_id`, `type`, `quantity`, `rental_start_date`, `rental_end_date`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'sale', 4, NULL, NULL, '2024-11-06 20:39:20', '2024-11-06 21:45:28');
 
 --
 -- 已傾印資料表的索引
@@ -66,7 +60,7 @@ ALTER TABLE `cart_items`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- 已傾印資料表的限制式

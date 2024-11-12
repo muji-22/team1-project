@@ -19,23 +19,19 @@ export default function CartPage() {
 
   // 購物車狀態管理
   const [currentStep, setCurrentStep] = useState(1);
-  const [cartData, setCartData] = useState({
-    products: [],
-    originalProducts: [],
-    totalAmount: 0,
-    discount: {
-      price: 0,
-      amount: 0,
-      couponId: null
-    }
-  });
+  const [discountPrice, setDiscountPrice] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [cartCouponId, setCartCouponId] = useState(null);
+  const [cartProductDtl, setCartProductDtl] = useState([]);
+  const [cartOriginDtl, setCartOriginDtl] = useState([]);
 
   // 訂單資訊
   const [orderInfo, setOrderInfo] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    payment: ''
+    name: user?.name || '',
+    phone: user?.phone || '',
+    address: user?.address || '',
+    note: '',
+    payment: 'credit_card'
   });
 
   // 檢查登入狀態
@@ -73,7 +69,7 @@ export default function CartPage() {
   const validateStep = (step) => {
     switch (step) {
       case 1:
-        if (cartData.products.length === 0) {
+        if (cartOriginDtl.length === 0) {
           toast.warning('購物車是空的');
           return false;
         }
@@ -84,14 +80,6 @@ export default function CartPage() {
       default:
         return true;
     }
-  };
-
-  // 更新購物車資料
-  const updateCartData = (newData) => {
-    setCartData(prev => ({
-      ...prev,
-      ...newData
-    }));
   };
 
   // 更新訂單資訊
@@ -123,25 +111,36 @@ export default function CartPage() {
         return (
           <StepOne
             setstepType={handleStepChange}
-            cartData={cartData}
-            updateCartData={updateCartData}
+            setDiscountPrice={setDiscountPrice}
+            setDiscountAmount={setDiscountAmount}
+            setCartCouponId={setCartCouponId}
+            setCartProductDtl={setCartProductDtl}
+            setCartOriginDtl={setCartOriginDtl}
           />
         );
       case 2:
         return (
           <StepTwo
             setstepType={handleStepChange}
-            orderInfo={orderInfo}
-            updateOrderInfo={updateOrderInfo}
-            cartData={cartData}
+            discountPrice={discountPrice}
+            discountAmount={discountAmount}
+            setOrderName={value => updateOrderInfo({ name: value })}
+            setOrderPhone={value => updateOrderInfo({ phone: value })}
+            setOrderAddress={value => updateOrderInfo({ address: value })}
           />
         );
       case 3:
         return (
           <StepThree
             setstepType={handleStepChange}
-            orderInfo={orderInfo}
-            cartData={cartData}
+            discountPrice={discountPrice}
+            discountAmount={discountAmount}
+            orderName={orderInfo.name}
+            orderPhone={orderInfo.phone}
+            orderAddress={orderInfo.address}
+            cartCouponId={cartCouponId}
+            cartOriginDtl={cartOriginDtl}
+            cartProducDtl={cartProductDtl}
           />
         );
       default:
