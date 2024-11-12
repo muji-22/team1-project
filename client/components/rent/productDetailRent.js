@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
 import DayAdjuster from "@/components/rent/dayAdjuster";
 import styles from "./productDetailRent.module.css";
-import AddToCartButton from "./AddToCartButton";
+// import AddToCartButton from "./AddToCartButton";
 import { useAuth } from '@/contexts/AuthContext';
 import FavoriteButton from "./FavoriteButton";
 import Link from "next/link";
@@ -97,14 +97,14 @@ const ProductDetailRent = ({
 
       <div className="row align-items-center g-2 mt-4 mb-2">
         <div className="col-sm-5">
-          <AddToCartButton
+          {/* <AddToCartButton
             className="btn buttonCustomC w-100  gap-2" 
             productId={id}
             quantity={quantity}
             days={days}
             deposit={deposit}
             rental_fee={rental_fee}
-          />
+          /> */}
         </div>
         <div className="col-sm-5">
           <Link

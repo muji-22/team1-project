@@ -105,8 +105,33 @@ router.get('/', async (req, res) => {
     }
 
     // 3. 添加分組、排序和分頁
-    sql += ` GROUP BY p.id ORDER BY p.id DESC LIMIT ? OFFSET ?`
-    values.push(limit, offset)
+sql += ` GROUP BY p.id`;
+
+// 新增價格排序選項
+if (req.query.sort_price) {
+  if (req.query.sort_price === 'asc') {
+    sql += ` ORDER BY p.price ASC`;
+  } else if (req.query.sort_price === 'desc') {
+    sql += ` ORDER BY p.price DESC`;
+  }
+} else {
+  sql += ` ORDER BY p.id ASC`;
+}
+
+sql += ` LIMIT ? OFFSET ?`;
+values.push(limit, offset);
+
+
+    // // 新增價格排序選項
+    // if (req.query.sort_price) {
+    //   if (req.query.sort_price === 'asc') {
+    //     sql += ` ORDER BY p.price ASC`
+    //   } else if (req.query.sort_price === 'desc') {
+    //     sql += ` ORDER BY p.price DESC`
+    //   }
+    // } else {
+    //   sql += ` ORDER BY p.id ASC`
+    // }
 
     // 4. 執行主要查詢
     const [rows] = await pool.query(sql, values)

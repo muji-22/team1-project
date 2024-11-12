@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../product/productCard.module.css";
-import AddToCartButton from "./AddToCartButton";
+// import AddToCartButton from "./AddToCartButton";
 import { useAuth } from '@/contexts/AuthContext';
 import FavoriteButton from "./FavoriteButton";
 
@@ -98,11 +98,11 @@ const RentCard = ({
           </div>
 
           {/* 加入購物車按鈕 */}
-          <AddToCartButton
+          {/* <AddToCartButton
             productId={id}
             className="buttonCustomC w-100 text-nowrap"
             type="rental"
-          />
+          /> */}
         </div>
       </div>
     </Link>
