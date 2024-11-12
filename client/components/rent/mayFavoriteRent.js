@@ -15,7 +15,7 @@ const MayFavoriteRent = ({ currentProduct }) => {
         setLoading(true);
         
         // 獲取商品，設定 limit 參數來限制回傳數量
-        const response = await fetch('http://localhost:3005/api/products?limit=12');
+        const response = await fetch('http://localhost:3005/api/rents?limit=12');
         
         if (!response.ok) {
           throw new Error('獲取商品失敗');
@@ -24,7 +24,7 @@ const MayFavoriteRent = ({ currentProduct }) => {
         const result = await response.json();
         
         // 從 result.data.products 取得商品列表
-        const availableProducts = result.data.products.filter(product => 
+        const availableProducts = result.data.rents.filter(product => 
           product.id !== currentProduct.id && 
           product.valid === 1
         );
@@ -46,7 +46,7 @@ const MayFavoriteRent = ({ currentProduct }) => {
         }
 
         setRecommendProducts(randomProducts);
-        
+        console.log(randomProducts);
       } catch (error) {
         console.error("獲取推薦商品失敗:", error);
         setError(error.message || "無法載入推薦商品");
@@ -77,13 +77,10 @@ const MayFavoriteRent = ({ currentProduct }) => {
     <div className="container my-5">
       <h2 className="mb-4 text-center fw-bold">你可能也喜歡</h2>
       <div className="row g-4 justify-content-center">
-        {recommendProducts.map((product) => (
-          <div key={product.id} className="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+        {recommendProducts.map((rent) => (
+          <div key={rent.id} className="col-xl-3 col-lg-3 col-md-6 col-sm-12">
             <RentCard
-              id={product.id}
-              name={product.name}
-              price={product.price}
-              description={product.description}
+              {...rent}
             />
           </div>
         ))}

@@ -1,9 +1,10 @@
 // components/rent/RentCard.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../product/productCard.module.css";
-import FavoriteButton from "../product/FavoriteButton";
-import AddToCartButton from "../product/AddToCartButton";
+import AddToCartButton from "./AddToCartButton";
+import { useAuth } from '@/contexts/AuthContext';
+import FavoriteButton from "./FavoriteButton";
 
 const RentCard = ({
   id,
@@ -24,6 +25,35 @@ const RentCard = ({
     60: "60分鐘",
     "60+": "60分鐘以上",
   };
+  const { user } = useAuth();
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 檢查收藏狀態
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!user) return;
+
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/favorites/check/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setIsFavorited(data.data.isFavorited);
+        }
+      } catch (error) {
+        console.error("檢查收藏狀態失敗:", error);
+      }
+    };
+
+    checkFavoriteStatus();
+  }, [id, user]);
 
   return (
     <Link href={`/rent/${id}`} className="text-decoration-none">
