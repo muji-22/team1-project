@@ -35,7 +35,12 @@ import pool from '../config/db.js' // Make sure this is the correct import path
 const router = express.Router()
 const db = pool.promise() // You can use this directly for querying
 
+router.get('/test', async (req, res) => {
+  res.json({ message: 'testing' })
+})
+
 router.get('/', async (req, res) => {
+  console.log('GETING....')
   try {
     const [rows] = await db.query('SELECT * FROM forum_article') // Use db.query with promise pool
     console.log('Query result:', rows) // Debugging: Log the result
