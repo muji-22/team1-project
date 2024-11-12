@@ -1,21 +1,20 @@
+// components/product/AddToCartButton.js
 import React, { useState } from 'react';
 import { IoCartOutline } from "react-icons/io5";
-import { FaCheckCircle } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 
 const AddToCartButton = ({ 
   productId,
   className,
   buttonText = "加入購物車",
   quantity = 1,
-  type = "sale"
+  type = "sale" // 'sale' 或 'rental'
 }) => {
   const [isAdding, setIsAdding] = useState(false);
   const { isAuthenticated } = useAuth();
-  const { addToCart } = useCart(); // 改用 addToCart 方法
+  const { addToCart } = useCart();
   const router = useRouter();
 
   const handleAddToCart = async (e) => {
@@ -31,29 +30,9 @@ const AddToCartButton = ({
 
     setIsAdding(true);
     try {
-      // 使用 CartContext 提供的 addToCart 方法
-      const result = await addToCart(productId, quantity, type);
-      
-      if (result.status === "success") {
-        toast.success("成功加入購物車！", {
-          position: "bottom-center",
-          autoClose: 1000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          progress: undefined,
-          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
-          progressStyle: { backgroundColor: "#40CBCE" },
-        });
-      } else {
-        throw new Error(result.message || "加入購物車失敗");
-      }
+      await addToCart(productId, quantity, type);
     } catch (error) {
       console.error("加入購物車錯誤:", error);
-      toast.error("加入購物車失敗，請稍後再試", {
-        position: "bottom-center",
-        autoClose: 1500,
-      });
     } finally {
       setIsAdding(false);
     }

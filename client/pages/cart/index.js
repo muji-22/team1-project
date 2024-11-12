@@ -2,65 +2,151 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useCart } from '@/contexts/CartContext';
-import StepOne from '@/components/cart/stepone';
+import StepOne from '@/components/cart/Stepone';
 import StepTwo from '@/components/cart/steptwo';
-import StepThree from '@/components/cart/stepthree';
+import StepThree from '@/components/cart/Stepthree';
 import styles from '@/styles/cart.module.css';
 import MayFavorite from '@/components/product/mayFavorite';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 export default function CartPage() {
   // Auth 相關
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
-
-  // 購物車相關
   const { fetchCartCount } = useCart();
-  const [payment, setPayment] = useState('');
-  const [discountPrice, setDiscountPrice] = useState(0);
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [stepType, setStepType] = useState(1);
-  const [orderName, setOrderName] = useState('');
-  const [orderPhone, setOrderPhone] = useState('');
-  const [orderAddress, setOrderAddress] = useState('');
-  const [cartCouponId, setCartCouponId] = useState(0);
-  const [cartProducDtl, setCartProductDtl] = useState([]);
-  const [cartOriginDtl, setCartOriginDtl] = useState([]);
 
-  // 檢查是否登入
+  // 購物車狀態管理
+  const [currentStep, setCurrentStep] = useState(1);
+  const [cartData, setCartData] = useState({
+    products: [],
+    originalProducts: [],
+    totalAmount: 0,
+    discount: {
+      price: 0,
+      amount: 0,
+      couponId: null
+    }
+  });
+
+  // 訂單資訊
+  const [orderInfo, setOrderInfo] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    payment: ''
+  });
+
+  // 檢查登入狀態
   useEffect(() => {
     if (!isAuthenticated()) {
+      toast.error('請先登入');
       router.push('/auth/login');
+      return;
     }
+    
+    // 初始化購物車
+    initializeCart();
   }, [isAuthenticated]);
 
-  // 初始化時獲取購物車數據
-  useEffect(() => {
-    if (isAuthenticated()) {
-      fetchCartCount();
+  // 初始化購物車
+  const initializeCart = async () => {
+    try {
+      await fetchCartCount();
+    } catch (error) {
+      console.error('購物車初始化失敗:', error);
+      toast.error('購物車載入失敗，請重試');
     }
-  }, []);
-
-  // 步驟切換處理
-  const handleStepChange = (newStep) => {
-    setStepType(newStep);
   };
 
-  // 步驟指示器渲染
-  const renderStepIndicator = (stepNumber, text) => {
-    return (
-      <Col className={`${styles.step} ${stepType === stepNumber && styles.nowStep}`}>
-        <div className={styles.stepBox}>
-          <div className={styles.stepNum}>{stepNumber}</div>
-        </div>
-        <div className={styles.stepWord}>
-          <div className={styles.phoneDNone}>第{stepNumber}步</div>
-          <div className={`${styles.phoneDNone} ${styles.stepline}`}></div>
-          <span>{text}</span>
-        </div>
-      </Col>
-    );
+  // 步驟控制
+  const handleStepChange = (step) => {
+    // 驗證步驟切換條件
+    if (step > currentStep && !validateStep(currentStep)) {
+      return;
+    }
+    setCurrentStep(step);
+  };
+
+  // 步驟驗證
+  const validateStep = (step) => {
+    switch (step) {
+      case 1:
+        if (cartData.products.length === 0) {
+          toast.warning('購物車是空的');
+          return false;
+        }
+        return true;
+      case 2:
+        // 驗證訂單基本資料
+        return true;
+      default:
+        return true;
+    }
+  };
+
+  // 更新購物車資料
+  const updateCartData = (newData) => {
+    setCartData(prev => ({
+      ...prev,
+      ...newData
+    }));
+  };
+
+  // 更新訂單資訊
+  const updateOrderInfo = (info) => {
+    setOrderInfo(prev => ({
+      ...prev,
+      ...info
+    }));
+  };
+
+  // 渲染步驟指示器
+  const renderStepIndicator = (number, text) => (
+    <Col className={`${styles.step} ${currentStep === number ? styles.nowStep : ''}`}>
+      <div className={styles.stepBox}>
+        <div className={styles.stepNum}>{number}</div>
+      </div>
+      <div className={styles.stepWord}>
+        <div className={styles.phoneDNone}>第{number}步</div>
+        <div className={`${styles.phoneDNone} ${styles.stepline}`}></div>
+        <span>{text}</span>
+      </div>
+    </Col>
+  );
+
+  // 渲染當前步驟內容
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <StepOne
+            setstepType={handleStepChange}
+            cartData={cartData}
+            updateCartData={updateCartData}
+          />
+        );
+      case 2:
+        return (
+          <StepTwo
+            setstepType={handleStepChange}
+            orderInfo={orderInfo}
+            updateOrderInfo={updateOrderInfo}
+            cartData={cartData}
+          />
+        );
+      case 3:
+        return (
+          <StepThree
+            setstepType={handleStepChange}
+            orderInfo={orderInfo}
+            cartData={cartData}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -74,42 +160,7 @@ export default function CartPage() {
       </Container>
 
       <div className="mb-4">
-        {stepType === 1 && (
-          <StepOne
-            setstepType={handleStepChange}
-            setDiscountPrice={setDiscountPrice}
-            setDiscountAmount={setDiscountAmount}
-            setCartCouponId={setCartCouponId}
-            setCartProductDtl={setCartProductDtl}
-            setCartOriginDtl={setCartOriginDtl}
-          />
-        )}
-
-        {stepType === 2 && (
-          <StepTwo
-            setstepType={handleStepChange}
-            discountPrice={discountPrice}
-            discountAmount={discountAmount}
-            setOrderAddress={setOrderAddress}
-            setOrderName={setOrderName}
-            setOrderPhone={setOrderPhone}
-          />
-        )}
-
-        {stepType === 3 && (
-          <StepThree
-            setstepType={handleStepChange}
-            discountPrice={discountPrice}
-            discountAmount={discountAmount}
-            payment={payment}
-            orderName={orderName}
-            orderAddress={orderAddress}
-            orderPhone={orderPhone}
-            cartCouponId={cartCouponId}
-            cartOriginDtl={cartOriginDtl}
-            cartProducDtl={cartProducDtl}
-          />
-        )}
+        {renderStepContent()}
       </div>
 
       <Container>

@@ -1,3 +1,4 @@
+// routes/cart.js
 import express from 'express'
 import pool from '../config/db.js'
 import { authenticateToken } from '../middlewares/auth.js'
@@ -9,7 +10,7 @@ router.use(authenticateToken)
 
 // 取得購物車內容
 router.get('/', async (req, res) => {
-  const userId = req.user.id // 改用 JWT 中的 user id
+  const userId = req.user.id
 
   try {
     // 1. 先查詢或建立使用者的購物車
@@ -29,19 +30,18 @@ router.get('/', async (req, res) => {
     }
 
     // 2. 取得購物車內的所有項目及商品資訊
-    // (資料庫"cart_items"簡寫成 "ci")
-    // (資料庫"product"簡寫成 "p")
     const [items] = await pool.execute(
-      `
-      SELECT 
+      `SELECT 
         ci.*,
-        p.name,
-        p.price,
-        p.image
+        COALESCE(p.name, r.name) as name,
+        COALESCE(p.price, r.rental_fee) as price,
+        COALESCE(p.image, r.image) as image,
+        r.deposit,
+        ci.type
       FROM cart_items ci
-      JOIN product p ON ci.product_id = p.id
-      WHERE ci.cart_id = ?
-    `,
+      LEFT JOIN product p ON ci.product_id = p.id AND ci.type = 'sale'
+      LEFT JOIN rent r ON ci.product_id = r.id AND ci.type = 'rental'
+      WHERE ci.cart_id = ?`,
       [carts[0].id]
     )
 
@@ -62,12 +62,27 @@ router.get('/', async (req, res) => {
 })
 
 // 新增商品至購物車
-router.post('/product-items/items', async (req, res) => {
-  const userId = req.user.id // 改用 JWT 中的 user id
-  const { productId, quantity } = req.body
+router.post('/items', async (req, res) => {
+  const userId = req.user.id
+  const { productId, quantity = 1, type = 'sale' } = req.body
 
   try {
-    // 1. 取得或建立購物車
+    // 1. 檢查商品是否存在
+    let [product] = await pool.execute(
+      type === 'sale'
+        ? 'SELECT id FROM product WHERE id = ? AND valid = 1'
+        : 'SELECT id FROM rent WHERE id = ? AND valid = 1',
+      [productId]
+    )
+
+    if (product.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '商品不存在'
+      })
+    }
+
+    // 2. 取得或建立購物車
     let [carts] = await pool.execute(
       'SELECT * FROM cart WHERE user_id = ? AND status = 1',
       [userId]
@@ -84,10 +99,10 @@ router.post('/product-items/items', async (req, res) => {
       cartId = carts[0].id
     }
 
-    // 2. 檢查商品是否已在購物車中
+    // 3. 檢查商品是否已在購物車中
     const [existingItems] = await pool.execute(
-      'SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ? type = ?',
-      [cartId, productId, 'product']
+      'SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ? AND type = ?',
+      [cartId, productId, type]
     )
 
     if (existingItems.length > 0) {
@@ -102,9 +117,9 @@ router.post('/product-items/items', async (req, res) => {
       // 如果不存在，新增項目
       await pool.execute(
         `INSERT INTO cart_items 
-         (cart_id, product_id, quantity)
-         VALUES (?, ?, ?)`,
-        [cartId, productId, quantity]
+         (cart_id, product_id, quantity, type)
+         VALUES (?, ?, ?, ?)`,
+        [cartId, productId, quantity, type]
       )
     }
 
@@ -122,20 +137,18 @@ router.post('/product-items/items', async (req, res) => {
 })
 
 // 更新購物車商品數量
-router.put('/product-items/:itemId', async (req, res) => {
-  const userId = req.user.id // 改用 JWT 中的 user id
+router.put('/items/:itemId', async (req, res) => {
+  const userId = req.user.id
   const { itemId } = req.params
   const { quantity } = req.body
 
   try {
     // 1. 確認這個項目是否屬於該使用者的購物車
     const [items] = await pool.execute(
-      `
-      SELECT ci.* 
+      `SELECT ci.* 
       FROM cart_items ci
       JOIN cart c ON ci.cart_id = c.id
-      WHERE ci.id = ? AND c.user_id = ? AND c.status = 1
-    `,
+      WHERE ci.id = ? AND c.user_id = ? AND c.status = 1`,
       [itemId, userId]
     )
 
@@ -148,12 +161,10 @@ router.put('/product-items/:itemId', async (req, res) => {
 
     // 2. 更新購物車項目
     await pool.execute(
-      `
-      UPDATE cart_items 
+      `UPDATE cart_items 
       SET quantity = ?,
           updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `,
+      WHERE id = ?`,
       [quantity, itemId]
     )
 
@@ -171,19 +182,17 @@ router.put('/product-items/:itemId', async (req, res) => {
 })
 
 // 刪除購物車商品
-router.delete('/product-items/:itemId', async (req, res) => {
-  const userId = req.user.id // 改用 JWT 中的 user id
+router.delete('/items/:itemId', async (req, res) => {
+  const userId = req.user.id
   const { itemId } = req.params
 
   try {
     // 1. 確認這個項目是否屬於該使用者的購物車
     const [items] = await pool.execute(
-      `
-      SELECT ci.* 
+      `SELECT ci.* 
       FROM cart_items ci
       JOIN cart c ON ci.cart_id = c.id
-      WHERE ci.id = ? AND c.user_id = ? AND c.status = 1
-    `,
+      WHERE ci.id = ? AND c.user_id = ? AND c.status = 1`,
       [itemId, userId]
     )
 
@@ -195,7 +204,10 @@ router.delete('/product-items/:itemId', async (req, res) => {
     }
 
     // 2. 刪除購物車項目
-    await pool.execute('DELETE FROM cart_items WHERE id = ?', [itemId])
+    await pool.execute(
+      'DELETE FROM cart_items WHERE id = ?',
+      [itemId]
+    )
 
     return res.json({
       status: 'success',
@@ -212,7 +224,7 @@ router.delete('/product-items/:itemId', async (req, res) => {
 
 // 清空購物車
 router.delete('/clear', async (req, res) => {
-  const userId = req.user.id // 改用 JWT 中的 user id
+  const userId = req.user.id
 
   try {
     // 1. 取得使用者的購物車 ID
@@ -223,9 +235,10 @@ router.delete('/clear', async (req, res) => {
 
     if (carts.length > 0) {
       // 2. 刪除該購物車內的所有項目
-      await pool.execute('DELETE FROM cart_items WHERE cart_id = ?', [
-        carts[0].id,
-      ])
+      await pool.execute(
+        'DELETE FROM cart_items WHERE cart_id = ?',
+        [carts[0].id]
+      )
     }
 
     return res.json({

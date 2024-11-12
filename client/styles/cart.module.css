@@ -1,62 +1,90 @@
-.pcDNone {
-    display: none;
-}
-@media (max-width: 393px) {
-    .pcDNone {
-        display: block;
-    }
-}
-.stepBar{
-    padding: 5rem 3rem 5rem 3rem;
+/* styles/cart.module.css */
+.summaryCard {
+  position: sticky;
+  top: 20px;
 }
 
-.step{
-    display: flex;
-    max-width: 350px;
-    opacity: 0.5;
-    gap: 10px;
+.cartItemImage {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.cartItemImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.priceDetails {
+  font-size: 1rem;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantityControl button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.stepBar {
+  padding: 2rem 0;
+  background-color: #f8f9fa;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .stepBox {
-    background: rgb(45, 172, 174);
-    display: flex;
-    width: 100px;
-    height: 100px;
-    padding: 5px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
-.nowStep {
-    opacity: 1;
-}
-@media (max-width: 393px) {
-    .nowStep{
-        display: flex;
-    }
-}
-.stepNum{
-    font-size: 50px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    width: 50px;
-    padding-right: 3px;
-    text-align: center;
+
+.nowStep .stepBox {
+  background-color: var(--bs-primary);
+  color: white;
 }
 
 .stepWord {
-    display: flex;
-    flex-direction: column;
-    margin-block: auto;
-    margin-left: 12px;
-    color: #030303;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .stepline {
-    height: 1px;
-    width: 147px;
-    background-color: #000;
-    margin-block: 10px;
+  width: 30px;
+  height: 2px;
+  background-color: #dee2e6;
+}
+
+@media (max-width: 768px) {
+  .cartItemImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .phoneDNone {
+    display: none;
+  }
 }
