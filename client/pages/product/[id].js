@@ -9,7 +9,6 @@ import ProductDetailMainNotice from "@/components/product/productDetailMainNotic
 import ProductDetailMainNotice2 from "@/components/product/productDetailMainNotice2";
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 import MayFavorite from "@/components/product/mayFavorite";
-import AddProduct from "@/components/cart/addProduct";
 import Breadcrumb from "@/components/Breadcrumb";
 
 function ProductDetail() {
@@ -45,7 +44,7 @@ function ProductDetail() {
         const data = await response.json();
 
         // 處理標籤字串
-        data.tagList = data.tags ? data.tags.split(",") : [];
+        // data.tagList = data.tags ? data.tags.split(',').filter(Boolean) : [];
         setProduct(data);
       } catch (error) {
         console.error("獲取商品失敗:", error);

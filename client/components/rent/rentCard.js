@@ -1,69 +1,112 @@
-import React from "react";
-import { IoMdHeartEmpty } from "react-icons/io";
-import styles from "./rentCard.module.css";
-import { FaCartPlus } from "react-icons/fa";
-// // 定義產品資料型別
+// components/rent/RentCard.js
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import styles from "../product/productCard.module.css";
+import AddToCartButton from "../product/AddToCartButton";
+import { useAuth } from '@/contexts/AuthContext';
+import FavoriteButton from "./FavoriteButton";
 
-// // 元件接收產品資料作為props
-const RentCard = ({  id, 
-    name, 
-    rental_fee,    // 改用租金
-    deposit,       // 押金
-    penalty_fee,   // 罰金
-    image,         // 圖片路徑
-    onAddToCart, 
-    onAddToWishlist  }) => {
-    // 取得商品第一張圖片（主圖）的路徑
-    const imageUrl = `http://localhost:3005/productImages/${id}/${id}-1.jpg`;
-    const handleImageError = (e) => {
-        e.target.src =
-            "http://localhost:3005/productImages/default-product.png";
+const RentCard = ({
+  id,
+  name,
+  rental_fee,
+  deposit,
+  description,
+  min_users,
+  max_users,
+  playtime,
+  tags = [],
+  className,
+}) => {
+  // 遊戲時間對照表
+  const playtimeMap = {
+    15: "15分鐘",
+    30: "30分鐘",
+    60: "60分鐘",
+    "60+": "60分鐘以上",
+  };
+  const { user } = useAuth();
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 檢查收藏狀態
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!user) return;
+
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/favorites/check/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setIsFavorited(data.data.isFavorited);
+        }
+      } catch (error) {
+        console.error("檢查收藏狀態失敗:", error);
+      }
     };
 
-    return (
-        <>
-            <div className="col-lg-4 col-md-5 col-sm-6 mb-4">
-                <div className={`card border-0 ${styles.card} col-2`}>
-                    <img
-                        className={`card-img-top ${styles.img}`}
-                        src={imageUrl}
-                        onError={handleImageError}
-                        alt={name}
-                    />
-                    <div className="card-body">
-                    <h5 className={`card-title ${styles.cardTitle}`}>(租借){name}</h5>
-                        <p className="card-text price origin text-danger ">
-                            <del> </del>
-                            {/* 要放打折後原價的位子] */}
-                        </p>
-                        <div className="row align-items-center g-2 mb-2">
-                            <div className="col">
-                                <p className="card-text price mb-0">
-                                    {" "}
-                                    NT$ {rental_fee?.toLocaleString()}/日
-                                </p>
-                            </div>
-                            <div className="col-auto">
-                                <a
-                                    className="btn btn-outline-danger border-0"
-                                    onClick={() => onAddToWishlist?.(id)}
-                                    title="加入收藏"
-                                >
-                                    <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
-                                </a>
-                            </div>
-                        </div>
-                        <a
-                            href="#"
-                            className="btn btn-custom  w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto "
-                        >
-                            加入購物車 <FaCartPlus size={20} />
-                        </a>
-                    </div>
-                </div>
+    checkFavoriteStatus();
+  }, [id, user]);
+
+  return (
+    <Link href={`/rent/${id}`} className="text-decoration-none">
+      <div className={`card h-100 ${styles.card} ${className || ""}`}>
+        <div className="position-relative">
+          {/* 商品圖片 */}
+          <div className={`position-relative ${styles.imageContainer}`}>
+            <img
+              src={`http://localhost:3005/productImages/${id}/${id}-1.jpg`}
+              className={`card-img-top ${styles.productImage}`}
+              alt={name}
+              onError={(e) => {
+                e.target.src =
+                  "http://localhost:3005/productImages/default-product.png";
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="card-body d-flex flex-column">
+          <h5 className="card-title text-dark">{name}</h5>
+          <p className="card-text text-secondary text-truncate">
+            {description || "無商品描述"}
+          </p>
+
+          <div className="mt-auto d-flex justify-content-between align-items-center">
+            {/* 租金資訊 */}
+            <div className="mb-2">
+              <p className="card-text mb-1">
+                租金：
+                <span className="fw-bold">
+                  NT$ {(rental_fee || 0).toLocaleString()}
+                </span>{" "}
+                /天
+              </p>
+              <p className="card-text small text-muted">
+                押金：NT$ {(deposit || 0).toLocaleString()}
+              </p>
             </div>
-        </>
-    );
+            {/* 收藏按鈕 */}
+            <FavoriteButton productId={id} className="pe-2" />
+          </div>
+
+          {/* 加入購物車按鈕 */}
+          <AddToCartButton
+            productId={id}
+            className="buttonCustomC w-100 text-nowrap"
+            type="rental"
+          />
+        </div>
+      </div>
+    </Link>
+  );
 };
 
 export default RentCard;

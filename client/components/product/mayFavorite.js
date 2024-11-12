@@ -14,30 +14,38 @@ const MayFavorite = ({ currentProduct }) => {
       try {
         setLoading(true);
         
-        const queryParams = new URLSearchParams({
-          exclude: currentProduct.id,
-          limit: 4,
-          tags: currentProduct.category_tag || ''
-        });
+        // 獲取商品，設定 limit 參數來限制回傳數量
+        const response = await fetch('http://localhost:3005/api/products?limit=12');
+        
+        if (!response.ok) {
+          throw new Error('獲取商品失敗');
+        }
 
-        const response = await fetch(
-          `http://localhost:3005/api/products`  // 先使用一般的商品API
+        const result = await response.json();
+        
+        // 從 result.data.products 取得商品列表
+        const availableProducts = result.data.products.filter(product => 
+          product.id !== currentProduct.id && 
+          product.valid === 1
         );
 
-        const data = await response.json();
-        
-        // 手動過濾和隨機選擇4個商品
-        const filteredProducts = data
-          .filter(p => p.id !== currentProduct.id)
-          .filter(p => p.valid === 1);
-          
-        // 隨機打亂陣列
-        const shuffled = filteredProducts.sort(() => 0.5 - Math.random());
-        
-        // 取前4個
-        const selected = shuffled.slice(0, 4);
+        // 如果沒有足夠的商品，直接返回全部
+        if (availableProducts.length <= 4) {
+          setRecommendProducts(availableProducts);
+          return;
+        }
 
-        setRecommendProducts(selected);
+        // 隨機選擇4個商品
+        const randomProducts = [];
+        const tempProducts = [...availableProducts];
+        
+        for (let i = 0; i < 4 && tempProducts.length > 0; i++) {
+          const randomIndex = Math.floor(Math.random() * tempProducts.length);
+          randomProducts.push(tempProducts[randomIndex]);
+          tempProducts.splice(randomIndex, 1);
+        }
+
+        setRecommendProducts(randomProducts);
         
       } catch (error) {
         console.error("獲取推薦商品失敗:", error);
@@ -50,7 +58,6 @@ const MayFavorite = ({ currentProduct }) => {
     fetchRecommendProducts();
   }, [currentProduct]);
 
-  // 載入中狀態
   if (loading) {
     return (
       <div className="container my-5">
@@ -64,26 +71,25 @@ const MayFavorite = ({ currentProduct }) => {
     );
   }
 
-  // 沒有推薦商品時不顯示區塊
-  if (!recommendProducts?.length) return null;
+  if (error || !recommendProducts?.length) return null;
 
   return (
     <div className="container my-5">
-        <h2 className="mb-4 text-center fw-bold">你可能也喜歡</h2>
-        <div className="row g-4 justify-content-center">
-            {recommendProducts.slice(0, 4).map((product) => (
-                <div key={product.id} className="col-xl-3 col-lg-3 col-md-6 col-sm-12">
-                    <ProductCard
-                        id={product.id}
-                        name={product.name}
-                        price={product.price}
-                        description={product.description}
-                    />
-                </div>
-            ))}
-        </div>
+      <h2 className="mb-4 text-center fw-bold">你可能也喜歡</h2>
+      <div className="row g-4 justify-content-center">
+        {recommendProducts.map((product) => (
+          <div key={product.id} className="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+            <ProductCard
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              description={product.description}
+            />
+          </div>
+        ))}
+      </div>
     </div>
-);
+  );
 };
 
 export default MayFavorite;

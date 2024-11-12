@@ -33,7 +33,7 @@ const ProductCard = ({ id, name, price, description, className }) => {
           <div className="mt-auto">
             <div className="d-flex justify-content-between align-items-center">
               {/* 商品價格 */}
-              <span className="card-text fs-5 m-2">
+              <span className="card-text fs-5 m-2 fw-bold">
                 NT$ {(price || 0).toLocaleString()}
               </span>
 
@@ -45,7 +45,7 @@ const ProductCard = ({ id, name, price, description, className }) => {
             </div>
 
             {/* 加入購物車按鈕 */}
-            <AddToCartButton productId={id} className="buttonCustomC w-100" />
+            <AddToCartButton productId={id} className="buttonCustomC w-100 text-nowrap" type="sale"/>
           </div>
         </div>
       </div>

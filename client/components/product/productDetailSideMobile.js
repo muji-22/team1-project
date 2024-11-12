@@ -24,6 +24,8 @@ const ProductDetailSideMobile = ({
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // 新增數量管理狀態
+  const [quantity, setQuantity] = useState(1);
 
   // 獲取商品資料
   useEffect(() => {
@@ -48,7 +50,7 @@ const ProductDetailSideMobile = ({
         const data = await response.json();
 
         // 處理標籤字串
-        data.tagList = data.tags ? data.tags.split(",") : [];
+        // data.tagList = data.tags ? data.tags.split(',').filter(Boolean) : [];
         setProduct(data);
       } catch (error) {
         console.error("獲取商品失敗:", error);
@@ -60,6 +62,11 @@ const ProductDetailSideMobile = ({
 
     fetchProduct();
   }, [id]);
+
+  // 處理數量變更
+  const handleQuantityChange = (newQuantity) => {
+    setQuantity(newQuantity);
+  };
 
   // 載入中畫面
   if (loading) {
@@ -89,8 +96,8 @@ const ProductDetailSideMobile = ({
 
   return (
     <>
-      <div class="row mt-5">
-        <div class="col-12 text-center">
+      <div className="row mt-5">
+        <div className="col-12 text-center">
           <h4 style={{ fontWeight: "700" }}>
             {name}
             <a href="#" className="btn">

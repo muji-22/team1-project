@@ -43,7 +43,7 @@ export default function CouponCard({
   const getBackgroundClass = () => {
     if (isUsed) return 'bg-secondary'; // 已使用
     if (isExpired) return 'bg-danger';  // 已過期
-    return 'bg-primary';  // 可使用
+    return 'bg-custom';  // 可使用
   }
 
   // 根據優惠券狀態取得狀態文字
@@ -114,7 +114,7 @@ export default function CouponCard({
               
               {isOwned && !isUsed && !isExpired && (
                 <button 
-                  className="btn btn-sm btn-outline-primary w-100 mt-2"
+                  className="btn btn-sm btn-outline-custom w-100 mt-2"
                   onClick={() => window.location.href = '/products'}
                 >
                   立即使用

@@ -1,0 +1,132 @@
+.mainContent {
+    height: calc(100% - 60px); /* 扣掉 navUser 高度 */
+    padding: 20px;
+    overflow: hidden;
+  }
+  
+  .listWrapper {
+    height: 100%;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 預設兩欄 */
+    gap: 20px;
+    padding-right: 10px;
+  }
+  
+  .cardWrapper {
+    height: 100%;
+  }
+  
+  .card {
+    height: 100%;
+    position: relative;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .imageLink {
+    display: block;
+    text-decoration: none;
+  }
+  
+  .productImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .cardBody {
+    padding: 15px;
+  }
+  
+  .titleLink {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .productTitle {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .price {
+    color: #dc3545;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .removeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: white;
+    color: #dc3545;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .removeButton:hover {
+    background: #dc3545;
+    color: white;
+  }
+  
+  .loadingContainer,
+  .emptyContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+  }
+  
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* RWD 樣式 */
+  @media (max-width: 992px) {
+    .mainContent {
+      padding: 10px;
+    }
+  
+    .listWrapper {
+      grid-template-columns: 1fr; /* 手機版改為單欄 */
+      gap: 15px;
+    }
+  
+    .productImage {
+      height: 150px;
+    }
+  
+    .cardBody {
+      padding: 10px;
+    }
+  
+    .productTitle {
+      font-size: 0.9rem;
+    }
+  }

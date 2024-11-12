@@ -1,215 +1,179 @@
+// components/cart/StepTwo.js
 import React, { useState, useEffect } from 'react';
-import { Col, } from 'react-bootstrap';
-import axios from 'axios';
-import CreditCard from './creditCard'
-import OrderList from './orderList'
-import Swal from "sweetalert2";
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useAuth } from '@/contexts/AuthContext';
+import styles from '@/styles/cart.module.css';
 
-export default function StepTwo({ setstepType, discountPrice, discountAmount, setPayment }) {
-  const [selectedOption, setSelectedOption] = useState('');
+const StepTwo = ({
+  setstepType,
+  discountPrice,
+  discountAmount,
+  setOrderName,
+  setOrderPhone,
+  setOrderAddress,
+}) => {
+  const { user } = useAuth();
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    note: ''
+  });
+  const [validated, setValidated] = useState(false);
 
-  const [cardSelectedOption, setCardSelectedOption] = useState('')
-
-  const { cart, items } = useCart();
-
-  const [accordionState, setAccordionState] = useState(true)
-
-  const [cardState, setCardState] = useState([]);
-
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-
-    //console.log(selectedOption)
-  };
-
-
-
-  const detectCard = cardState.number == '' || cardState.expiry == '' || cardState.cvc == '' || cardState.name == '' || selectedOption == ''
-
-  const sendData = (n) => {
-    // 在子组件中调用父组件传递的回调函数，并传递数据
-    setstepType(n);
-
-  };
-
-  //console.log(cardState)
-
-  const detectOnlyCourse = items.filter((item) => item.product_id === null && item.isChecked === true);
-  const detectNullProduct = items.filter((item) => item.course_id === null && item.isChecked === true);
-
-  const detectCourse = items.filter((item) => item.course_id != null && item.isChecked === true )
-
-  
-
-  const handleNewOrder = async () => {
-    try {
-      const response = await axios.post(
-        'http://localhost:3005/cart/NewOrder', { payment: selectedOption }
-      )
-      if (response.status === 200) {
-        alert('連結成功');
-
-      } else {
-        alert('連接失敗')
-      }
-    } catch (error) {
-      console.log(error)
+  // 載入用戶資料
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name || '',
+        phone: user.phone || '',
+        address: user.address || ''
+      }));
     }
-  }
+  }, [user]);
+
+  // 表單提交處理
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
+    }
+
+    // 更新訂單資訊
+    setOrderName(formData.name);
+    setOrderPhone(formData.phone);
+    setOrderAddress(formData.address);
+
+    // 前往下一步
+    setstepType(3);
+  };
+
+  // 表單欄位變更處理
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
-    <div>
-      <div className='stepTypeTitle phoneDNone'>
-        <h2>付款及配送方式</h2>
-      </div>
-      <div className='radioSection'>
-        <label className='customCheckbox'>
-          <input
-            type="checkbox"
-            name="choice"
-            value="credit"
-            checked={selectedOption === 'credit'}
-            onChange={handleOptionChange}
-
-          />
-          <span>{` 宅配 信用卡/金融卡付款（購買課程限此付款方式）`}</span>
-        </label>
-        <label className="customCheckbox">
-          <input
-            type="checkbox"
-            name="choice"
-            value="cashOn"
-            checked={selectedOption === 'cashOn'}
-            onChange={handleOptionChange}
-            disabled={ detectCourse.length >0 ? true : false}
+    <Container>
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          <div className="border rounded p-4 bg-white shadow-sm">
+            <h4 className="mb-4">填寫收件資料</h4>
             
-          />
-          <span
-          className={`${detectCourse.length >0 ? 'opacity50' : ""}`}
-          >{` 宅配 貨到付款（限台灣本島）`}</span>
-        </label>
-        <CreditCard selectedOption={selectedOption} setCardState={setCardState} />
-      </div>
-      <div
-        className="orderTitle"
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              {/* 姓名 */}
+              <Form.Group className="mb-3">
+                <Form.Label>姓名</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="請輸入收件人姓名"
+                />
+                <Form.Control.Feedback type="invalid">
+                  請輸入姓名
+                </Form.Control.Feedback>
+              </Form.Group>
 
-      >
-        <Col className=''>
-          <button
-            className='btn d-flex justify-content-between w-100'
-            onClick={() => {
-              setAccordionState(!accordionState)
-            }}
-          >
-            <span>+</span>
-            <span>訂單明細</span>
-            <span>+</span>
-          </button>
+              {/* 電話 */}
+              <Form.Group className="mb-3">
+                <Form.Label>聯絡電話</Form.Label>
+                <Form.Control
+                  required
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="請輸入聯絡電話"
+                  pattern="[0-9]{10}"
+                />
+                <Form.Control.Feedback type="invalid">
+                  請輸入有效的電話號碼（10碼）
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              {/* 地址 */}
+              <Form.Group className="mb-3">
+                <Form.Label>收件地址</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="請輸入完整收件地址"
+                />
+                <Form.Control.Feedback type="invalid">
+                  請輸入收件地址
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              {/* 備註 */}
+              <Form.Group className="mb-4">
+                <Form.Label>訂單備註</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  name="note"
+                  value={formData.note}
+                  onChange={handleChange}
+                  placeholder="有什麼想告訴我們的嗎？"
+                  rows={3}
+                />
+              </Form.Group>
+
+              {/* 按鈕區 */}
+              <div className="d-flex justify-content-between gap-3">
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => setstepType(1)}
+                  className="px-4"
+                >
+                  返回購物車
+                </Button>
+                <Button 
+                  variant="primary" 
+                  type="submit"
+                  className="px-4"
+                >
+                  下一步
+                </Button>
+              </div>
+            </Form>
+          </div>
+
+          {/* 金額摘要 */}
+          <div className="mt-4 p-3 border rounded bg-light">
+            <div className="d-flex justify-content-between mb-2">
+              <span>商品總金額</span>
+              <span>NT$ {(discountPrice + discountAmount).toLocaleString()}</span>
+            </div>
+            {discountAmount > 0 && (
+              <div className="d-flex justify-content-between mb-2 text-danger">
+                <span>優惠折抵</span>
+                <span>-NT$ {discountAmount.toLocaleString()}</span>
+              </div>
+            )}
+            <hr className="my-2" />
+            <div className="d-flex justify-content-between fw-bold">
+              <span>應付金額</span>
+              <span className="text-primary">NT$ {discountPrice.toLocaleString()}</span>
+            </div>
+          </div>
         </Col>
+      </Row>
+    </Container>
+  );
+};
 
-      </div>
-
-      <OrderList discountPrice={discountPrice} discountAmount={discountAmount} accordionState={accordionState} />
-      <div className='stepBtnGroup'>
-        <button
-          className='nextStepBtn fs-5 opacity-50 d-lg-block d-none'
-          onClick={() => {
-            sendData(1);
-
-          }}>返回購物車 </button>
-
-        <button
-          className='nextStepBtn fs-5 opacity-50 d-sm-none d-block'
-          onClick={() => {
-            sendData(1);
-
-          }}>上一步 </button>
-
-        <button
-          className='nextStepBtn fs-5 d-sm-block d-none'
-          onClick={() => {
-
-            if (selectedOption === 'credit' && detectCard=== true) {
-
-              Swal.fire({
-                icon: 'error',
-                title: '信用卡資料不能為空',
-                showConfirmButton: false,
-                timer: 1500,
-                backdrop: `rgba(255, 255, 255, 0.55)`,
-                width: '55%',
-                padding: '0 0 3.25em',
-                customClass: {
-                }
-
-              })
-              sendData(2);
-
-            } else if (selectedOption == '') {
-              Swal.fire({
-                icon: 'error',
-                title: '請選取付款方式',
-                showConfirmButton: false,
-                timer: 1500,
-                backdrop: `rgba(255, 255, 255, 0.55)`,
-                width: '55%',
-                padding: '0 0 3.25em',
-                customClass: {
-                }
-
-              })
-              sendData(2);
-            } else {
-              sendData(3);
-              setPayment(selectedOption);
-            }
-
-          }}
-        // disabled={detecteCard && selectedOption==='credit'? true : false}
-        >填寫訂單資料</button>
-
-        <button
-          className='nextStepBtn fs-5 d-sm-none d-block'
-          onClick={() => {
-            if ((selectedOption === 'credit' && !detectCard) == false) {
-
-              Swal.fire({
-                icon: 'error',
-                title: '信用卡資料不能為空',
-                showConfirmButton: false,
-                timer: 1500,
-                backdrop: `rgba(255, 255, 255, 0.55)`,
-                width: '60%',
-                padding: '0 0 3.25em',
-                customClass: {
-                }
-
-              })
-              sendData(2);
-
-            } else if (selectedOption == '') {
-              Swal.fire({
-                icon: 'error',
-                title: '請選取付款方式',
-                showConfirmButton: false,
-                timer: 1500,
-                backdrop: `rgba(255, 255, 255, 0.55)`,
-                width: '35%',
-                padding: '0 0 3.25em',
-                customClass: {
-                }
-
-              })
-              sendData(2);
-            } else {
-              sendData(3);
-              setPayment(selectedOption);
-            }
-          }}
-        // disabled={detecteCard && selectedOption==='credit'? true : false}
-        >下一步</button>
-      </div>
-    </div>
-
-  )
-}
+export default StepTwo;

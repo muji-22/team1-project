@@ -1,43 +1,8 @@
 // components/coupon/ClaimCouponButton.js
-//優惠券領取按鈕
-// 使用方法
-// 在pages/index.js 或其他任何頁面
-// import ClaimCouponButton from '../components/coupon/ClaimCouponButton';
-// export default function HomePage() {
-//   return (
-//     <div className="container">
-//       {/* 其他內容 */}
-  
-//       {/* 基本使用 */}
-//       <ClaimCouponButton couponId={1} />
-
-//       {/* 自訂樣式和文字 */}
-//       <ClaimCouponButton 
-//         couponId={2}
-//         buttonText="領取生日優惠券"
-//         className="btn btn-outline-primary"
-//       />
-
-//       {/* 加入回調函數 */}
-//       <ClaimCouponButton 
-//         couponId={3}
-//         onSuccess={() => {
-//           console.log('優惠券領取成功！');
-//           // 可以在這裡做其他處理
-//         }}
-//         onError={(errorMsg) => {
-//           console.error('領取失敗：', errorMsg);
-//           // 可以在這裡做錯誤處理
-//         }}
-//       />
-//     </div>
-//   );
-// }
-
-// components/coupon/ClaimCouponButton.js
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify'; // 新增這行
 
 export default function ClaimCouponButton({ 
   couponId, 
@@ -92,17 +57,17 @@ export default function ClaimCouponButton({
 
     // 檢查優惠券狀態
     if (isClaimed) {
-      alert('您已經領取過此優惠券了！');
+      toast.warning('您已經領取過此優惠券了！');
       return;
     }
 
     if (isExpired) {
-      alert('此優惠券已過期！');
+      toast.warning('此優惠券已過期！');
       return;
     }
 
     if (isUsed) {
-      alert('此優惠券已使用！');
+      toast.warning('此優惠券已使用！');
       return;
     }
 
@@ -123,12 +88,7 @@ export default function ClaimCouponButton({
       }
 
       setIsClaimed(true);
-      
-      // 顯示成功訊息
-      const toastLiveExample = document.getElementById('claimToast');
-      const toast = new bootstrap.Toast(toastLiveExample);
-      toast.show();
-      
+      toast.success('恭喜！優惠券領取成功');
       onSuccess();
 
     } catch (err) {
@@ -136,7 +96,7 @@ export default function ClaimCouponButton({
         setIsClaimed(true);
       }
       onError(err.message);
-      alert(err.message);
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -165,27 +125,12 @@ export default function ClaimCouponButton({
   };
 
   return (
-    <>
-      <button 
-        className={getButtonClass()}
-        onClick={handleClaim}
-        disabled={isLoading || isClaimed || isUsed || isExpired}
-      >
-        {getButtonText()}
-      </button>
-
-      {/* Toast 提示元件 */}
-      <div className="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="claimToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
-          <div className="toast-header">
-            <strong className="me-auto">系統通知</strong>
-            <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-          <div className="toast-body">
-            恭喜！優惠券領取成功
-          </div>
-        </div>
-      </div>
-    </>
+    <button 
+      className={getButtonClass()}
+      onClick={handleClaim}
+      disabled={isLoading || isClaimed || isUsed || isExpired}
+    >
+      {getButtonText()}
+    </button>
   );
 }
