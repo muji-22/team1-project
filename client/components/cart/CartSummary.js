@@ -220,25 +220,6 @@ const CartSummary = ({
             </div>
           )}
 
-          {/* 優惠券代碼輸入 */}
-          <Form.Group className="mb-3">
-            <Form.Label>優惠券代碼</Form.Label>
-            <div className="d-flex gap-2">
-              <Form.Control
-                type="text"
-                placeholder="請輸入優惠券代碼"
-                disabled={appliedCoupon}
-              />
-              <Button
-                variant={appliedCoupon ? "outline-danger" : "outline-primary"}
-                onClick={appliedCoupon ? handleRemoveCoupon : null} // handleApplyCoupon 被移除
-                style={{ width: '80px' }}
-              >
-                {appliedCoupon ? '移除' : '套用'}
-              </Button>
-            </div>
-          </Form.Group>
-
           {/* 選擇優惠券按鈕 */}
           <Button
             variant="outline-secondary"
