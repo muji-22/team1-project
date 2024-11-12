@@ -1,17 +1,21 @@
 // components/cart/CartSummary.js
-import React, { useState, useEffect } from 'react';
-import { Card, Form, Button } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import styles from '@/styles/cart.module.css';
+import React, { useState, useEffect } from "react";
+import { Card, Form, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+import styles from "@/styles/cart.module.css";
 import { FaTicket } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 
 const CartSummary = ({
   total,
+  saleTotal = 0,
+  rentalTotal = 0,
+  cartItems = [],
   setDiscountPrice,
   setDiscountAmount,
   setCartCouponId,
-  onNextStep
+  onNextStep,
 }) => {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [showCouponSelector, setShowCouponSelector] = useState(false);
@@ -22,34 +26,35 @@ const CartSummary = ({
   useEffect(() => {
     const fetchUserCoupons = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+        const token = localStorage.getItem("token");
+        const tokenPayload = JSON.parse(atob(token.split(".")[1]));
         const userId = tokenPayload.id;
 
         const response = await fetch(
           `http://localhost:3005/api/coupons/user/${userId}`,
           {
             headers: {
-              'Authorization': `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
         if (!response.ok) {
-          throw new Error('獲取優惠券失敗');
+          throw new Error("獲取優惠券失敗");
         }
 
         const data = await response.json();
         // 只過濾未使用的優惠券
-        const validCoupons = data.filter(coupon => 
-          coupon.status === 'valid' && 
-          !coupon.used_time && 
-          new Date(coupon.end_date) > new Date()
+        const validCoupons = data.filter(
+          (coupon) =>
+            coupon.status === "valid" &&
+            !coupon.used_time &&
+            new Date(coupon.end_date) > new Date()
         );
         setUserCoupons(validCoupons);
       } catch (error) {
-        console.error('獲取優惠券失敗:', error);
-        toast.error('獲取優惠券失敗');
+        console.error("獲取優惠券失敗:", error);
+        toast.error("獲取優惠券失敗");
       }
     };
 
@@ -65,11 +70,37 @@ const CartSummary = ({
 
   // 優惠券顯示格式
   const formatCouponValue = (coupon) => {
-    if (coupon.type === 'percentage') {
+    if (coupon.type === "percentage") {
       return `${coupon.discount}折`;
     } else {
       return `NT$ ${coupon.discount}`;
     }
+  };
+
+  // 計算折扣
+  const calculateDiscount = (couponData) => {
+    let baseAmount = total;
+
+    // 根據優惠券類型決定折扣基準
+    switch (couponData.apply_to) {
+      case 'sale':
+        baseAmount = saleTotal;
+        break;
+      case 'rental':
+        baseAmount = rentalTotal;
+        break;
+      // case 'both' 使用 total，不需要改變
+    }
+
+    // 計算折扣金額
+    let discountAmount = 0;
+    if (couponData.type === 'percentage') {
+      discountAmount = Math.round(baseAmount * ((100 - couponData.discount) / 100));
+    } else {
+      discountAmount = Math.min(couponData.discount, baseAmount);
+    }
+
+    return discountAmount;
   };
 
   // 選擇優惠券
@@ -83,24 +114,30 @@ const CartSummary = ({
       start_date: coupon.start_date,
       end_date: coupon.end_date,
       apply_to: coupon.apply_to,
-      valid: coupon.valid
+      valid: coupon.valid,
     };
-    
+
     // 設定優惠券資訊
     setAppliedCoupon(couponData);
     setCartCouponId(couponData.id);
 
     // 計算折扣金額
-    let discountAmount;
-    if (couponData.type === 'percentage') {
-      discountAmount = Math.round(total * ((100 - couponData.discount) / 100));
-    } else {
-      discountAmount = Math.min(couponData.discount, total);
-    }
-
+    const discountAmount = calculateDiscount(couponData);
     setDiscountAmount(discountAmount);
     setDiscountPrice(total - discountAmount);
-    toast.success('優惠券套用成功！');
+
+    // 自動收起優惠券列表
+    setShowCouponSelector(false);
+
+    toast.success("成功套用優惠券", {
+      position: "bottom-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      progress: undefined,
+      icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+    });
   };
 
   // 移除優惠券
@@ -109,13 +146,21 @@ const CartSummary = ({
     setCartCouponId(null);
     setDiscountAmount(0);
     setDiscountPrice(total);
-    toast.success('已移除優惠券');
+    toast.success("已移除優惠券", {
+      position: "bottom-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      progress: undefined,
+      icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+    });
   };
 
   // 檢查是否可以進行結帳
   const handleNextStep = () => {
     if (total <= 0) {
-      toast.warning('購物車是空的');
+      toast.warning("購物車是空的");
       return;
     }
     onNextStep();
@@ -144,22 +189,26 @@ const CartSummary = ({
         </div>
 
         {/* 優惠券列表 */}
-        <div style={{ 
-          maxHeight: '300px', 
-          overflowY: 'auto',
-          paddingRight: '5px'
-        }}>
+        <div
+          style={{
+            maxHeight: "300px",
+            overflowY: "auto",
+            paddingRight: "5px",
+          }}
+        >
           {filteredCoupons.length > 0 ? (
             <div className="d-flex flex-column gap-2">
               {filteredCoupons.map((coupon) => (
                 <div
                   key={coupon.id}
-                  className={`card shadow-sm w-100 ${appliedCoupon?.id === coupon.id ? 'border-success' : ''}`}
+                  className={`card shadow-sm w-100`}
                   onClick={() => handleSelectCoupon(coupon)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
                   <div className="row g-0">
-                    <div className={`col-3 ${appliedCoupon?.id === coupon.id ? 'bg-success' : 'bg-custom'} d-flex align-items-center justify-content-center p-2`}>
+                    <div
+                      className={`col-3 bg-custom d-flex align-items-center justify-content-center p-2`}
+                    >
                       <FaTicket className="text-white w-75 h-auto" />
                     </div>
                     <div className="col-9 bg-white text-dark p-1">
@@ -169,14 +218,15 @@ const CartSummary = ({
                             {coupon.name}
                           </h5>
                           {appliedCoupon?.id === coupon.id && (
-                            <span className="badge bg-success">使用中</span>
+                            <FaCheckCircle className="fs-4 text-custom" />
                           )}
                         </div>
                         <p className="card-text mb-1 fs-5 fw-bold text-danger">
                           {formatCouponValue(coupon)}
                         </p>
                         <p className="card-text mb-0 text-secondary small">
-                          到期日：{new Date(coupon.end_date).toLocaleDateString()}
+                          到期日：
+                          {new Date(coupon.end_date).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -186,7 +236,7 @@ const CartSummary = ({
             </div>
           ) : (
             <div className="text-center text-muted py-3">
-              {searchTerm ? '沒有符合條件的優惠券' : '目前沒有可用的優惠券'}
+              {searchTerm ? "沒有符合條件的優惠券" : "目前沒有可用的優惠券"}
             </div>
           )}
         </div>
@@ -203,19 +253,21 @@ const CartSummary = ({
         <div className="mb-4">
           {/* 已選擇的優惠券顯示 */}
           {appliedCoupon && (
-            <div className="alert alert-success d-flex align-items-center justify-content-between mb-3">
+            <div className="alert border d-flex align-items-center justify-content-between mb-3">
               <div>
                 <div className="fw-bold">{appliedCoupon.name}</div>
                 <small className="text-muted">
-                  {appliedCoupon.type === 'percentage' ? `${appliedCoupon.discount}折` : `折抵 NT$ ${appliedCoupon.discount}`}
+                  {appliedCoupon.type === "percentage"
+                    ? `${appliedCoupon.discount}折`
+                    : `折抵 NT$ ${appliedCoupon.discount}`}
                 </small>
               </div>
-              <Button 
-                variant="outline-danger" 
+              <Button
+                variant="outline-secondary"
                 size="sm"
                 onClick={handleRemoveCoupon}
               >
-                移除
+                取消
               </Button>
             </div>
           )}
@@ -226,8 +278,7 @@ const CartSummary = ({
             className="w-100"
             onClick={() => setShowCouponSelector(!showCouponSelector)}
           >
-            <FaTicket className="me-2" />
-            {showCouponSelector ? '收起優惠券' : '選擇我的優惠券'}
+            {appliedCoupon ? "更改優惠券" : "選擇優惠券"}
           </Button>
 
           {/* 優惠券選擇器 */}
@@ -236,30 +287,43 @@ const CartSummary = ({
 
         {/* 價格明細 */}
         <div className={styles.priceDetails}>
-          <div className="d-flex justify-content-between mb-2">
-            <span>商品總金額</span>
-            <span className="fw-bold">NT$ {total.toLocaleString()}</span>
+          {/* 購買商品小計 */}
+          <div className="d-flex justify-content-between mb-2 text-secondary">
+            <span>購買商品小計</span>
+            <span>NT$ {saleTotal.toLocaleString()}</span>
           </div>
 
+          {/* 租借商品小計 */}
+          <div className="d-flex justify-content-between mb-2 text-secondary">
+            <span>租借商品小計</span>
+            <span>NT$ {rentalTotal.toLocaleString()}</span>
+          </div>
+
+          {/* 商品總金額 */}
+          <div className="d-flex justify-content-between mb-2 pt-2 border-top fw-bold">
+            <span>商品總金額</span>
+            <span>NT$ {total.toLocaleString()}</span>
+          </div>
+
+          {/* 優惠折抵 */}
           {appliedCoupon && (
             <div className="d-flex justify-content-between mb-2 text-danger">
-              <span>優惠折抵</span>
-              <span>-NT$ {(appliedCoupon.type === 'percentage' 
-                ? Math.round(total * ((100 - appliedCoupon.discount) / 100))
-                : Math.min(appliedCoupon.discount, total)).toLocaleString()}</span>
+              <span>
+                優惠折抵 
+                {appliedCoupon.apply_to === 'sale' && '(限購買商品)'}
+                {appliedCoupon.apply_to === 'rental' && '(限租借商品)'}
+              </span>
+              <span>-NT$ {calculateDiscount(appliedCoupon).toLocaleString()}</span>
             </div>
           )}
 
           <hr className="my-3" />
 
+          {/* 應付金額 */}
           <div className="d-flex justify-content-between">
             <span className="fw-bold">應付金額</span>
-            <span className="fw-bold text-primary">
-              NT$ {(total - (appliedCoupon ? (
-                appliedCoupon.type === 'percentage'
-                  ? Math.round(total * ((100 - appliedCoupon.discount) / 100))
-                  : Math.min(appliedCoupon.discount, total)
-              ) : 0)).toLocaleString()}
+            <span className="fw-bold">
+              NT$ {(total - (appliedCoupon ? calculateDiscount(appliedCoupon) : 0)).toLocaleString()}
             </span>
           </div>
         </div>
@@ -267,7 +331,7 @@ const CartSummary = ({
         {/* 下一步按鈕 */}
         <div className="mt-4">
           <Button
-            variant="primary"
+            variant="custom"
             size="lg"
             className="w-100"
             onClick={handleNextStep}
