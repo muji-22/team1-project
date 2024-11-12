@@ -20,17 +20,18 @@
   background: white;
   box-shadow: -10px 10px 5px gray;
   border: 1px solid #40CBCE;
+  padding-top: 10px;
 }
 
 .inputGroup {
-  display: block;
+  /* display: block; */
   width: 80%;
   height: 50px;
   background: #D9D9D9;
   border: 1px solid #40CBCE;
   background: white;
   border-radius: 5px;
-  margin: 40px auto;
+  margin: 20px auto;
   outline: none;
   padding-left: 25px;
   font-size: 20px;
@@ -42,7 +43,7 @@
   background: #40CBCE;
   color: white;
   width: 80%;
-  height: 65px;
+  height: 55px;
   border-radius: 5px;
   margin: 25px auto;
   border: 0px;
@@ -86,7 +87,7 @@
 
 .btnLogin {
   width: 100px;
-  background: black;
+  background: #40CBCE;
   color: white;
   margin: auto;
   border-radius: 3px;
@@ -95,8 +96,8 @@
   font-size: 16px;
   font-weight: 600;
   &:hover {
-    box-shadow: 3px 3px 3px #40CBCE;
-    text-shadow: 1px 1px 1px #40CBCE;
+    box-shadow: 3px 3px 3px black;
+    text-shadow: 1px 1px 1px black;
 }
 }
 .link{
@@ -128,6 +129,12 @@ margin-inline-start: 50px;
   display: flex;
 }
 
+.icon{
+  color: #40CBCE;
+  margin-left: 10px;
+  font-size: 35px;
+}
+
 @media(max-width: 992px) {
   .main {
     width: 100%;
@@ -146,7 +153,7 @@ margin-inline-start: 50px;
     max-width: 992px;
     height: 700px;
     margin: auto;
-    background: url("./login-pic.png") no-repeat;
+    /* background: url("./login-pic.png") no-repeat; */
     margin-bottom: 40px;
 
   }
@@ -166,25 +173,26 @@ margin-inline-start: 50px;
   }
 
   .inputGroup {
-    display: block;
-    width: 85%;
-    height: 50px;
+    /* display: block; */
+    width: 75%;
+    height: 40px;
     background: #D9D9D9;
-    border: 0px;
+    border: 1px solid #40CBCE;
+    background: white;
     border-radius: 5px;
-    margin: 40px auto;
+    margin: 20px auto;
     outline: none;
     padding-left: 25px;
-    font-size: 14px;
+    font-size: 20px;
     box-shadow: 3px 3px 5px gray;
   }
 
   .btnResgiter {
-    display: block;
+    /* display: block; */
     background: #40CBCE;
     color: white;
-    width: 85%;
-    height: 65px;
+    width: 75%;
+    height: 55px;
     border-radius: 5px;
     margin: 25px auto;
     border: 0px;
@@ -211,5 +219,11 @@ margin-inline-start: 50px;
     text-align: center;
     font-size: 14px;
   }
+  .icon{
+    color: #40CBCE;
+    margin-left: 20px;
+    font-size: 35px;
+  }
+  
 
 }
