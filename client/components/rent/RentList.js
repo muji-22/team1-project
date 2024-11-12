@@ -1,6 +1,6 @@
 // components/rent/RentList.js
 import React, { useState, useEffect } from "react";
-import RentCard from "./RentCard";
+import RentCard from "./rentCard";
 import { useAuth } from "@/contexts/AuthContext";
 import Pagination from "@/components/product/Pagination";
 
