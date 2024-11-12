@@ -13,8 +13,6 @@ const CartSummary = ({
   setCartCouponId,
   onNextStep
 }) => {
-  const [couponCode, setCouponCode] = useState('');
-  const [isApplying, setIsApplying] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [showCouponSelector, setShowCouponSelector] = useState(false);
   const [userCoupons, setUserCoupons] = useState([]);
@@ -105,90 +103,12 @@ const CartSummary = ({
     toast.success('優惠券套用成功！');
   };
 
-  // 套用優惠券代碼
-  const handleApplyCoupon = async () => {
-    if (!couponCode.trim()) {
-      toast.warning('請輸入優惠券代碼');
-      return;
-    }
-
-    setIsApplying(true);
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3005/api/coupons/detail/${couponCode}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('無效的優惠券代碼');
-      }
-
-      const couponData = await response.json();
-      
-      if (!couponData.valid) {
-        throw new Error('此優惠券已失效');
-      }
-
-      // 檢查有效期限
-      const now = new Date();
-      const startDate = new Date(couponData.start_date);
-      const endDate = new Date(couponData.end_date);
-      
-      if (now < startDate) {
-        throw new Error('此優惠券尚未開始');
-      }
-      
-      if (now > endDate) {
-        throw new Error('此優惠券已過期');
-      }
-
-      // 檢查使用狀態
-      const checkStatusResponse = await fetch(
-        `http://localhost:3005/api/coupons/check-status/${couponData.id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }
-      );
-
-      const statusData = await checkStatusResponse.json();
-      if (statusData.usedTime) {
-        throw new Error('此優惠券已使用過');
-      }
-
-      // 套用優惠券
-      setAppliedCoupon(couponData);
-      setCartCouponId(couponData.id);
-
-      // 計算折扣金額
-      let discountAmount;
-      if (couponData.type === 'percentage') {
-        discountAmount = Math.round(total * ((100 - couponData.discount) / 100));
-      } else {
-        discountAmount = Math.min(couponData.discount, total);
-      }
-
-      setDiscountAmount(discountAmount);
-      setDiscountPrice(total - discountAmount);
-      toast.success('優惠券套用成功！');
-
-    } catch (error) {
-      console.error('套用優惠券錯誤:', error);
-      toast.error(error.message || '套用優惠券失敗');
-    } finally {
-      setIsApplying(false);
-    }
-  };
-
   // 移除優惠券
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     setCartCouponId(null);
     setDiscountAmount(0);
     setDiscountPrice(total);
-    setCouponCode('');
     toast.success('已移除優惠券');
   };
 
@@ -307,17 +227,14 @@ const CartSummary = ({
               <Form.Control
                 type="text"
                 placeholder="請輸入優惠券代碼"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                disabled={appliedCoupon || isApplying}
+                disabled={appliedCoupon}
               />
               <Button
                 variant={appliedCoupon ? "outline-danger" : "outline-primary"}
-                onClick={appliedCoupon ? handleRemoveCoupon : handleApplyCoupon}
-                disabled={isApplying}
+                onClick={appliedCoupon ? handleRemoveCoupon : null} // handleApplyCoupon 被移除
                 style={{ width: '80px' }}
               >
-                {isApplying ? '處理中...' : appliedCoupon ? '移除' : '套用'}
+                {appliedCoupon ? '移除' : '套用'}
               </Button>
             </div>
           </Form.Group>
