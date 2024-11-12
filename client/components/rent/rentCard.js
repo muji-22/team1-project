@@ -98,11 +98,11 @@ const RentCard = ({
           </div>
 
           {/* 加入購物車按鈕 */}
-          {/* <AddToCartButton
+          <AddToCartButton
             productId={id}
             className="buttonCustomC w-100 text-nowrap"
             type="rental"
-          /> */}
+          />
         </div>
       </div>
     </Link>
