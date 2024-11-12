@@ -2,6 +2,7 @@
 import express from 'express'
 import pool from '../config/db.js'
 import { authenticateToken } from '../middlewares/auth.js'
+import { sendOrderConfirmationEmail } from '../services/emailService.js'
 
 const router = express.Router()
 
@@ -40,8 +41,14 @@ router.post('/', authenticateToken, async (req, res) => {
 
     const orderId = orderResult.insertId
 
-    // 2. 創建訂單項目
+    // 2. 創建訂單項目並保存項目資訊
+    const orderItems = []
     for (const item of items) {
+      let [productInfo] = await conn.query(
+        `SELECT name, image FROM ${item.type === 'sale' ? 'product' : 'rent'} WHERE id = ?`,
+        [item.product_id]
+      )
+
       if (item.type === 'rental') {
         // 租借商品
         await conn.query(
@@ -65,6 +72,13 @@ router.post('/', authenticateToken, async (req, res) => {
           ]
         )
       }
+
+      // 保存完整的項目資訊供郵件使用
+      orderItems.push({
+        ...item,
+        name: productInfo.name,
+        image: productInfo.image
+      })
     }
 
     // 3. 如果有使用優惠券，更新優惠券使用狀態
@@ -77,7 +91,34 @@ router.post('/', authenticateToken, async (req, res) => {
       )
     }
 
+    // 4. 取得用戶 email
+    const [users] = await conn.query(
+      'SELECT email FROM users WHERE id = ?',
+      [userId]
+    )
+
     await conn.commit()
+
+    // 5. 發送訂單確認信
+    try {
+      const mailData = {
+        id: orderId,
+        recipient_name,
+        recipient_phone,
+        recipient_address,
+        total_amount,
+        discount_amount,
+        final_amount,
+        payment_method,
+        items: orderItems,
+        created_at: new Date()
+      }
+
+      await sendOrderConfirmationEmail(users[0].email, mailData)
+    } catch (emailError) {
+      console.error('發送訂單確認信失敗:', emailError)
+      // 繼續執行，不影響訂單建立
+    }
 
     res.json({
       status: 'success',
