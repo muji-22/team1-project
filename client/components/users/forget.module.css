@@ -37,7 +37,7 @@
   background: #D9D9D9;
   border: 0px;
   border-radius: 5px;
-  margin: 40px auto;
+  margin: 20px auto;
   outline: none;
   padding-left: 25px;
   font-size: 20px;
@@ -50,7 +50,7 @@
     width: 80%;
     height: 65px;
     border-radius: 5px;
-    margin: 25px auto;
+    margin: 10px auto;
     border: 0px;
     font-size: 30px;
     box-shadow: 3px 3px 5px gray;
@@ -80,4 +80,10 @@
       
   }
   }
-  
+  .box{
+    width: 200px;
+    height: 25px;
+    margin-inline: auto;
+    text-align: center;
+    color: red;
+  }
