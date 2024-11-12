@@ -11,8 +11,22 @@
 }
 
 .categoryCard:hover {
+  border: none;
   background-color: #40cbce;
   color: #fff;
   transform: scale(1.05);
-  box-shadow: 0px 10px 10px rgba(79, 252, 255, 0.555);
+  box-shadow: 0px 10px 10px rgb(155, 155, 155);
+}
+
+.categoryCard:active {
+  transform: scale(0.95);
+}
+
+.categoryIcon {
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.categoryCard:hover .categoryIcon {
+  transform: scale(1.1);
 }
