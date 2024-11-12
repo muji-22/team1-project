@@ -161,12 +161,6 @@ export default function CartPage() {
       <div className="mb-4">
         {renderStepContent()}
       </div>
-
-      <Container>
-        <Row className="d-flex justify-content-center align-items-center">
-          <MayFavorite />
-        </Row>
-      </Container>
     </>
   );
 }

@@ -8,11 +8,11 @@ import styles from '@/styles/cart.module.css';
 
 const StepThree = ({
   setstepType,
-  discountPrice,
-  discountAmount,
   orderName,
   orderPhone,
   orderAddress,
+  discountPrice,
+  discountAmount,
   cartCouponId,
   cartOriginDtl,
   cartProducDtl
@@ -21,6 +21,21 @@ const StepThree = ({
   const { fetchCartCount } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('credit_card'); // 'credit_card' or 'transfer'
+
+  // 計算總金額的輔助函數
+  const calculateTotalAmount = () => {
+    return cartOriginDtl.reduce((total, item) => {
+      if (item.type === 'rental') {
+        // 租借商品：押金 + (租金 × 天數)
+        return total + 
+          (item.deposit * item.quantity) + 
+          (item.rental_fee * (item.rental_days || 3) * item.quantity);
+      } else {
+        // 一般商品：單價 × 數量
+        return total + (item.price * item.quantity);
+      }
+    }, 0);
+  };
 
   // 計算各類商品的小計
   const calculateSubtotals = () => {
@@ -50,29 +65,29 @@ const StepThree = ({
 
     setIsProcessing(true);
     try {
-      // 準備訂單數據
+      // 1. 準備訂單數據
       const orderData = {
         recipient_name: orderName,
         recipient_phone: orderPhone,
         recipient_address: orderAddress,
-        total_amount: discountPrice + discountAmount,
+        total_amount: calculateTotalAmount(),
         discount_amount: discountAmount,
         final_amount: discountPrice,
         coupon_id: cartCouponId,
         payment_method: paymentMethod,
-        items: cartProducDtl.map(item => ({
-          product_id: item.product_id,
+        items: cartOriginDtl.map(item => ({
+          product_id: item.product_id || item.id,
           type: item.type,
           quantity: item.quantity,
           price: item.type === 'rental' ? item.rental_fee : item.price,
           ...(item.type === 'rental' && {
             deposit: item.deposit,
-            rental_days: item.rental_days || 3
+            rental_days: item.rental_days || 3,
           })
         }))
       };
 
-      // 送出訂單
+      // 2. 發送訂單請求
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:3005/api/orders', {
         method: 'POST',
@@ -89,7 +104,7 @@ const StepThree = ({
         throw new Error(data.message || '建立訂單失敗');
       }
 
-      // 清空購物車
+      // 3. 清空購物車
       await fetch('http://localhost:3005/api/cart/clear', {
         method: 'DELETE',
         headers: {
@@ -97,14 +112,14 @@ const StepThree = ({
         }
       });
 
-      // 更新購物車數量
+      // 4. 更新購物車數量
       await fetchCartCount();
 
-      // 顯示成功訊息
+      // 5. 顯示成功訊息
       toast.success('訂單建立成功！');
 
-      // 導向訂單詳情頁
-      router.push(`/orders/${data.orderId}`);
+      // 6. 導向訂單詳情頁
+      router.push(`/member/orders/${data.orderId}`);
 
     } catch (error) {
       console.error('建立訂單錯誤:', error);
