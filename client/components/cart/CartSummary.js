@@ -310,8 +310,8 @@ const CartSummary = ({
             <div className="d-flex justify-content-between mb-2 text-danger">
               <span>
                 優惠折抵 
-                {appliedCoupon.apply_to === 'sale' && '(限購買商品)'}
-                {appliedCoupon.apply_to === 'rental' && '(限租借商品)'}
+                {appliedCoupon.apply_to === 'sale' && '(限購買)'}
+                {appliedCoupon.apply_to === 'rental' && '(限租借)'}
               </span>
               <span>-NT$ {calculateDiscount(appliedCoupon).toLocaleString()}</span>
             </div>
