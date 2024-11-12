@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
 import DayAdjuster from "@/components/rent/dayAdjuster";
 import styles from "./productDetailRent.module.css";
-// import AddToCartButton from "./AddToCartButton";
+import AddToCartButton from "../product/AddToCartButton";
 import { useAuth } from '@/contexts/AuthContext';
 import FavoriteButton from "./FavoriteButton";
 import Link from "next/link";

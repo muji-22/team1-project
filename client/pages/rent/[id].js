@@ -12,7 +12,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import RentNotice from "@/components/rent/rentNotice";
 import RentNotice2 from "@/components/rent/rentNotice2";
 import MayFavoriteRent from "@/components/rent/mayFavoriteRent";
-// import AddToCartButton from "@/components/rent/AddToCartButton";
+import AddToCartButton from "@/components/product/AddToCartButton";
 import { useAuth } from '@/contexts/AuthContext';
 import FavoriteButton from "@/components/rent/FavoriteButton";
 import Link from "next/link";

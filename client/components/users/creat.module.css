@@ -2,22 +2,13 @@
     width: 100%;
 }
 
-.breadcrumb {
-    max-width: 1440px;
-    height: 80px;
-    position: relative;
-    line-height: 5;
-    display: block;
-    left: 50px;
-    color: orange;
-}
 
 .wrap {
     max-width: 1440px;
     height: 90vh;
     margin: auto;
     display: flex;
-    background: url("./login-pic.png") no-repeat;
+    /* background: url("./login-pic.png") no-repeat; */
     background-size: 100% 100%;
     margin-bottom: 40px;
 
@@ -30,13 +21,14 @@
 
 .resgiter {
     max-width: 500px;
-    height: 650px;
+    height: 700px;
     margin-block: auto;
     margin-inline: auto;
     border-radius: 20px;
     box-shadow: -10px 10px 5px gray;
     background: white;
     border: 1px solid #40CBCE;
+    padding-top: 10px;
 }
 
 .top {
@@ -52,14 +44,14 @@
 
 
 .inputGroup {
-    display: block;
-    width: 80%;
-    height: 40px;
+    /* display: block; */
+    width: 75%;
+    height: 50px;
     background: #D9D9D9;
     border: 1px solid #40CBCE;
     background: white;
     border-radius: 5px;
-    margin: 30px auto;
+    margin: 15px auto;
     outline: none;
     padding-left: 20px;
     font-size: 20px;
@@ -68,10 +60,10 @@
 
 .btnResgiter {
     display: block;
-    background: black;
+    background: #40CBCE;
     color: white;
-    width: 80%;
-    height: 65px;
+    width: 75%;
+    height: 55px;
     border-radius: 5px;
     margin: 25px auto 15px;
     border: 0px;
@@ -80,8 +72,8 @@
     font-weight: 1000;
 
     &:hover {
-        box-shadow: 5px 5px 5px #40CBCE;
-        text-shadow: 2px 2px 2px #40CBCE;
+        box-shadow: 5px 5px 5px black;
+        text-shadow: 2px 2px 2px black;
     }
 }
 
@@ -122,6 +114,12 @@
     text-align: center;
 }
 
+.icon{
+    color: #40CBCE;
+    margin-inline: 12px;
+    font-size: 35px;
+  }
+
 
 
 
@@ -139,7 +137,7 @@
         max-width: 992px;
         height: 700px;
         margin: auto;
-        background: url("./login-pic.png") no-repeat;
+        /* background: url("./login-pic.png") no-repeat; */
         margin-bottom: 40px;
 
     }
@@ -186,9 +184,9 @@
         background: black;
         color: white;
         width: 85%;
-        height: 65px;
+        height: 55px;
         border-radius: 5px;
-        margin: 25px auto;
+        margin: 20px auto;
         border: 0px;
         font-size: 24px;
         box-shadow: 3px 3px 5px gray;

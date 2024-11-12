@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
+import { FaCheckCircle } from "react-icons/fa";
 
 const CartContext = createContext();
 
@@ -64,7 +65,15 @@ export function CartProvider({ children }) {
       
       if (data.status === 'success') {
         await fetchCartCount();
-        toast.success('成功加入購物車！');
+        toast.success("成功加入購物車！", {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          progress: undefined,
+          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+        });
       }
 
       return data;

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../product/productCard.module.css";
-// import AddToCartButton from "./AddToCartButton";
+import AddToCartButton from "../product/AddToCartButton";
 import { useAuth } from '@/contexts/AuthContext';
 import FavoriteButton from "./FavoriteButton";
 
