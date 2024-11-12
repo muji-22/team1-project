@@ -1,6 +1,7 @@
 // contexts/CartContext.js
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { toast } from 'react-toastify';
 
 const CartContext = createContext();
 
@@ -22,8 +23,10 @@ export function CartProvider({ children }) {
           'Authorization': `Bearer ${token}`
         }
       });
-      const data = await response.json();
 
+      if (!response.ok) throw new Error('獲取購物車數據失敗');
+
+      const data = await response.json();
       if (data.status === 'success') {
         const totalCount = data.data.items.reduce((sum, item) => sum + item.quantity, 0);
         setCartCount(totalCount);
@@ -35,7 +38,7 @@ export function CartProvider({ children }) {
   };
 
   // 加入購物車
-  const addToCart = async (productId, quantity) => {
+  const addToCart = async (productId, quantity = 1, type = 'sale') => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:3005/api/cart/items', {
@@ -44,23 +47,36 @@ export function CartProvider({ children }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ productId, quantity })
+        body: JSON.stringify({ 
+          productId,
+          quantity,
+          type,
+          rental_days: type === 'rental' ? 3 : undefined // 預設租借天數為3天
+        })
       });
 
-      const data = await response.json();
-      if (data.status === 'success') {
-        // 更新購物車數量
-        await fetchCartCount();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '加入購物車失敗');
       }
+
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        await fetchCartCount();
+        toast.success('成功加入購物車！');
+      }
+
       return data;
     } catch (error) {
       console.error('加入購物車錯誤:', error);
+      toast.error(error.message || '加入購物車失敗');
       throw error;
     }
   };
 
   // 更新購物車項目數量
-  const updateCartItem = async (itemId, quantity) => {
+  const updateCartItem = async (itemId, quantity, rental_days) => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:3005/api/cart/items/${itemId}`, {
@@ -69,17 +85,22 @@ export function CartProvider({ children }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ quantity })
+        body: JSON.stringify({ 
+          quantity,
+          rental_days // 新增租借天數參數
+        })
       });
+
+      if (!response.ok) throw new Error('更新購物車失敗');
 
       const data = await response.json();
       if (data.status === 'success') {
-        // 更新購物車數量
         await fetchCartCount();
       }
       return data;
     } catch (error) {
       console.error('更新購物車錯誤:', error);
+      toast.error('更新購物車失敗');
       throw error;
     }
   };
@@ -95,14 +116,43 @@ export function CartProvider({ children }) {
         }
       });
 
+      if (!response.ok) throw new Error('刪除購物車項目失敗');
+
       const data = await response.json();
       if (data.status === 'success') {
-        // 更新購物車數量
         await fetchCartCount();
+        toast.success('已從購物車移除');
       }
       return data;
     } catch (error) {
       console.error('刪除購物車項目錯誤:', error);
+      toast.error('刪除購物車項目失敗');
+      throw error;
+    }
+  };
+
+  // 清空購物車
+  const clearCart = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3005/api/cart/clear', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) throw new Error('清空購物車失敗');
+
+      const data = await response.json();
+      if (data.status === 'success') {
+        await fetchCartCount();
+        toast.success('購物車已清空');
+      }
+      return data;
+    } catch (error) {
+      console.error('清空購物車錯誤:', error);
+      toast.error('清空購物車失敗');
       throw error;
     }
   };
@@ -118,6 +168,7 @@ export function CartProvider({ children }) {
     addToCart,
     updateCartItem,
     removeCartItem,
+    clearCart,
     fetchCartCount
   };
 

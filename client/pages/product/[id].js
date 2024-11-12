@@ -9,7 +9,6 @@ import ProductDetailMainNotice from "@/components/product/productDetailMainNotic
 import ProductDetailMainNotice2 from "@/components/product/productDetailMainNotice2";
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 import MayFavorite from "@/components/product/mayFavorite";
-import AddProduct from "@/components/cart/addProduct";
 import Breadcrumb from "@/components/Breadcrumb";
 
 function ProductDetail() {

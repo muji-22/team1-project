@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-12 12:19:22
+-- 產生時間： 2024-11-12 13:10:59
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -24,20 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `cart_items`
+-- 資料表結構 `order_items`
 --
 
-CREATE TABLE `cart_items` (
+CREATE TABLE `order_items` (
   `id` int(10) NOT NULL,
-  `cart_id` int(10) NOT NULL,
+  `order_id` int(10) NOT NULL,
   `product_id` int(5) UNSIGNED NOT NULL,
   `type` enum('sale','rental') NOT NULL COMMENT '商品類型:販售or租借',
   `quantity` int(3) NOT NULL DEFAULT 1,
+  `price` int(8) NOT NULL COMMENT '商品單價',
+  `deposit` int(8) DEFAULT NULL COMMENT '押金(租借商品用)',
+  `rental_days` int(3) DEFAULT NULL COMMENT '租借天數',
   `rental_start_date` date DEFAULT NULL COMMENT '租借開始日期',
   `rental_end_date` date DEFAULT NULL COMMENT '租借結束日期',
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `rental_days` int(11) DEFAULT 3 COMMENT '租借天數'
+  `return_status` tinyint(1) DEFAULT NULL COMMENT '歸還狀態(租借商品用): 0未歸還, 1已歸還',
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -45,11 +47,11 @@ CREATE TABLE `cart_items` (
 --
 
 --
--- 資料表索引 `cart_items`
+-- 資料表索引 `order_items`
 --
-ALTER TABLE `cart_items`
+ALTER TABLE `order_items`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_cart` (`cart_id`),
+  ADD KEY `idx_order` (`order_id`),
   ADD KEY `idx_product` (`product_id`);
 
 --
@@ -57,21 +59,21 @@ ALTER TABLE `cart_items`
 --
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `cart_items`
+-- 使用資料表自動遞增(AUTO_INCREMENT) `order_items`
 --
-ALTER TABLE `cart_items`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+ALTER TABLE `order_items`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- 已傾印資料表的限制式
 --
 
 --
--- 資料表的限制式 `cart_items`
+-- 資料表的限制式 `order_items`
 --
-ALTER TABLE `cart_items`
-  ADD CONSTRAINT `fk_cart_items_cart` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_cart_items_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`);
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
