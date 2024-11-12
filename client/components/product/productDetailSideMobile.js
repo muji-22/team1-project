@@ -96,8 +96,8 @@ const ProductDetailSideMobile = ({
 
   return (
     <>
-      <div class="row mt-5">
-        <div class="col-12 text-center">
+      <div className="row mt-5">
+        <div className="col-12 text-center">
           <h4 style={{ fontWeight: "700" }}>
             {name}
             <a href="#" className="btn">

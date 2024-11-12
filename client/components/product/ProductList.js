@@ -49,6 +49,9 @@ function ProductList({
         if (filters?.price?.max) {
           queryParams.append('price_max', filters.price.max);
         }
+        if (filters?.sortPrice) {
+          queryParams.append('sort_price', filters.sortPrice);
+        }
 
         const response = await fetch(
           `http://localhost:3005/api/products?${queryParams.toString()}`

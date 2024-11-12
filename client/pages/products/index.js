@@ -186,6 +186,14 @@ function Products() {
 
         {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
+        <select
+          className="form-select"
+          onChange={(e) => handleFilterChange({ sortPrice: e.target.value })}
+        >
+          <option value="">價格排序</option>
+          <option value="asc">價格：低到高</option>
+          <option value="desc">價格：高到低</option>
+        </select>
           <ProductList 
             filters={filters}
             currentPage={currentPage}
