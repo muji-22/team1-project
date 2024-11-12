@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { useCart } from '@/contexts/CartContext';
-import { toast } from 'react-toastify';
-import styles from '@/styles/cart.module.css';
+import Swal from 'sweetalert2';
 
 const StepThree = ({
   setstepType,
@@ -116,14 +115,27 @@ const StepThree = ({
       await fetchCartCount();
 
       // 5. 顯示成功訊息
-      toast.success('訂單建立成功！');
+      await Swal.fire({
+        icon: 'success',
+        title: '訂單建立成功！',
+        text: '感謝您的購買',
+        iconColor: '#40CBCE',
+        confirmButtonText: '查看訂單',
+        confirmButtonColor: '#40CBCE',
+      });
 
       // 6. 導向訂單詳情頁
       router.push(`/member/orders/${data.orderId}`);
 
     } catch (error) {
       console.error('建立訂單錯誤:', error);
-      toast.error(error.message || '建立訂單失敗，請稍後再試');
+      await Swal.fire({
+        icon: 'error',
+        title: '訂單建立失敗',
+        text: error.message || '請稍後再試',
+        confirmButtonText: '確定',
+        confirmButtonColor: '#dc3545',
+      });
     } finally {
       setIsProcessing(false);
     }
