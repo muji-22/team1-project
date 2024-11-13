@@ -8,34 +8,54 @@
   width: 400px;
 }
 
+.space {
+  width: 800px;
+}
 
+.title{
+  width: 200px;
+  border-bottom: 2px solid black;
+  margin-inline: auto;
+  text-align: center;
+  margin-block: 20px;
+  font-size: 36px;
+  font-weight: 600;
+  text-shadow: 1px 1px 3px #40CBCE;
+}
 
 
 .resgiter {
   max-width: 450px;
-  height: 450px;
+  height: 520px;
   border-radius: 20px;
   margin-block: auto;
   margin-inline: auto;
-  background: white;
-  box-shadow: -10px 10px 5px gray;
-  border: 1px solid #40CBCE;
+  background: rgba(220, 220, 220, 0.5);
+  box-shadow: 5px 5px 5px gray;
+  border: 2px solid #40CBCE;
   padding-top: 10px;
 }
 
 .inputGroup {
-  /* display: block; */
   width: 80%;
   height: 50px;
   background: #D9D9D9;
-  border: 1px solid #40CBCE;
-  background: white;
+  border: 2px solid #40CBCE;
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 5px;
   margin: 20px auto;
   outline: none;
   padding-left: 25px;
   font-size: 20px;
+  font-weight: 700;
   box-shadow: 3px 3px 5px gray;
+  
+}
+.eye{
+  margin-inline-start: 335px;
+  margin-top: -57px;
+  margin-bottom: 50px;
+  font-size: 18px;
 }
 
 .btnResgiter {
@@ -66,74 +86,92 @@
 .bottom {
   display: flex;
   margin: 30px 0px 0px 100px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .forgrt {
-  width: 100px;
+  /* width: 100px; */
   display: block;
-  margin-inline-start: 150px;
+  margin-inline-start: 170px;
   text-align: right;
   margin-top: 5px;
-  background: white;
+  background: rgba(137, 134, 134, 0.1);
   border: 0px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+
   &:hover {
-    text-shadow: 0.5px 0.5px 0.5px black;
-}
+    text-shadow:2px 2px 5px black;
+  }
 }
 
 .btnLogin {
-  width: 100px;
+  width: 80px;
   background: #40CBCE;
   color: white;
-  margin: auto;
+  margin: -5px 5px;
   border-radius: 3px;
   text-align: center;
   border: 0px;
   font-size: 16px;
   font-weight: 600;
+
   &:hover {
     box-shadow: 3px 3px 3px black;
     text-shadow: 1px 1px 1px black;
+  }
 }
-}
-.link{
+
+.link {
   text-decoration: none;
 }
-.box{
+
+.box {
   width: 100%;
   height: 20px;
   margin-bottom: 10px;
 }
-.message{
+
+.message {
   display: block;
   color: red;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.75);
   text-align: center;
+  font-size: 20px;
 }
-.loading{
+
+.loading {
   width: 100%;
   height: 450px;
   border: 1px solid black;
   color: red;
- background: white;
+  background: white;
   backdrop-filter: blur(5px);
   z-index: 1000;
 }
-.check{
-margin-inline-start: 50px;
-}
-.test{
-  display: flex;
+
+.check {
+  margin-inline-start: 50px;
 }
 
-.icon{
+.test {
+  display: flex;
+  font-weight: 600;
+}
+
+.icon {
   color: #40CBCE;
   margin-left: 10px;
   font-size: 35px;
 }
+
+.inputGroup::placeholder {
+  color: white;
+  font-weight: 700;
+}
+
 
 @media(max-width: 992px) {
   .main {
@@ -165,26 +203,31 @@ margin-inline-start: 50px;
 
   .resgiter {
     max-width: 500px;
-    height: 450px;
+    height: 480px;
     border-radius: 20px;
     margin-inline: auto;
-    background: white;
+    background: rgba(220, 220, 220, 0.5);
     box-shadow: -10px 10px 5px gray;
   }
 
   .inputGroup {
     /* display: block; */
     width: 75%;
-    height: 40px;
+    height: 35px;
     background: #D9D9D9;
-    border: 1px solid #40CBCE;
-    background: white;
+    border: 2px solid #40CBCE;
+    background: rgba(255, 255, 255, 0.6);
     border-radius: 5px;
-    margin: 20px auto;
+    margin: 15px auto;
     outline: none;
     padding-left: 25px;
     font-size: 20px;
     box-shadow: 3px 3px 5px gray;
+  }
+  .eye{
+    margin-inline-start: 330px;
+    margin-top: -45px;
+    margin-bottom: 50px;
   }
 
   .btnResgiter {
@@ -211,19 +254,31 @@ margin-inline-start: 50px;
   }
 
   .btnLogin {
-    width: 100px;
-    background: black;
+    width: 80px;
+    background: #40CBCE;
     color: white;
-    margin: auto;
+    margin: -5px 5px;
     border-radius: 3px;
     text-align: center;
     font-size: 14px;
   }
-  .icon{
+
+  .icon {
     color: #40CBCE;
     margin-left: 20px;
     font-size: 35px;
   }
-  
+  .title{
+    width: 200px;
+    border-bottom: 2px solid black;
+    margin-inline: auto;
+    text-align: center;
+    margin-block: 15px;
+    font-size: 36px;
+    font-weight: 600;
+    text-shadow: 1px 1px 3px #40CBCE;
+  }
+
+
 
 }

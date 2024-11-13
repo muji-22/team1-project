@@ -10,6 +10,7 @@ import {
 } from "react-icons/gi";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from 'next/router';
+import Swal from "sweetalert2";
 
 export default function UserData() {
   const { user, updateUserData, updateAvatar, loading } = useAuth();
@@ -104,7 +105,10 @@ export default function UserData() {
     e.preventDefault();
     try {
       await updateUserData(formData);
-      alert('資料更新成功！');
+      Swal.fire({
+        icon: "success",
+        title: "資料修改成功",
+      });
     } catch (error) {
       alert('更新失敗：' + error.message);
     }
@@ -128,7 +132,10 @@ export default function UserData() {
 
     try {
       const result = await updateAvatar(file)
-      alert('大頭貼上傳成功！')
+      Swal.fire({
+        icon: "success",
+        title: "大頭貼上傳成功",
+      });
     } catch (error) {
       alert('上傳失敗：' + error.message)
     }
@@ -173,7 +180,7 @@ export default function UserData() {
               style={{
                 backgroundImage: user?.avatar_url 
                   ? `url(http://localhost:3005${user.avatar_url})` 
-                  : 'url(/default-avatar.png)',
+                  : 'url(http://localhost:3005/avatar/default-avatar.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}

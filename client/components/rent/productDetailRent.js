@@ -78,18 +78,11 @@ const ProductDetailRent = ({
         </div>
         <h5 className="col-4">押金${deposit}</h5>
         <h5 className="col-4">租金{rental_fee}/天$</h5>
-        <div className="col-9 mt-3"></div>
         <div className="col-8 mt-3">
           商品數量 
           <QuantityAdjuster 
             value={quantity}
             onChange={handleQuantityChange}
-          />
-        </div><div className="col-8 mt-3">
-          租借天數 
-          <DayAdjuster 
-            value={days}
-            onChange={handleDaysChange}
           />
         </div>
         <h5 className="col-3">總價${(deposit+rental_fee*days)*quantity}</h5>
@@ -104,6 +97,7 @@ const ProductDetailRent = ({
             days={days}
             deposit={deposit}
             rental_fee={rental_fee}
+            type="rental"
           />
         </div>
         <div className="col-sm-5">
