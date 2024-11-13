@@ -12,7 +12,7 @@
     border-radius: 20px;
     box-shadow: 10px 10px 5px black;
     background: rgba(137, 134, 134, 0.741);
-    border: 1px solid #40CBCE;
+    border: 2px solid #40CBCE;
   }
   .input{
     display: block;
@@ -47,13 +47,15 @@
   }
   .title{
     display: block;
-    width: 300px;
-    border-bottom:1px solid black ;
+    width: 200px;
+    border-bottom:2px solid black ;
     margin-top: 10px;
     margin-inline: auto;
-    font-size: 30px;
     text-align: center;
     font-weight: 700;
+    font-size: 36px;
+    padding-bottom: 10px;
+    text-shadow: 1px 1px 3px #40CBCE;
   }
   .return{
     border: 0px;

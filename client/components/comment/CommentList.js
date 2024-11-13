@@ -2,9 +2,9 @@
 import React, { useEffect } from 'react'
 import { useComment } from '@/contexts/CommentContext'
 import { useAuth } from '@/contexts/AuthContext'
-import StarRating from '../common/StarRating'
+import StarRating from '../comment/StarRating'
 
-const CommentList = ({ productId }) => {
+const CommentList = ({ productId, user }) => {
   const { 
     comments, 
     avgScore,
@@ -15,9 +15,10 @@ const CommentList = ({ productId }) => {
     fetchComments,
     deleteComment,
   } = useComment()
-  const { user } = useAuth()
 
   useEffect(() => {
+    console.log('avgScore type:', typeof avgScore)
+    console.log('avgScore value:', avgScore)
     fetchComments(productId)
   }, [productId])
 
@@ -41,11 +42,13 @@ const CommentList = ({ productId }) => {
         <h4 className="mb-0">商品評價</h4>
         <div className="d-flex align-items-center">
           <StarRating 
-            initialRating={Math.round(avgScore)} 
+            initialRating={avgScore ? Math.round(avgScore) : 0} 
             totalStars={5}
             onRatingChange={() => {}} // 唯讀模式
           />
-          <span className="ms-2">({avgScore.toFixed(1)}分)</span>
+          <span className="ms-2">
+            {avgScore ? `(${Number(avgScore).toFixed(1)}分)` : '(尚無評分)'}
+          </span>
         </div>
       </div>
 
@@ -61,7 +64,7 @@ const CommentList = ({ productId }) => {
                   <div className="d-flex align-items-center gap-2">
                     {/* 使用者頭像 */}
                     <img
-                      src={comment.avatar_url || '/default-avatar.png'}
+                      src={comment.avatar_url || 'http://localhost:3005/avatar/default-avatar.png'}
                       alt="avatar"
                       className="rounded-circle"
                       width="40"

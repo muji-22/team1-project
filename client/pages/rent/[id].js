@@ -1,4 +1,4 @@
-// pages/product/[id].js
+// pages/rent/[id].js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import style from "@/styles/productDetail.module.css";

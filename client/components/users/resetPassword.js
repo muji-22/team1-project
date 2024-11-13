@@ -6,6 +6,8 @@ import {
   GiDiceSixFacesTwo,
   GiDiceSixFacesThree,
 } from "react-icons/gi";
+import Swal from "sweetalert2";
+import { IoIosEye,IoIosEyeOff  } from "react-icons/io";
 
 export default function ResetPassword() {
   const { updatePasswordData } = useAuth();
@@ -37,12 +39,20 @@ export default function ResetPassword() {
 
     try {
       await updatePasswordData(formData);
-      alert("密碼修改成功！");
+      Swal.fire({
+        icon: "success",
+        title: "密碼修改成功",
+      });
       setError("");
       setFormData({ currentPassword: "", newPassword: "", newPassword2: "" });
     } catch (error) {
       setError(error.message);
     }
+  };
+
+  const [isActive, setIsActive] = useState(false);
+  const handleClick = () => {
+    setIsActive(prevState => !prevState);
   };
   
   return (
@@ -55,11 +65,12 @@ export default function ResetPassword() {
           </label>
           <input
             className={styles.inputContext1}
-            type="password"
+            type={isActive?'text': 'password'}
             name="currentPassword"
             value={formData.currentPassword}
             onChange={handleChange}
           />
+          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
         </div>
         <div className={styles.inputWrap}>
           <label className={styles.label2}>
@@ -68,11 +79,12 @@ export default function ResetPassword() {
           </label>
           <input
             className={styles.inputContext2}
-            type="password"
+            type={isActive?'text': 'password'}
             name="newPassword"
             value={formData.newPassword}
             onChange={handleChange}
           />
+          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
         </div>
         <div className={styles.inputWrap}>
           <label className={styles.label2}>
@@ -81,11 +93,12 @@ export default function ResetPassword() {
           </label>
           <input
             className={styles.inputContext2}
-            type="password"
+            type={isActive?'text': 'password'}
             name="newPassword2"
             value={formData.newPassword2}
             onChange={handleChange}
           />
+          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
         </div>
         <div className={styles.error}>{error}</div>
         <button className={styles.button} type="submit">

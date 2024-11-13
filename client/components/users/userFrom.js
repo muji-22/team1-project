@@ -6,6 +6,9 @@ import ResetPassword from "./resetPassword";
 import CouponsPage from "../coupon/CouponsPage";
 import FavoriteList from "../favorite/FavoriteList";
 import { useAuth } from "@/contexts/AuthContext";
+import { IoHomeOutline } from "react-icons/io5";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import Link from "next/link";
 
 export default function UserForm() {
   const { user } = useAuth();
@@ -29,6 +32,8 @@ export default function UserForm() {
 
   return (
     <>
+   
+    <div className={styles.breadcrumb}> <Link href="/"><IoHomeOutline color="#40CBCE"/></Link><MdKeyboardArrowRight color="blue"/><span className={styles.text}>{title[active]}</span></div>
       <main className={styles.main}>
         <div className={styles.wrap}>
           <div className={styles.leftUser}>

@@ -100,8 +100,21 @@ router.get('/', async (req, res) => {
     }
 
     // 3. 添加分組、排序和分頁
-    sql += ` GROUP BY r.id ORDER BY r.id DESC LIMIT ? OFFSET ?`
-    values.push(limit, offset)
+sql += ` GROUP BY r.id`;
+
+// 新增價格排序選項
+if (req.query.sort_rental_fee) {
+  if (req.query.sort_rental_fee === 'asc') {
+    sql += ` ORDER BY r.rental_fee ASC`;
+  } else if (req.query.sort_rental_fee === 'desc') {
+    sql += ` ORDER BY r.rental_fee DESC`;
+  }
+} else {
+  sql += ` ORDER BY r.id ASC`;
+}
+
+sql += ` LIMIT ? OFFSET ?`;
+values.push(limit, offset);
 
     // 4. 執行主要查詢
     const [rows] = await pool.query(sql, values)

@@ -54,6 +54,9 @@ function RentList({
         if (filters?.price?.max) {
           queryParams.append('rental_fee_max', filters.price.max);
         }
+        if (filters?.sortRentalFee) {
+          queryParams.append('sort_rental_fee', filters.sortRentalFee);
+        }
 
         const response = await fetch(
           `http://localhost:3005/api/rents?${queryParams.toString()}`

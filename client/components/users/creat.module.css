@@ -18,20 +18,32 @@
 }
 
 .resgiter {
-    max-width: 500px;
-    height: 700px;
+    max-width: 450px;
+    height: 750px;
     margin-block: auto;
     margin-inline: auto;
     border-radius: 20px;
     box-shadow: 5px 5px 5px gray;
     background: rgba(137, 134, 134, 0.741);
-    border: 1px solid #40CBCE;
+    border: 2px solid #40CBCE;
     padding-top: 10px;
 }
+
+.title{
+    width: 200px;
+    border-bottom: 2px solid black;
+    margin-inline: auto;
+    text-align: center;
+    margin-block: 20px;
+    font-size: 36px;
+    font-weight: 600;
+    text-shadow: 1px 1px 3px #40CBCE;
+  }
 
 .top {
     margin: 0px auto;
     width: 450px;
+    padding-bottom: 10px;
 }
 
 .line {
@@ -49,7 +61,7 @@
     border: 2px solid #40CBCE;
     background: rgba(255, 255, 255, 0.6);
     border-radius: 5px;
-    margin: 15px auto;
+    margin: 10px auto;
     outline: none;
     padding-left: 20px;
     font-size: 20px;
@@ -79,16 +91,16 @@
 .bottom {
     display: flex;
     margin: 30px 0px 0px 120px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
 
 }
 
 .btnLogin {
-    width: 100px;
+    width: 80px;
     background: #40CBCE;
     color: white;
-    margin-inline-start: 3px;
+    margin: -5px 5px;
     border-radius: 3px;
     text-align: center;
     border: 0px;
@@ -155,7 +167,7 @@
 
     .resgiter {
         max-width: 576px;
-        height: 650px;
+        height: 660px;
         margin-block: auto;
         margin-inline: auto;
         border-radius: 20px;
@@ -165,6 +177,7 @@
 
     .top {
         margin: 0px auto;
+        padding-bottom: 10px;
 
     }
 
@@ -172,12 +185,12 @@
     .inputGroup {
         /* display: block; */
         width: 75%;
-        height: 40px;
+        height: 35px;
         background: #D9D9D9;
         border: 2px solid #40CBCE;
         background: rgba(255, 255, 255, 0.6);
         border-radius: 5px;
-        margin: 15px auto;
+        margin: 10px auto;
         outline: none;
         padding-left: 20px;
         font-size: 20px;
@@ -202,18 +215,27 @@
         display: flex;
         margin: 30px 0px 0px 140px;
 
-
     }
 
 
 
     .btnLogin {
-        width: 100px;
+        width: 80px;
         background: #40CBCE;
         color: white;
         border-radius: 3px;
         text-align: center;
         font-size: 14px;
     }
+    .title{
+        width: 200px;
+        border-bottom: 2px solid black;
+        margin-inline: auto;
+        text-align: center;
+        margin-block: 15px;
+        font-size: 36px;
+        font-weight: 600;
+        text-shadow: 1px 1px 3px #40CBCE;
+      }
 
 }

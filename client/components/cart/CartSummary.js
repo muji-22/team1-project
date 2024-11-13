@@ -11,7 +11,6 @@ const CartSummary = ({
   total,
   saleTotal = 0,
   rentalTotal = 0,
-  cartItems = [],
   setDiscountPrice,
   setDiscountAmount,
   setCartCouponId,
@@ -61,6 +60,56 @@ const CartSummary = ({
     fetchUserCoupons();
   }, []);
 
+  // 監測購物車金額變化
+  useEffect(() => {
+    // 當購物車完全為空時
+    if (total <= 0 && appliedCoupon) {
+      setAppliedCoupon(null);
+      setCartCouponId(null);
+      setDiscountAmount(0);
+      setDiscountPrice(0);
+      setShowCouponSelector(false);
+      return;
+    }
+
+    // 當已選擇優惠券時，檢查對應類型的商品是否還存在
+    if (appliedCoupon) {
+      const shouldRemoveCoupon = (
+        (appliedCoupon.apply_to === 'sale' && saleTotal <= 0) ||
+        (appliedCoupon.apply_to === 'rental' && rentalTotal <= 0)
+      );
+
+      if (shouldRemoveCoupon) {
+        setAppliedCoupon(null);
+        setCartCouponId(null);
+        setDiscountAmount(0);
+        setDiscountPrice(total);
+        toast.info("已自動移除不適用的優惠券", {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          progress: undefined,
+        });
+      }
+    }
+  }, [total, saleTotal, rentalTotal]);
+
+  // 判斷優惠券是否可用
+  const isCouponApplicable = (coupon) => {
+    switch (coupon.apply_to) {
+      case 'sale':
+        return saleTotal > 0;
+      case 'rental':
+        return rentalTotal > 0;
+      case 'both':
+        return total > 0;
+      default:
+        return false;
+    }
+  };
+
   // 過濾優惠券
   const filteredCoupons = userCoupons.filter(
     (coupon) =>
@@ -105,6 +154,8 @@ const CartSummary = ({
 
   // 選擇優惠券
   const handleSelectCoupon = async (coupon) => {
+    if (!isCouponApplicable(coupon)) return;
+
     const couponData = {
       id: coupon.id,
       code: coupon.code,
@@ -198,41 +249,56 @@ const CartSummary = ({
         >
           {filteredCoupons.length > 0 ? (
             <div className="d-flex flex-column gap-2">
-              {filteredCoupons.map((coupon) => (
-                <div
-                  key={coupon.id}
-                  className={`card shadow-sm w-100`}
-                  onClick={() => handleSelectCoupon(coupon)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="row g-0">
-                    <div
-                      className={`col-3 bg-custom d-flex align-items-center justify-content-center p-2`}
-                    >
-                      <FaTicket className="text-white w-75 h-auto" />
-                    </div>
-                    <div className="col-9 bg-white text-dark p-1">
-                      <div className="card-body p-2">
-                        <div className="d-flex justify-content-between align-items-center">
-                          <h5 className="card-title mb-2 fs-6 fw-bold text-truncate">
-                            {coupon.name}
-                          </h5>
-                          {appliedCoupon?.id === coupon.id && (
-                            <FaCheckCircle className="fs-4 text-custom" />
-                          )}
+              {filteredCoupons.map((coupon) => {
+                const isApplicable = isCouponApplicable(coupon);
+                return (
+                  <div
+                    key={coupon.id}
+                    className={`card shadow-sm w-100 ${!isApplicable ? 'opacity-50' : ''}`}
+                    onClick={() => isApplicable && handleSelectCoupon(coupon)}
+                    style={{ 
+                      cursor: isApplicable ? "pointer" : "not-allowed",
+                    }}
+                  >
+                    <div className="row g-0">
+                      <div className={`col-3 ${isApplicable ? 'bg-custom' : 'bg-secondary'} d-flex align-items-center justify-content-center p-2`}>
+                        <FaTicket className="text-white w-75 h-auto" />
+                      </div>
+                      <div className="col-9 bg-white text-dark p-1">
+                        <div className="card-body p-2">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <h5 className="card-title mb-2 fs-6 fw-bold text-truncate">
+                              {coupon.name}
+                            </h5>
+                            {appliedCoupon?.id === coupon.id && (
+                              <FaCheckCircle className="fs-4 text-custom" />
+                            )}
+                          </div>
+                          <p className="card-text mb-1 fs-5 fw-bold text-danger">
+                            {formatCouponValue(coupon)}
+                          </p>
+                          <p className="card-text mb-0 text-secondary small">
+                            到期日：{new Date(coupon.end_date).toLocaleDateString()}
+                          </p>
+                          <div className="d-flex gap-2 align-items-center">
+                            <span className={`badge ${isApplicable ? 'bg-secondary' : 'bg-danger'}`}>
+                              {coupon.apply_to === 'sale' && '限購買商品'}
+                              {coupon.apply_to === 'rental' && '限租借商品'}
+                              {coupon.apply_to === 'both' && '適用全部商品'}
+                            </span>
+                            {!isApplicable && (
+                              <small className="text-danger">
+                                {coupon.apply_to === 'sale' && '購物車中無購買商品'}
+                                {coupon.apply_to === 'rental' && '購物車中無租借商品'}
+                              </small>
+                            )}
+                          </div>
                         </div>
-                        <p className="card-text mb-1 fs-5 fw-bold text-danger">
-                          {formatCouponValue(coupon)}
-                        </p>
-                        <p className="card-text mb-0 text-secondary small">
-                          到期日：
-                          {new Date(coupon.end_date).toLocaleDateString()}
-                        </p>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="text-center text-muted py-3">
@@ -277,8 +343,9 @@ const CartSummary = ({
             variant="outline-secondary"
             className="w-100"
             onClick={() => setShowCouponSelector(!showCouponSelector)}
+            disabled={total <= 0}
           >
-            {appliedCoupon ? "更改優惠券" : "選擇優惠券"}
+            {total <= 0 ? "購物車是空的" : appliedCoupon ? "更改優惠券" : "選擇優惠券"}
           </Button>
 
           {/* 優惠券選擇器 */}

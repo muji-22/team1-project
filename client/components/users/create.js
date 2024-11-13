@@ -61,6 +61,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import Swal from "sweetalert2";
 
 export default function Register({ setCurrentForm }) {
   const router = useRouter();
@@ -131,6 +132,11 @@ export default function Register({ setCurrentForm }) {
       }
 
       // 註冊成功，導向登入頁
+      Swal.fire({
+        icon: "success",
+        title: "註冊成功",
+        text: `前往登入`,
+      });
       router.push("/auth/login");
       setTimeout(() => {
         // 註冊成功後重新整理頁面
@@ -154,7 +160,7 @@ export default function Register({ setCurrentForm }) {
       <div className={styles.space}></div>
       <form onSubmit={handleSubmit} className={styles.resgiter}>
         <div className={styles.top}>
-          <div></div>
+        <div className={styles.title}>會員註冊</div>
           <label className={styles.icon}>
             <MdAccountCircle />
           </label>

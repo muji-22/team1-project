@@ -1,37 +1,41 @@
 import React from 'react'
-import CommentList from '@/components/common/CommentList.js'
-import CommentForm from '@/components/common/CommentForm'
-function Test() {
-    return (
-      <>
-      <main className='container min-vh-100'>
-      <div>
-      {/* 商品資訊... */}
-      
-      {/* 評價區塊 */}
-      <section className="mt-5">
-        {/* 已登入且有訂單才顯示評價表單 */}
-        
-          <div className="mb-5">
-            <h5>撰寫評價</h5>
-            <CommentForm 
-              productId= "1"
-              orderId= "1"
-              onSuccess={() => {
-                // 可以顯示成功訊息
-                alert('評價提交成功！')
-              }} 
-            />
-          </div>
-      
+import CommentList from '@/components/comment/CommentList'
+import CommentForm from '@/components/comment/CommentForm'
+import { useAuth } from '@/contexts/AuthContext'
 
-        {/* 評價列表 */}
-        <CommentList productId="1" />
-      </section>
+function TestComment() {
+  const { user } = useAuth()
+  console.log('User:', user) // 調試用
+  const testProductId = 1
+
+  return (
+    <div className="container py-4">
+      <h2 className="mb-4">評論區塊測試頁面</h2>
+      
+      <hr className="my-4" />
+
+      <div className="mb-5">
+        <h3 className="mb-3">新增評論</h3>
+        {user ? (
+          <CommentForm 
+            productId={testProductId}
+            onSuccess={() => {
+              alert('評論新增成功！')
+            }}
+          />
+        ) : (
+          <div className="alert alert-info">
+            請先登入才能發表評論
+          </div>
+        )}
+      </div>
+
+      <div className="mb-5">
+        <h3 className="mb-3">評論列表</h3>
+        <CommentList productId={testProductId} />
+      </div>
     </div>
-      </main>
-      </>
-    )
-  }
-  
-  export default Test
+  )
+}
+
+export default TestComment
