@@ -1,15 +1,15 @@
 // pages/cart/index.js
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { useCart } from '@/contexts/CartContext';
-import StepOne from '@/components/cart/Stepone';
-import StepTwo from '@/components/cart/steptwo';
-import StepThree from '@/components/cart/Stepthree';
-import styles from '@/styles/cart.module.css';
-import MayFavorite from '@/components/product/mayFavorite';
-import { useRouter } from 'next/router';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useCart } from "@/contexts/CartContext";
+import StepOne from "@/components/cart/Stepone";
+import StepTwo from "@/components/cart/steptwo";
+import StepThree from "@/components/cart/Stepthree";
+import styles from "@/styles/cart.module.css";
+import MayFavorite from "@/components/product/mayFavorite";
+import { useRouter } from "next/router";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-toastify";
 
 export default function CartPage() {
   // Auth 相關
@@ -27,21 +27,21 @@ export default function CartPage() {
 
   // 訂單資訊
   const [orderInfo, setOrderInfo] = useState({
-    name: user?.name || '',
-    phone: user?.phone || '',
-    address: user?.address || '',
-    note: '',
-    payment: 'credit_card'
+    name: user?.name || "",
+    phone: user?.phone || "",
+    address: user?.address || "",
+    note: "",
+    payment: "credit_card",
   });
 
   // 檢查登入狀態
   useEffect(() => {
     if (!isAuthenticated()) {
-      toast.error('請先登入');
-      router.push('/auth/login');
+      toast.error("請先登入");
+      router.push("/auth/login");
       return;
     }
-    
+
     // 初始化購物車
     initializeCart();
   }, [isAuthenticated]);
@@ -51,8 +51,8 @@ export default function CartPage() {
     try {
       await fetchCartCount();
     } catch (error) {
-      console.error('購物車初始化失敗:', error);
-      toast.error('購物車載入失敗，請重試');
+      console.error("購物車初始化失敗:", error);
+      toast.error("購物車載入失敗，請重試");
     }
   };
 
@@ -63,6 +63,8 @@ export default function CartPage() {
       return;
     }
     setCurrentStep(step);
+    // 切換步驟時滾動到頁面頂部
+    window.scrollTo(0, 0);
   };
 
   // 步驟驗證
@@ -70,7 +72,7 @@ export default function CartPage() {
     switch (step) {
       case 1:
         if (cartOriginDtl.length === 0) {
-          toast.warning('購物車是空的');
+          toast.warning("購物車是空的");
           return false;
         }
         return true;
@@ -84,21 +86,25 @@ export default function CartPage() {
 
   // 更新訂單資訊
   const updateOrderInfo = (info) => {
-    setOrderInfo(prev => ({
+    setOrderInfo((prev) => ({
       ...prev,
-      ...info
+      ...info,
     }));
   };
 
   // 渲染步驟指示器
   const renderStepIndicator = (number, text) => (
-    <Col className={`${styles.step} ${currentStep === number ? styles.nowStep : ''}`}>
-      <div className={styles.stepBox}>
+    <Col
+      className={`${styles.step}  ${
+        currentStep === number ? styles.nowStep : ""
+      }`}
+    >
+      <div className={`${styles.stepBox}`}>
         <div className={styles.stepNum}>{number}</div>
       </div>
       <div className={styles.stepWord}>
-        <div className={styles.phoneDNone}>第{number}步</div>
-        <div className={`${styles.phoneDNone} ${styles.stepline}`}></div>
+        <div className="">第{number}步</div>
+        <div className= {styles.stepline}></div>
         <span>{text}</span>
       </div>
     </Col>
@@ -124,9 +130,9 @@ export default function CartPage() {
             setstepType={handleStepChange}
             discountPrice={discountPrice}
             discountAmount={discountAmount}
-            setOrderName={value => updateOrderInfo({ name: value })}
-            setOrderPhone={value => updateOrderInfo({ phone: value })}
-            setOrderAddress={value => updateOrderInfo({ address: value })}
+            setOrderName={(value) => updateOrderInfo({ name: value })}
+            setOrderPhone={(value) => updateOrderInfo({ phone: value })}
+            setOrderAddress={(value) => updateOrderInfo({ address: value })}
           />
         );
       case 3:
@@ -150,17 +156,20 @@ export default function CartPage() {
 
   return (
     <>
-      <Container fluid="xxl">
-        <Row className={`d-flex justify-content-center align-items-center ${styles.stepBar}`}>
-          {renderStepIndicator(1, '購物車')}
-          {renderStepIndicator(2, '填寫資料')}
-          {renderStepIndicator(3, '最後確認')}
-        </Row>
-      </Container>
-
-      <div className="mb-4">
-        {renderStepContent()}
+      <div className={`${styles.stepImg} d-flex justify-content-center align-items-center`} >
+        <Container fluid="xxl">
+          <Row
+            className={`d-flex justify-content-center align-items-center ${styles.stepBar}`}
+          >
+            {renderStepIndicator(1, "購物車")}
+            {renderStepIndicator(2, "填寫資料")}
+            {renderStepIndicator(3, "最後確認")}
+          </Row>
+        </Container>
       </div>
+      
+      
+      <div className={`mb-4 mt-3`}>{renderStepContent()}</div>
     </>
   );
 }

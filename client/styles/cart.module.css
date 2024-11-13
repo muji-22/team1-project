@@ -41,7 +41,17 @@
 .stepBar {
   padding: 2rem 0;
   /* background-color: #3a81c9; */
-  margin-bottom: 2rem;
+  
+}
+.stepNum{}
+
+.stepImg{
+  background: url("../public/images/stpbar5.png") ;
+  width: 100vw;
+  height: 200px;
+  background-repeat: repeat;
+  background-size: cover;
+  opacity: 1;
 }
 
 .step {
@@ -49,6 +59,21 @@
   align-items: center;
   gap: 1rem;
 }
+
+.nowStep {
+  opacity: 1;
+}
+
+
+
+.nowStep .stepBox {
+  background-color: var(--bs-custom);
+  color: white;
+  height: 80px;
+  width: 80px;
+  box-shadow: 1px 5px 3px 2px rgba(73, 73, 73, 0.5);
+}
+
 
 .stepBox {
   width: 60px;
@@ -63,16 +88,10 @@
   font-size: 2rem;
 }
 
-.nowStep .stepBox {
-  background-color: var(--bs-custom);
-  color: white;
-  height: 60px;
-  width: 60px;
-}
-
 .stepWord {
   align-items: center;
   gap: 0.5rem;
+  
 }
 
 .stepline {
@@ -92,3 +111,19 @@
     display: none;
   }
 }
+
+/* 手機排版 */
+@media (max-width: 500px) {
+  .step{
+    display: none;
+  }
+  .nowStep{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .stepNum{
+
+  }
+
+  }

@@ -142,7 +142,7 @@ const StepTwo = ({
                   返回購物車
                 </Button>
                 <Button 
-                  variant="primary" 
+                  variant="custom" 
                   type="submit"
                   className="px-4"
                 >
