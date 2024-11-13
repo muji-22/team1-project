@@ -1,0 +1,11 @@
+// 調整使用者下拉選單的位置
+#userDropdown {
+    position: relative;
+  }
+  
+  #userDropdown .dropdown-menu {
+    position: absolute;
+    top: 30px; /* 調整下拉選單的垂直位置 */
+    right: 10px; /* 調整下拉選單的水平位置 */
+    transform: translateX(50%);
+  }

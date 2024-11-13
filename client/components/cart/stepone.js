@@ -131,8 +131,8 @@ const StepOne = ({
         <Col lg={8}>
           {/* 購買商品列表 */}
           {cartItems.filter(item => item.type === 'sale').length > 0 && (
-            <div className="mb-4">
-              <h5 className="mb-3">購買商品</h5>
+            <div className="mb-4 mt-3">
+              <h5 className={`my-3 bg-custom py-3 text-center text-white`}>購買商品</h5>
               {cartItems
                 .filter(item => item.type === 'sale')
                 .map(item => (
@@ -148,8 +148,8 @@ const StepOne = ({
 
           {/* 租借商品列表 */}
           {cartItems.filter(item => item.type === 'rental').length > 0 && (
-            <div className="mb-4">
-              <h5 className="mb-3">租借商品</h5>
+            <div className="mb-4 ">
+              <h5 className={`my-3 bg-custom py-3 text-center text-white`}>租借商品</h5>
               {cartItems
                 .filter(item => item.type === 'rental')
                 .map(item => (
