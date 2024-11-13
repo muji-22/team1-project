@@ -94,14 +94,15 @@ export default function Register({ setCurrentForm }) {
       setError("再輸入一次密碼");
       return;
     }
-    if (!formData.email) {
-      setError("信箱不得為空");
-      return;
-    }
     if (formData.password !== formData.confirmPassword) {
       setError("密碼與確認密碼不符");
       return;
     }
+    if (!formData.email) {
+      setError("信箱不得為空");
+      return;
+    }
+    
 
     setError("");
     // setIsLoading(true);
@@ -150,6 +151,7 @@ export default function Register({ setCurrentForm }) {
   };
   return (
     <>
+      <div className={styles.space}></div>
       <form onSubmit={handleSubmit} className={styles.resgiter}>
         <div className={styles.top}>
           <div></div>
