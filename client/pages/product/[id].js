@@ -10,10 +10,14 @@ import ProductDetailMainNotice2 from "@/components/product/productDetailMainNoti
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 import MayFavorite from "@/components/product/mayFavorite";
 import Breadcrumb from "@/components/Breadcrumb";
+import CommentList from '@/components/comment/CommentList'
+import CommentForm from '@/components/comment/CommentForm'
+import { useAuth } from '@/contexts/AuthContext'
 
 function ProductDetail() {
     const router = useRouter();
     const { id } = router.query;
+    const { user } = useAuth()
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -237,6 +241,26 @@ function ProductDetail() {
             <ProductDetailNotice />
             <br />
             <ProductDetailNotice2 />
+
+             {/* 評價區塊 */}
+      <div className="my-5">
+        <div className="container">
+          {/* 已經購買過的使用者才能評價 */}
+          {user && (
+            <CommentForm 
+              productId={product.id} 
+              orderId={1} // 這裡需要傳入實際的訂單ID
+              onSuccess={() => {
+                // 評價成功後的處理
+              }}
+            />
+          )}
+          <CommentList 
+            productId={product.id}
+            user={user}
+          />
+        </div>
+      </div>
 
             {/* 可能喜歡 */}
             <div className="d-flex justify-content-center">

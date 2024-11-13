@@ -158,4 +158,30 @@ router.delete('/:commentId', authenticateToken, async (req, res) => {
   }
 })
 
+// 取得可評價的訂單
+router.get('/available-orders/:productId', authenticateToken, async (req, res) => {
+  const userId = req.user.id
+  const productId = req.params.productId
+
+  try {
+    const [orders] = await pool.execute(
+      `SELECT DISTINCT o.id, o.created_at
+       FROM orders o
+       JOIN order_items oi ON o.id = oi.order_id
+       LEFT JOIN product_comment pc ON o.id = pc.order_id AND oi.product_id = pc.product_id
+       WHERE o.user_id = ?
+       AND oi.product_id = ?
+       AND o.order_status = 3  # 已完成的訂單
+       AND pc.id IS NULL  # 還未評價的訂單
+       ORDER BY o.created_at DESC`,
+      [userId, productId]
+    )
+
+    res.json(orders)
+  } catch (error) {
+    console.error('獲取可評價訂單失敗:', error)
+    res.status(500).json({ message: '獲取可評價訂單失敗' })
+  }
+})
+
 export default router
