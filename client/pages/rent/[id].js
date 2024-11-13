@@ -256,7 +256,6 @@ function ProductRent() {
           {user && (
             <CommentForm 
               productId={product.id} 
-              orderId={1} // 這裡需要傳入實際的訂單ID
               onSuccess={() => {
                 // 評價成功後的處理
               }}
