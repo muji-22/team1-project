@@ -42,6 +42,8 @@ app.use('/api/cart', cartRoutes)
 app.use('/api/favorites', favoritesRouter)
 app.use('/api/newsletter', newsletterRouter)
 app.use('/api/comments', commentRouter)
+app.use('/api/forumarticle',forumRouter)
+app.use('/api/forumpublish',publishRouter)
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {

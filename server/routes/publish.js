@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 const router = express.Router()
 const db = pool 
 
-router.post("/api/publish", async (req,res)=>{
+router.post("/api/forumpublish", async (req,res)=>{
   if (req.method === 'POST') {
     console.log("posting artcile");
     try {
