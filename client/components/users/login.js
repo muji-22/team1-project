@@ -6,6 +6,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { MdAccountCircle } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import Swal from "sweetalert2";
+import { IoIosEye,IoIosEyeOff  } from "react-icons/io";
 
 export default function Login({ setCurrentForm }) {
   const { login } = useAuth();
@@ -55,13 +56,17 @@ export default function Login({ setCurrentForm }) {
       setIsLoading(false);
     }
   };
+  const [isActive, setIsActive] = useState(false);
+  const handleClick = () => {
+    setIsActive(prevState => !prevState);
+  };
 
   return (
     <>
       <div className={styles.space}></div>
       <form className={styles.resgiter} onSubmit={handleSubmit}>
         <div className={styles.top}>
-
+          <div className={styles.title}>會員登入</div>
           <div>
            <label><MdAccountCircle  className={styles.icon}/></label> 
           <input
@@ -77,13 +82,14 @@ export default function Login({ setCurrentForm }) {
           <div>
           <label><RiLockPasswordFill  className={styles.icon}/></label>
           <input
-            type="password"
+            type={isActive?'text': 'password'}
             name="password" // 修改：添加 name 屬性
             className={styles.inputGroup}
             placeholder="密碼"
             value={formData.password}
             onChange={handleChange}
           />
+          <div className={styles.eye}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
           </div>
 
           <button type="submit" className={styles.btnResgiter}>
