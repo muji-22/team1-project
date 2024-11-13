@@ -229,15 +229,17 @@ function Products() {
 
         {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
+        <div className="col-3 ms-auto">
           <select
             className="form-select mb-4"
             onChange={(e) => handleFilterChange({...filters, sortPrice: e.target.value })}
             value={filters.sortPrice || ""}
           >
-            <option value="">價格排序</option>
+            <option value="">預設排序</option>
             <option value="asc">價格：低到高</option>
             <option value="desc">價格：高到低</option>
           </select>
+          </div>
           
           <ProductList 
             filters={filters}
