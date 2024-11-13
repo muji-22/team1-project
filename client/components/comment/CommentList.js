@@ -64,7 +64,7 @@ const CommentList = ({ productId, user }) => {
                   <div className="d-flex align-items-center gap-2">
                     {/* 使用者頭像 */}
                     <img
-                      src={comment.avatar_url || '/default-avatar.png'}
+                      src={comment.avatar_url || 'http://localhost:3005/avatar/default-avatar.png'}
                       alt="avatar"
                       className="rounded-circle"
                       width="40"
