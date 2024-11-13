@@ -23,6 +23,8 @@ function ArticleList() {
     fetchArticles();
   }, []);
 
+  
+
   if (error) return <div className="alert alert-danger">伺服器錯誤，請洽管理員......</div>;
 
   // 計算當前頁面要顯示的文章

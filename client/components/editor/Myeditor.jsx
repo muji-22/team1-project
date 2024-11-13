@@ -37,7 +37,8 @@ function MyCustomUploadAdapterPlugin( editor ) {
   editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
     return new MyUploadAdapter(loader);
 };
-};
+};  
+
 
 const Myeditor = ({ onChange, editorLoaded, name, value }) => {
   const editorRef = useRef();

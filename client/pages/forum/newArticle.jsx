@@ -34,7 +34,7 @@ const Editor = () => {
 
       setIsSubmitting(true); // 開始送出
 
-      const response = await fetch('http://localhost:3005/api/publish', {
+      const response = await fetch('http://localhost:3005//api/forumpublish', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

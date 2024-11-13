@@ -1,7 +1,7 @@
 /* styles/cart.module.css */
 .summaryCard {
   position: sticky;
-  top: 20px;
+  top: 100px;
 }
 
 .cartItemImage {
@@ -40,7 +40,7 @@
 
 .stepBar {
   padding: 2rem 0;
-  background-color: #f8f9fa;
+  /* background-color: #3a81c9; */
   margin-bottom: 2rem;
 }
 
@@ -51,31 +51,35 @@
 }
 
 .stepBox {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background-color: #e9ecef;
+  background-color: #36a5a5;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  font-size: 2rem;
 }
 
 .nowStep .stepBox {
-  background-color: var(--bs-primary);
+  background-color: var(--bs-custom);
   color: white;
+  height: 60px;
+  width: 60px;
 }
 
 .stepWord {
-  display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .stepline {
-  width: 30px;
-  height: 2px;
-  background-color: #dee2e6;
+  width: 200px;
+  height: 1px;
+  background-color: #8a8a8a;
+  margin: 5px 0;
 }
 
 @media (max-width: 768px) {

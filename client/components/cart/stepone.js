@@ -16,6 +16,8 @@ const StepOne = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
+  const [saleTotal, setSaleTotal] = useState(0);
+  const [rentalTotal, setRentalTotal] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const { fetchCartCount } = useCart();
 
@@ -52,20 +54,35 @@ const StepOne = ({
         console.log('處理後的商品列表:', items);
         
         setCartItems(items);
-        
-        // 計算總金額
-        const total = items.reduce((sum, item) => {
-          console.log('計算商品金額:', item);
+
+        // 計算購買商品總額
+        const saleTotal = items.reduce((sum, item) => {
+          if (item.type === 'sale') {
+            const itemTotal = (item.price || 0) * (item.quantity || 1);
+            console.log('購買商品:', item.name, '金額:', itemTotal);
+            return sum + itemTotal;
+          }
+          return sum;
+        }, 0);
+
+        // 計算租借商品總額
+        const rentalTotal = items.reduce((sum, item) => {
           if (item.type === 'rental') {
             const depositTotal = (item.deposit || 0) * (item.quantity || 1);
             const rentalTotal = (item.rental_fee || 0) * ((item.rental_days || 3) * (item.quantity || 1));
-            return sum + depositTotal + rentalTotal;
-          } else {
-            return sum + ((item.price || 0) * (item.quantity || 1));
+            const itemTotal = depositTotal + rentalTotal;
+            console.log('租借商品:', item.name, '金額:', itemTotal);
+            return sum + itemTotal;
           }
+          return sum;
         }, 0);
-        
-        console.log('計算得到的總金額:', total);
+
+        // 設定總金額
+        console.log('購買商品總額:', saleTotal);
+        console.log('租借商品總額:', rentalTotal);
+        setSaleTotal(saleTotal);
+        setRentalTotal(rentalTotal);
+        const total = saleTotal + rentalTotal;
         setTotalAmount(total);
         setDiscountPrice(total);
         
@@ -85,6 +102,8 @@ const StepOne = ({
         toast.error(error.message || '獲取購物車數據失敗');
       }
       setCartItems([]);
+      setSaleTotal(0);
+      setRentalTotal(0);
       setTotalAmount(0);
     } finally {
       setLoading(false);
@@ -156,6 +175,9 @@ const StepOne = ({
         <Col lg={4}>
           <CartSummary
             total={totalAmount}
+            saleTotal={saleTotal}
+            rentalTotal={rentalTotal}
+            cartItems={cartItems}
             setDiscountPrice={setDiscountPrice}
             setDiscountAmount={setDiscountAmount}
             setCartCouponId={setCartCouponId}
