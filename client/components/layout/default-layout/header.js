@@ -237,54 +237,28 @@ function Header() {
             <>{/* 未登入 */}</>
           )}
 
-          <div className="accordion accordion-flush" id="accordionFlushExample">
-            <div className="accordion-item">
-              <h2
-                className="accordion-header px-3 border-bottom"
-                id="flush-headingOne"
-              >
-                <button
-                  className="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#flush-collapseOne"
-                  aria-expanded="false"
-                  aria-controls="flush-collapseOne"
-                >
-                  會員中心
-                </button>
-              </h2>
-              <div
-                id="flush-collapseOne"
-                className="accordion-collapse collapse"
-                aria-labelledby="flush-headingOne"
-                data-bs-parent="#accordionFlushExample"
-              >
-                <div className="accordion-body p-0">
-                  <div className="list-group list-group-flush">
-                    <Link
-                      href="/member/profile"
-                      className="list-group-item list-group-item-action"
-                    >
-                      會員資料
-                    </Link>
-                    <Link
-                      href="/member/orders"
-                      className="list-group-item list-group-item-action"
-                    >
-                      訂單查詢
-                    </Link>
-                    <Link
-                      href="/member/favorites"
-                      className="list-group-item list-group-item-action"
-                    >
-                      收藏清單
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="list-group list-group-flush border-bottom">
+            <Link
+              href="/products"
+              className="list-group-item list-group-item-action"
+            >
+              商品列表
+            </Link>
+            <Link
+              href="/rents"
+              className="list-group-item list-group-item-action"
+            >
+              商品租借
+            </Link>
+            <Link
+              href="/forum"
+              className="list-group-item list-group-item-action"
+            >
+              文章
+            </Link>
           </div>
+
+          {/* 登出/登入 */}
           <div className="d-flex justify-content-center position-absolute bottom-0 w-100 p-3">
             {user ? (
               <>
