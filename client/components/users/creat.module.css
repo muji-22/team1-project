@@ -8,15 +8,13 @@
     height: 90vh;
     margin: auto;
     display: flex;
-    /* background: url("./login-pic.png") no-repeat; */
+    background: url("../../public/images/login-bg.jpg") no-repeat;
     background-size: 100% 100%;
     margin-bottom: 40px;
-
 }
 
 .space {
-    width: 1100px;
-
+    width: 800px;
 }
 
 .resgiter {
@@ -25,8 +23,8 @@
     margin-block: auto;
     margin-inline: auto;
     border-radius: 20px;
-    box-shadow: -10px 10px 5px gray;
-    background: white;
+    box-shadow: 5px 5px 5px gray;
+    background: rgba(137, 134, 134, 0.741);
     border: 1px solid #40CBCE;
     padding-top: 10px;
 }
@@ -48,13 +46,14 @@
     width: 75%;
     height: 50px;
     background: #D9D9D9;
-    border: 1px solid #40CBCE;
-    background: white;
+    border: 2px solid #40CBCE;
+    background: rgba(255, 255, 255, 0.6);
     border-radius: 5px;
     margin: 15px auto;
     outline: none;
     padding-left: 20px;
     font-size: 20px;
+    font-weight: 700;
     box-shadow: 3px 3px 5px gray;
 }
 
@@ -111,7 +110,10 @@
 .message {
     display: block;
     color: red;
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.8);
     text-align: center;
+    font-size: 20px;
 }
 
 .icon{
@@ -119,7 +121,10 @@
     margin-inline: 12px;
     font-size: 35px;
   }
-
+  .inputGroup::placeholder {
+    color: white;
+    font-weight: 700;
+  }
 
 
 
@@ -155,8 +160,7 @@
         margin-inline: auto;
         border-radius: 20px;
         box-shadow: -10px 10px 5px gray;
-        background: white;
-
+        background: rgba(137, 134, 134, 0.741);
     }
 
     .top {
@@ -166,24 +170,26 @@
 
 
     .inputGroup {
-        display: block;
-        width: 85%;
+        /* display: block; */
+        width: 75%;
         height: 40px;
         background: #D9D9D9;
-        border: 0px;
+        border: 2px solid #40CBCE;
+        background: rgba(255, 255, 255, 0.6);
         border-radius: 5px;
-        margin: 30px auto;
+        margin: 15px auto;
         outline: none;
         padding-left: 20px;
-        font-size: 14px;
+        font-size: 20px;
+        font-weight: 700;
         box-shadow: 3px 3px 5px gray;
     }
 
     .btnResgiter {
         display: block;
-        background: black;
+        background: #40CBCE;
         color: white;
-        width: 85%;
+        width: 75%;
         height: 55px;
         border-radius: 5px;
         margin: 20px auto;

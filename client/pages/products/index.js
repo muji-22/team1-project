@@ -1,11 +1,13 @@
-//pages/products/index.js
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import ProductFilter from "@/components/product/filter";
 import ProductList from "@/components/product/ProductList";
 import { GrFilter } from "react-icons/gr";
 import Breadcrumb from "@/components/Breadcrumb";
 
 function Products() {
+  const router = useRouter();
+
   // 篩選條件狀態
   const [filters, setFilters] = useState({
     search: "",
@@ -24,18 +26,31 @@ function Products() {
   const [activeFilters, setActiveFilters] = useState([]);
   const hasActiveFilters = activeFilters.length > 0;
 
-  // 處理分頁變更
-  const handlePageChange = (page) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setCurrentPage(page);
-  };
+  // 監聽 URL 參數變化，只做初始化
+  useEffect(() => {
+    if (router.isReady) {
+      const { gametypes, search, players, playtime, age, price_min, price_max } = router.query;
 
-  // 處理篩選條件變更
-  const handleFilterChange = (newFilters) => {
-    setCurrentPage(1); // 重設頁碼到第一頁
-    setFilters(newFilters);
+      const newFilters = {
+        search: search || "",
+        gametypes: gametypes ? JSON.parse(gametypes) : [],
+        players: players ? Number(players) : null,
+        playtime: playtime ? Number(playtime) : null,
+        age: age ? Number(age) : null,
+        price: {
+          min: price_min || "",
+          max: price_max || "",
+        }
+      };
 
-    // 更新活動的篩選器
+      // 更新 filters 和 activeFilters
+      setFilters(newFilters);
+      updateActiveFilters(newFilters);
+    }
+  }, [router.isReady]);
+
+  // 更新活動篩選器標籤的函數
+  const updateActiveFilters = (newFilters) => {
     const active = [];
 
     if (newFilters.search) {
@@ -102,6 +117,36 @@ function Products() {
     setActiveFilters(active);
   };
 
+  // 處理分頁變更
+  const handlePageChange = (page) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentPage(page);
+  };
+
+  // 處理篩選條件變更
+  const handleFilterChange = (newFilters) => {
+    setCurrentPage(1); // 重設頁碼到第一頁
+    setFilters(newFilters);
+    updateActiveFilters(newFilters);
+
+    // 更新 URL，但不重新加載頁面
+    router.push({
+      pathname: '/products',
+      query: {
+        ...(newFilters.search && { search: newFilters.search }),
+        ...(newFilters.gametypes?.length > 0 && { 
+          gametypes: JSON.stringify(newFilters.gametypes) 
+        }),
+        ...(newFilters.players && { players: newFilters.players }),
+        ...(newFilters.playtime && { playtime: newFilters.playtime }),
+        ...(newFilters.age && { age: newFilters.age }),
+        ...(newFilters.price?.min && { price_min: newFilters.price.min }),
+        ...(newFilters.price?.max && { price_max: newFilters.price.max }),
+        ...(newFilters.sortPrice && { sort_price: newFilters.sortPrice }),
+      }
+    }, undefined, { shallow: true });
+  };
+
   // 移除篩選標籤
   const removeFilter = (filterId) => {
     const newFilters = { ...filters };
@@ -125,7 +170,7 @@ function Products() {
         newFilters.price = { min: "", max: "" };
         break;
     }
-    setCurrentPage(1); // 重設頁碼到第一頁
+    setCurrentPage(1);
     handleFilterChange(newFilters);
   };
 
@@ -180,20 +225,20 @@ function Products() {
       {/* 主要內容區 */}
       <div className="row">
         {/* 左側-篩選欄 */}
-        
-          <ProductFilter onSelectTags={handleFilterChange} />
-        
+        <ProductFilter onSelectTags={handleFilterChange} initialFilters={filters} />
 
         {/* 右側-商品列表 */}
         <div className="col-12 col-lg-9">
-        <select
-          className="form-select"
-          onChange={(e) => handleFilterChange({ sortPrice: e.target.value })}
-        >
-          <option value="">價格排序</option>
-          <option value="asc">價格：低到高</option>
-          <option value="desc">價格：高到低</option>
-        </select>
+          <select
+            className="form-select mb-4"
+            onChange={(e) => handleFilterChange({...filters, sortPrice: e.target.value })}
+            value={filters.sortPrice || ""}
+          >
+            <option value="">價格排序</option>
+            <option value="asc">價格：低到高</option>
+            <option value="desc">價格：高到低</option>
+          </select>
+          
           <ProductList 
             filters={filters}
             currentPage={currentPage}

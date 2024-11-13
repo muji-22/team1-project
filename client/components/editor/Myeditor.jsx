@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+import styles from '@/components/editor/editor.module.css'
 class MyUploadAdapter {
   constructor(loader) {
     this.loader = loader;
@@ -52,19 +52,21 @@ const Myeditor = ({ onChange, editorLoaded, name, value }) => {
   return (
     <>
       {editorLoaded ? (
-        <CKEditor
-          type=""
-          name={name}
-          editor={ClassicEditor}
-          data={value}
-          onChange={(event, editor) => {
-            const data = editor.getData();
-            onChange(data);
-          }}
-          config={{
-            extraPlugins: [ MyCustomUploadAdapterPlugin ],
-          }}
-        />
+        <div className={styles.editorContainer}>
+          <CKEditor
+            type=""
+            name={name}
+            editor={ClassicEditor}
+            data={value}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              onChange(data);
+            }}
+            config={{
+              extraPlugins: [MyCustomUploadAdapterPlugin],
+            }}
+          />
+        </div>
       ) : (
         <div>Editor loading</div>
       )}

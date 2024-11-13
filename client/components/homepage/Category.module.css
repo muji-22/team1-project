@@ -1,48 +1,32 @@
- 
-  .categoryCard {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    /* align-items: center; */
-    transition: all 0.3s ease;
-    &&:hover {
-      background-color: #40cbce;
-      color: #fff;
-      transform: scale(1.05);
-      box-shadow: 0px 10px 10px rgba(79, 252, 255, 0.555);
-    }
-  }
-  
-  .categoryIcon {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 12px;
-  }
+.categoryCard {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
 
-  
-  
-  .categoryName {
-    font-weight: 900;
-    font-size: 16px;
-    margin: 0;
-  }
-  
-  @media (max-width: 576px) {
-    .categoryCard {
-      padding: 15px;
-    }
-    
-    .categoryIcon {
-      width: 50px;
-      height: 50px;
-    }
-    
-    .categoryName {
-      font-size: 14px;
-    }
-  }
+.categoryCard:hover {
+  border: none;
+  background-color: #40cbce;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0px 10px 10px rgb(155, 155, 155);
+}
+
+.categoryCard:active {
+  transform: scale(0.95);
+}
+
+.categoryIcon {
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.categoryCard:hover .categoryIcon {
+  transform: scale(1.1);
+}
