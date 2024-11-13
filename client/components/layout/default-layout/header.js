@@ -15,6 +15,15 @@ function Header() {
   const { user, logout, isAuthenticated } = useAuth();
   const { cartCount } = useCart();
 
+   // 新增關閉側邊欄的函式
+   const handleOffcanvasClose = () => {
+    const offcanvas = document.getElementById('offcanvasMenu');
+    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+    if (bsOffcanvas) {
+      bsOffcanvas.hide();
+    }
+  };
+
   // 處理登出
   const handleLogout = async () => {
     await logout();
@@ -241,18 +250,21 @@ function Header() {
             <Link
               href="/products"
               className="list-group-item list-group-item-action"
+              onClick={handleOffcanvasClose}
             >
               商品列表
             </Link>
             <Link
               href="/rents"
               className="list-group-item list-group-item-action"
+              onClick={handleOffcanvasClose}
             >
               商品租借
             </Link>
             <Link
               href="/forum"
               className="list-group-item list-group-item-action"
+              onClick={handleOffcanvasClose}
             >
               文章
             </Link>
@@ -264,7 +276,10 @@ function Header() {
               <>
                 <button
                   className="btn buttonCustomB w-100 rounded-pill"
-                  onClick={handleLogout}
+                  onClick={(e) => {
+                    handleOffcanvasClose();
+                    handleLogout(e);
+                  }}
                 >
                   登出
                 </button>
@@ -274,6 +289,7 @@ function Header() {
                 <Link
                   href="/auth/login"
                   className="btn buttonCustomB w-100 rounded-pill"
+                  onClick={handleOffcanvasClose}
                 >
                   登入
                 </Link>
