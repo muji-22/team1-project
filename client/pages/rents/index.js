@@ -142,7 +142,7 @@ function Rents() {
         ...(newFilters.age && { age: newFilters.age }),
         ...(newFilters.price?.min && { price_min: newFilters.price.min }),
         ...(newFilters.price?.max && { price_max: newFilters.price.max }),
-        ...(newFilters.sortPrice && { sort_price: newFilters.sortPrice }),
+        ...(newFilters.sortRentalFee && { sort_price: newFilters.sortRentalFee }),
       }
     }, undefined, { shallow: true });
   };
@@ -228,15 +228,17 @@ function Rents() {
         />
 
         <div className="col-12 col-lg-9">
+        <div className="col-3 ms-auto">
           <select
             className="form-select mb-4"
-            onChange={(e) => handleFilterChange({...filters, sortPrice: e.target.value })}
-            value={filters.sortPrice || ""}
+            onChange={(e) => handleFilterChange({...filters, sortRentalFee: e.target.value })}
+            value={filters.sortRentalFee || ""}
           >
-            <option value="">租金排序</option>
+            <option value="">預設排序</option>
             <option value="asc">租金：低到高</option>
             <option value="desc">租金：高到低</option>
           </select>
+          </div>
 
           <RentList
             filters={filters}
