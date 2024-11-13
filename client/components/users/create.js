@@ -160,7 +160,7 @@ export default function Register({ setCurrentForm }) {
       <div className={styles.space}></div>
       <form onSubmit={handleSubmit} className={styles.resgiter}>
         <div className={styles.top}>
-          <div></div>
+        <div className={styles.title}>會員註冊</div>
           <label className={styles.icon}>
             <MdAccountCircle />
           </label>
