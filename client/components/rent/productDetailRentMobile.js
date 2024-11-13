@@ -103,6 +103,7 @@ const ProductDetailSideMobile = ({
             days={days}
             deposit={deposit}
             rental_fee={rental_fee}
+            type="rental"
           />
         </div>
         <div className="col-6 ps-5">

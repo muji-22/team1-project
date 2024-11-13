@@ -103,6 +103,7 @@ const ProductDetailRent = ({
             days={days}
             deposit={deposit}
             rental_fee={rental_fee}
+            type="rental"
           />
         </div>
         <div className="col-sm-5">
