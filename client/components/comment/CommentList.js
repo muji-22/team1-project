@@ -4,7 +4,7 @@ import { useComment } from '@/contexts/CommentContext'
 import { useAuth } from '@/contexts/AuthContext'
 import StarRating from '../comment/StarRating'
 
-const CommentList = ({ productId }) => {
+const CommentList = ({ productId, user }) => {
   const { 
     comments, 
     avgScore,
