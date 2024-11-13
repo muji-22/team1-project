@@ -33,15 +33,17 @@ const Editor = () => {
       }
 
       setIsSubmitting(true); // 開始送出
-
-      const response = await fetch('http://localhost:3005//api/forumpublish', {
+      // const checkJSON = JSON.stringify({title: title,content:data})
+      // console.log(checkJSON);
+      const response = await fetch('http://localhost:3005/api/forumpublish', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          title: title.trim(),
-          content: data.trim(),
+        body: 
+        JSON.stringify({
+           title: 1234,
+          content:5678,
         }),
       });
 
@@ -94,7 +96,9 @@ const Editor = () => {
             value={data}
           />
         </div>
-
+<div>
+{JSON.stringify(data)}
+</div>
         {/* 按鈕區 */}
         <div className="d-flex gap-3 mt-4">
           <button 
