@@ -52,7 +52,7 @@ export default function Login({ setCurrentForm }) {
 
   return (
     <>
-    
+      <div className={styles.space}></div>
       <form className={styles.resgiter} onSubmit={handleSubmit}>
         <div className={styles.top}>
 
