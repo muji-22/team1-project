@@ -89,7 +89,7 @@ export default function Login({ setCurrentForm }) {
             value={formData.password}
             onChange={handleChange}
           />
-          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
+          <div className={styles.eye}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
           </div>
 
           <button type="submit" className={styles.btnResgiter}>
