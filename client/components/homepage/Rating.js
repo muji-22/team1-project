@@ -82,8 +82,8 @@ const Rating = () => {
     <section className={`container ${styles.section} py-5`}>
       <div className="row justify-content-center mb-4">
         <div className="col-md-8 text-center">
-          <h2 className={`${styles.sectionTitle} mb-3`}>顧客評分</h2>
-          <p className={styles.sectionDescription}>
+          <h2 className={`display-4 mb-3`}>顧客評分</h2>
+          <p className="lead">
             探索最受歡迎的遊戲商品
           </p>
         </div>
@@ -144,7 +144,7 @@ const Rating = () => {
                         <FaStar
                           key={i}
                           className={`${styles.star} ${
-                            i < Math.round(product.avg_score) ? "text-warning" : "text-secondary"
+                            i < Math.round(product.avg_score) ? "text-custom" : "text-secondary"
                           } fs-5 me-1`}
                         />
                       ))}
