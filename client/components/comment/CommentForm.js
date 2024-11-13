@@ -1,7 +1,7 @@
 // components/comment/CommentForm.js
 import React, { useState } from 'react'
 import { useComment } from '@/contexts/CommentContext'
-import StarRating from '../common/StarRating'
+import StarRating from './StarRating'
 
 const CommentForm = ({ productId, orderId, onSuccess }) => {
   const [comment, setComment] = useState('')

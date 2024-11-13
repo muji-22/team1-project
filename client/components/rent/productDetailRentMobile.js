@@ -77,7 +77,7 @@ const ProductDetailSideMobile = ({
           </h4>
         </div>
         <h5 class="col-6 text-center">押金${deposit}</h5>
-        <h5 class="col-6 text-center">租金{rental_fee}/天$</h5>
+        <h5 class="col-6 text-center">租金${rental_fee}/天</h5>
         <div className="col-12 mt-3 text-center">
           商品數量<QuantityAdjuster 
             value={quantity}

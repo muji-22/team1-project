@@ -80,7 +80,7 @@ const ProductDetailRent = ({
         <h5 className="col-4">租金${rental_fee}/天</h5>
         <div className="col-8 mt-3">
           商品數量 
-          <QuantityAdjuster 
+          <QuantityAdjuster   
             value={quantity}
             onChange={handleQuantityChange}
           />

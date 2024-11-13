@@ -12,11 +12,21 @@
   width: 800px;
 }
 
+.title{
+  width: 200px;
+  border-bottom: 2px solid black;
+  margin-inline: auto;
+  text-align: center;
+  margin-block: 20px;
+  font-size: 36px;
+  font-weight: 600;
+  text-shadow: 1px 1px 3px #40CBCE;
+}
 
 
 .resgiter {
   max-width: 450px;
-  height: 450px;
+  height: 520px;
   border-radius: 20px;
   margin-block: auto;
   margin-inline: auto;
@@ -41,10 +51,11 @@
   box-shadow: 3px 3px 5px gray;
   
 }
-.sss{
+.eye{
   margin-inline-start: 335px;
-  margin-top: -55px;
+  margin-top: -57px;
   margin-bottom: 50px;
+  font-size: 18px;
 }
 
 .btnResgiter {
@@ -75,7 +86,7 @@
 .bottom {
   display: flex;
   margin: 30px 0px 0px 100px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -96,10 +107,10 @@
 }
 
 .btnLogin {
-  width: 100px;
+  width: 80px;
   background: #40CBCE;
   color: white;
-  margin: auto;
+  margin: -5px 5px;
   border-radius: 3px;
   text-align: center;
   border: 0px;
@@ -192,7 +203,7 @@
 
   .resgiter {
     max-width: 500px;
-    height: 450px;
+    height: 480px;
     border-radius: 20px;
     margin-inline: auto;
     background: rgba(220, 220, 220, 0.5);
@@ -202,16 +213,21 @@
   .inputGroup {
     /* display: block; */
     width: 75%;
-    height: 40px;
+    height: 35px;
     background: #D9D9D9;
     border: 2px solid #40CBCE;
     background: rgba(255, 255, 255, 0.6);
     border-radius: 5px;
-    margin: 20px auto;
+    margin: 15px auto;
     outline: none;
     padding-left: 25px;
     font-size: 20px;
     box-shadow: 3px 3px 5px gray;
+  }
+  .eye{
+    margin-inline-start: 330px;
+    margin-top: -45px;
+    margin-bottom: 50px;
   }
 
   .btnResgiter {
@@ -238,10 +254,10 @@
   }
 
   .btnLogin {
-    width: 100px;
+    width: 80px;
     background: #40CBCE;
     color: white;
-    margin: auto;
+    margin: -5px 5px;
     border-radius: 3px;
     text-align: center;
     font-size: 14px;
@@ -252,6 +268,17 @@
     margin-left: 20px;
     font-size: 35px;
   }
+  .title{
+    width: 200px;
+    border-bottom: 2px solid black;
+    margin-inline: auto;
+    text-align: center;
+    margin-block: 15px;
+    font-size: 36px;
+    font-weight: 600;
+    text-shadow: 1px 1px 3px #40CBCE;
+  }
+
 
 
 }

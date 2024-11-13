@@ -66,7 +66,7 @@ export default function Login({ setCurrentForm }) {
       <div className={styles.space}></div>
       <form className={styles.resgiter} onSubmit={handleSubmit}>
         <div className={styles.top}>
-
+          <div className={styles.title}>會員登入</div>
           <div>
            <label><MdAccountCircle  className={styles.icon}/></label> 
           <input
@@ -89,7 +89,7 @@ export default function Login({ setCurrentForm }) {
             value={formData.password}
             onChange={handleChange}
           />
-          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
+          <div className={styles.eye}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
           </div>
 
           <button type="submit" className={styles.btnResgiter}>
