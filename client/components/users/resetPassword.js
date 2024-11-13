@@ -7,6 +7,7 @@ import {
   GiDiceSixFacesThree,
 } from "react-icons/gi";
 import Swal from "sweetalert2";
+import { IoIosEye,IoIosEyeOff  } from "react-icons/io";
 
 export default function ResetPassword() {
   const { updatePasswordData } = useAuth();
@@ -48,6 +49,11 @@ export default function ResetPassword() {
       setError(error.message);
     }
   };
+
+  const [isActive, setIsActive] = useState(false);
+  const handleClick = () => {
+    setIsActive(prevState => !prevState);
+  };
   
   return (
     <>
@@ -59,11 +65,12 @@ export default function ResetPassword() {
           </label>
           <input
             className={styles.inputContext1}
-            type="password"
+            type={isActive?'text': 'password'}
             name="currentPassword"
             value={formData.currentPassword}
             onChange={handleChange}
           />
+          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
         </div>
         <div className={styles.inputWrap}>
           <label className={styles.label2}>
@@ -72,11 +79,12 @@ export default function ResetPassword() {
           </label>
           <input
             className={styles.inputContext2}
-            type="password"
+            type={isActive?'text': 'password'}
             name="newPassword"
             value={formData.newPassword}
             onChange={handleChange}
           />
+          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
         </div>
         <div className={styles.inputWrap}>
           <label className={styles.label2}>
@@ -85,11 +93,12 @@ export default function ResetPassword() {
           </label>
           <input
             className={styles.inputContext2}
-            type="password"
+            type={isActive?'text': 'password'}
             name="newPassword2"
             value={formData.newPassword2}
             onChange={handleChange}
           />
+          <div className={styles.sss}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
         </div>
         <div className={styles.error}>{error}</div>
         <button className={styles.button} type="submit">
