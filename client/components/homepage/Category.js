@@ -34,11 +34,11 @@ const Category = () => {
 
   return (
     <div className={`container py-5 ${styles.categorySection}`}>
-      <div className="row justify-content-center mb-5">
-        <div className="col-md-6 text-center">
-          <h2 className={'display-4 font-weight-bold mb-3'}>商品大分類區塊</h2>
+      <div className="row justify-content-center m-5">
+        <div className="col-8 text-center">
+          <h2 className={'display-4 font-weight-bold mb-3'}>分類多元</h2>
           <p className={'lead'}>
-            找到適合您的桌遊類型，讓我們為您推薦最適合的商品！
+            利用多元的分類，找到適合您的桌遊類型，讓我們為您推薦最適合的商品！
           </p>
         </div>
       </div>
@@ -46,7 +46,7 @@ const Category = () => {
         {categories.map((category) => (
           <div 
             key={category.id} 
-            className="col-6 col-sm-4 col-md-3 col-lg-2 mb-4"
+            className="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 mb-4"
             onClick={() => handleCategoryClick(category.tagId)}
             role="button"
           >
