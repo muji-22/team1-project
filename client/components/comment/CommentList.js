@@ -17,9 +17,7 @@ const CommentList = ({ productId, user }) => {
   } = useComment()
 
   useEffect(() => {
-    console.log('avgScore type:', typeof avgScore)
-    console.log('avgScore value:', avgScore)
-    fetchComments(productId)
+    fetchComments(productId, 1, 5) // 預設載入第一頁，每頁5筆
   }, [productId])
 
   const handleDelete = async (commentId) => {
@@ -44,7 +42,8 @@ const CommentList = ({ productId, user }) => {
           <StarRating 
             initialRating={avgScore ? Math.round(avgScore) : 0} 
             totalStars={5}
-            onRatingChange={() => {}} // 唯讀模式
+            readonly={true}
+            onRatingChange={() => {}}
           />
           <span className="ms-2">
             {avgScore ? `(${Number(avgScore).toFixed(1)}分)` : '(尚無評分)'}
@@ -64,7 +63,7 @@ const CommentList = ({ productId, user }) => {
                   <div className="d-flex align-items-center gap-2">
                     {/* 使用者頭像 */}
                     <img
-                      src={comment.avatar_url || 'http://localhost:3005/avatar/default-avatar.png'}
+                      src={comment.avatar_url ? 'http://localhost:3005' + comment.avatar_url : 'http://localhost:3005/avatar/default-avatar.png'}
                       alt="avatar"
                       className="rounded-circle"
                       width="40"
@@ -94,7 +93,8 @@ const CommentList = ({ productId, user }) => {
                   <StarRating 
                     initialRating={comment.score}
                     totalStars={5}
-                    onRatingChange={() => {}} // 唯讀模式
+                    readonly={true}
+                    onRatingChange={() => {}}
                   />
                 </div>
                 
@@ -106,23 +106,67 @@ const CommentList = ({ productId, user }) => {
         </div>
       )}
 
-      {/* 分頁 */}
-      {totalPages > 1 && (
+      {/* 分頁 - 只在評論超過5筆時顯示 */}
+      {comments.length > 0 && totalPages > 1 && (
         <nav className="d-flex justify-content-center mt-4">
           <ul className="pagination">
-            {[...Array(totalPages)].map((_, index) => (
-              <li 
-                key={index}
-                className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+            {/* 上一頁按鈕 */}
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => fetchComments(productId, currentPage - 1, 5)}
+                disabled={currentPage === 1}
               >
-                <button
-                  className="page-link"
-                  onClick={() => fetchComments(productId, index + 1)}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
+                &laquo;
+              </button>
+            </li>
+
+            {/* 頁碼按鈕 */}
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNumber = index + 1;
+              // 當頁數很多時，只顯示當前頁附近的頁碼
+              if (
+                pageNumber === 1 ||
+                pageNumber === totalPages ||
+                (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
+              ) {
+                return (
+                  <li 
+                    key={index}
+                    className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => fetchComments(productId, pageNumber, 5)}
+                    >
+                      {pageNumber}
+                    </button>
+                  </li>
+                );
+              } else if (
+                pageNumber === currentPage - 3 ||
+                pageNumber === currentPage + 3
+              ) {
+                // 顯示省略號
+                return (
+                  <li key={index} className="page-item disabled">
+                    <span className="page-link">...</span>
+                  </li>
+                );
+              }
+              return null;
+            })}
+
+            {/* 下一頁按鈕 */}
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => fetchComments(productId, currentPage + 1, 5)}
+                disabled={currentPage === totalPages}
+              >
+                &raquo;
+              </button>
+            </li>
           </ul>
         </nav>
       )}
