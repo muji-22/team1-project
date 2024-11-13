@@ -79,10 +79,13 @@ function Header() {
                 </Link>
               </li>
               <li className="nav-item mx-3">
-                <Link className={`nav-link ${styles.navLink} ${
-                  isActive("/rents") ? styles.active : ""
-                }
-                `} href="/rents">
+                <Link
+                  className={`nav-link ${styles.navLink} ${
+                    isActive("/rents") ? styles.active : ""
+                  }
+                `}
+                  href="/rents"
+                >
                   商品租賃
                 </Link>
               </li>
@@ -192,31 +195,47 @@ function Header() {
           />
         </div>
 
+        {/* 側邊登入後樣式 */}
         <div className="offcanvas-body p-0">
-          <div className="p-3 border-bottom border text-center">
-            {user ? (
-              <>
+          {user ? (
+            <>
+              <div className="p-3 border-bottom border text-center">
                 <div className="d-flex justify-content-center">
                   <Avatar src={user?.avatar_url} size="medium" />
                 </div>
-                <span className="fs-6 d-block py-2">
+                <span className="fs-5 d-block py-2">
                   {user.name || user.account}
                 </span>
-                <button
-                  className="btn btn-sm buttonCustomB"
-                  onClick={handleLogout}
-                >
-                  登出
-                </button>
-              </>
-            ) : (
-              <div className="d-flex justify-content-center">
-                <Link href="/auth/login" className="btn buttonCustomB">
-                  登入
-                </Link>
+
+                <div className="d-flex gap-3 py-3">
+                  <Link
+                    className="flex-grow-1 text-decoration-none"
+                    href="/auth/user"
+                  >
+                    <button className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
+                      <LuUser2 className="fs-2" />
+                    </button>
+                  </Link>
+
+                  <Link
+                    className="flex-grow-1 text-decoration-none"
+                    href="/cart"
+                  >
+                    <button className="btn btn-custom w-100 d-flex align-items-center justify-content-center position-relative">
+                      <IoCartOutline className="fs-2 text-white" />
+                      {cartCount > 0 && (
+                        <span className="position-absolute top-50 end-0 translate-middle badge rounded-pill bg-danger">
+                          {cartCount}
+                        </span>
+                      )}
+                    </button>
+                  </Link>
+                </div>
               </div>
-            )}
-          </div>
+            </>
+          ) : (
+            <>{/* 未登入 */}</>
+          )}
 
           <div className="accordion accordion-flush" id="accordionFlushExample">
             <div className="accordion-item">
@@ -265,6 +284,27 @@ function Header() {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="d-flex justify-content-center position-absolute bottom-0 w-100 p-3">
+            {user ? (
+              <>
+                <button
+                  className="btn buttonCustomB w-100 rounded-pill"
+                  onClick={handleLogout}
+                >
+                  登出
+                </button>
+              </>
+            ) : (
+              <div className="d-flex justify-content-center w-100">
+                <Link
+                  href="/auth/login"
+                  className="btn buttonCustomB w-100 rounded-pill"
+                >
+                  登入
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
