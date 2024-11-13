@@ -51,10 +51,11 @@
   box-shadow: 3px 3px 5px gray;
   
 }
-.sss{
+.eye{
   margin-inline-start: 335px;
-  margin-top: -55px;
+  margin-top: -57px;
   margin-bottom: 50px;
+  font-size: 18px;
 }
 
 .btnResgiter {
@@ -222,6 +223,11 @@
     padding-left: 25px;
     font-size: 20px;
     box-shadow: 3px 3px 5px gray;
+  }
+  .eye{
+    margin-inline-start: 330px;
+    margin-top: -45px;
+    margin-bottom: 50px;
   }
 
   .btnResgiter {
