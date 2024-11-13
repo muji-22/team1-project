@@ -220,6 +220,7 @@ function Header() {
                   <Link
                     className="flex-grow-1 text-decoration-none"
                     href="/auth/user"
+                    onClick={handleOffcanvasClose}
                   >
                     <button className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
                       <LuUser2 className="fs-2" />
@@ -229,6 +230,7 @@ function Header() {
                   <Link
                     className="flex-grow-1 text-decoration-none"
                     href="/cart"
+                    onClick={handleOffcanvasClose}
                   >
                     <button className="btn btn-custom w-100 d-flex align-items-center justify-content-center position-relative">
                       <IoCartOutline className="fs-2 text-white" />
