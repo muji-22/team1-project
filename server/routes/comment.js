@@ -18,7 +18,10 @@ router.post('/', authenticateToken, async (req, res) => {
     )
 
     if (existingComment.length > 0) {
-      return res.status(400).json({ message: '已經評價過此商品' })
+      return res.status(400).json({ 
+        status: 'error',
+        message: '已經評價過此商品' 
+      })
     }
 
     // 新增評價
@@ -40,7 +43,10 @@ router.post('/', authenticateToken, async (req, res) => {
     })
   } catch (error) {
     console.error('新增評價失敗:', error)
-    res.status(500).json({ message: '新增評價失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '新增評價失敗' 
+    })
   }
 })
 
@@ -89,7 +95,10 @@ router.get('/product/:productId', async (req, res) => {
     })
   } catch (error) {
     console.error('取得評價列表失敗:', error)
-    res.status(500).json({ message: '取得評價列表失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '取得評價列表失敗' 
+    })
   }
 })
 
@@ -107,7 +116,10 @@ router.put('/:commentId', authenticateToken, async (req, res) => {
     )
 
     if (existingComment.length === 0) {
-      return res.status(403).json({ message: '無權限修改此評價' })
+      return res.status(403).json({ 
+        status: 'error',
+        message: '無權限修改此評價' 
+      })
     }
 
     // 更新評價
@@ -122,7 +134,10 @@ router.put('/:commentId', authenticateToken, async (req, res) => {
     })
   } catch (error) {
     console.error('修改評價失敗:', error)
-    res.status(500).json({ message: '修改評價失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '修改評價失敗' 
+    })
   }
 })
 
@@ -139,7 +154,10 @@ router.delete('/:commentId', authenticateToken, async (req, res) => {
     )
 
     if (existingComment.length === 0) {
-      return res.status(403).json({ message: '無權限刪除此評價' })
+      return res.status(403).json({ 
+        status: 'error',
+        message: '無權限刪除此評價' 
+      })
     }
 
     // 軟刪除評價
@@ -154,8 +172,104 @@ router.delete('/:commentId', authenticateToken, async (req, res) => {
     })
   } catch (error) {
     console.error('刪除評價失敗:', error)
-    res.status(500).json({ message: '刪除評價失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '刪除評價失敗' 
+    })
   }
 })
+
+// 5. 獲取可評價訂單
+router.get('/product/:productId/orders', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+  const productId = req.params.productId;
+
+  try {
+    const [orders] = await pool.execute(
+      `SELECT DISTINCT o.id, o.created_at
+       FROM orders o
+       JOIN order_items oi ON o.id = oi.order_id
+       LEFT JOIN product_comment pc 
+         ON o.id = pc.order_id 
+         AND oi.product_id = pc.product_id
+         AND pc.user_id = o.user_id
+       WHERE o.user_id = ?
+         AND oi.product_id = ?
+         AND o.order_status = 3  # 已完成的訂單
+         AND pc.id IS NULL  # 尚未評價的訂單
+       ORDER BY o.created_at DESC`,
+      [userId, productId]
+    );
+
+    res.json({
+      status: 'success',
+      data: orders
+    });
+  } catch (error) {
+    console.error('獲取可評價訂單失敗:', error);
+    res.status(500).json({ 
+      status: 'error',
+      message: '獲取可評價訂單失敗'
+    });
+  }
+});
+
+// routes/comment.js
+// 修改 取得高分商品列表 的SQL查詢
+
+router.get('/top-rated', async (req, res) => {
+  try {
+    // 修改 SQL 查詢，即使沒有評分也會顯示商品
+    const [products] = await pool.execute(`
+      SELECT 
+        p.*,
+        COALESCE(AVG(CASE WHEN pc.status = 1 THEN pc.score END), 0) as avg_score,
+        COUNT(DISTINCT CASE WHEN pc.status = 1 THEN pc.id END) as review_count
+      FROM product p
+      LEFT JOIN product_comment pc ON p.id = pc.product_id
+      WHERE p.valid = 1
+      GROUP BY p.id
+      ORDER BY 
+        CASE 
+          WHEN COUNT(DISTINCT CASE WHEN pc.status = 1 THEN pc.id END) > 0 
+          THEN AVG(CASE WHEN pc.status = 1 THEN pc.score END) 
+          ELSE 0 
+        END DESC,
+        review_count DESC, 
+        p.id DESC
+      LIMIT 12
+    `);
+
+    // 格式化資料
+    const formattedProducts = products.map(product => ({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      avg_score: Number(product.avg_score || 0).toFixed(1),
+      review_count: parseInt(product.review_count),
+      description: product.description,
+      min_users: product.min_users,
+      max_users: product.max_users,
+      min_age: product.min_age,
+      playtime: product.playtime
+    }));
+
+    console.log('查詢到的商品:', formattedProducts); // 除錯用
+
+    res.json({
+      status: 'success',
+      data: formattedProducts
+    });
+
+  } catch (error) {
+    console.error('取得高分商品失敗:', error);
+    res.status(500).json({ 
+      status: 'error',
+      message: '取得高分商品失敗',
+      error: error.message
+    });
+  }
+});
 
 export default router

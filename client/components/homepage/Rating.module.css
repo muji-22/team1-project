@@ -1,3 +1,46 @@
+/* Rating.module.css */
+.productImage {
+  width: 100%;
+  height: auto;
+  max-width: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.productName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.productPrice {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #e53935;
+}
+
+.buyButton {
+  background-color: #333;
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.buyButton:hover {
+  background-color: #40cbce;
+  transform: translateY(-2px);
+}
+
+.star {
+  font-size: 1.2rem;
+}
 .section {
     background-color: #fff;
   }

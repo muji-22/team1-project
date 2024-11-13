@@ -3,6 +3,8 @@ import React, { useEffect } from 'react'
 import { useComment } from '@/contexts/CommentContext'
 import { useAuth } from '@/contexts/AuthContext'
 import StarRating from '../comment/StarRating'
+import Pagination from '@/components/product/Pagination'
+import { FaTrash } from 'react-icons/fa';
 
 const CommentList = ({ productId, user }) => {
   const { 
@@ -17,9 +19,7 @@ const CommentList = ({ productId, user }) => {
   } = useComment()
 
   useEffect(() => {
-    console.log('avgScore type:', typeof avgScore)
-    console.log('avgScore value:', avgScore)
-    fetchComments(productId)
+    fetchComments(productId, 1, 4) // 預設載入第一頁，每頁5筆
   }, [productId])
 
   const handleDelete = async (commentId) => {
@@ -38,13 +38,14 @@ const CommentList = ({ productId, user }) => {
   return (
     <div>
       {/* 平均評分 */}
-      <div className="d-flex align-items-center gap-3 mb-4">
+      <div className="d-flex align-items-center gap-3 mb-5 justify-content-center">
         <h4 className="mb-0">商品評價</h4>
         <div className="d-flex align-items-center">
           <StarRating 
             initialRating={avgScore ? Math.round(avgScore) : 0} 
             totalStars={5}
-            onRatingChange={() => {}} // 唯讀模式
+            readonly={true}
+            onRatingChange={() => {}}
           />
           <span className="ms-2">
             {avgScore ? `(${Number(avgScore).toFixed(1)}分)` : '(尚無評分)'}
@@ -64,7 +65,7 @@ const CommentList = ({ productId, user }) => {
                   <div className="d-flex align-items-center gap-2">
                     {/* 使用者頭像 */}
                     <img
-                      src={comment.avatar_url || 'http://localhost:3005/avatar/default-avatar.png'}
+                      src={comment.avatar_url ? 'http://localhost:3005' + comment.avatar_url : 'http://localhost:3005/avatar/default-avatar.png'}
                       alt="avatar"
                       className="rounded-circle"
                       width="40"
@@ -81,10 +82,10 @@ const CommentList = ({ productId, user }) => {
                   {/* 刪除按鈕 (僅顯示給評價作者) */}
                   {user?.id === comment.user_id && (
                     <button
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-link"
                       onClick={() => handleDelete(comment.id)}
                     >
-                      刪除
+                      <FaTrash className='text-danger'/>
                     </button>
                   )}
                 </div>
@@ -94,7 +95,8 @@ const CommentList = ({ productId, user }) => {
                   <StarRating 
                     initialRating={comment.score}
                     totalStars={5}
-                    onRatingChange={() => {}} // 唯讀模式
+                    readonly={true}
+                    onRatingChange={() => {}}
                   />
                 </div>
                 
@@ -106,26 +108,15 @@ const CommentList = ({ productId, user }) => {
         </div>
       )}
 
-      {/* 分頁 */}
-      {totalPages > 1 && (
-        <nav className="d-flex justify-content-center mt-4">
-          <ul className="pagination">
-            {[...Array(totalPages)].map((_, index) => (
-              <li 
-                key={index}
-                className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => fetchComments(productId, index + 1)}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {/* 分頁 - 只在評論超過5筆時顯示 */}
+      {comments.length > 0 && totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => fetchComments(productId, page, 4)}
+        />
       )}
+      
     </div>
   )
 }

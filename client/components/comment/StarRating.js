@@ -1,12 +1,15 @@
+// components/comment/StarRating.js
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';  // 實心星星
 import { FaRegStar } from 'react-icons/fa'; // 空心星星
 
-const StarRating = ({ totalStars = 5, initialRating = 0, onRatingChange }) => {
+const StarRating = ({ totalStars = 5, initialRating = 0, onRatingChange, readonly = false }) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(null);
 
   const handleRatingChange = (newRating) => {
+    if (readonly) return;
+
     setRating(newRating);
     if (onRatingChange) {
       onRatingChange(newRating);
@@ -26,8 +29,8 @@ const StarRating = ({ totalStars = 5, initialRating = 0, onRatingChange }) => {
               type="button"
               className="btn btn-link p-0 mx-1 text-decoration-none"
               onClick={() => handleRatingChange(starValue)}
-              onMouseEnter={() => setHover(starValue)}
-              onMouseLeave={() => setHover(null)}
+              onMouseEnter={() => !readonly && setHover(starValue)}
+              onMouseLeave={() => !readonly && setHover(null)}
               aria-label={`給 ${starValue} 顆星`}
             >
               {isActive ? (
@@ -40,9 +43,11 @@ const StarRating = ({ totalStars = 5, initialRating = 0, onRatingChange }) => {
         })}
       </div>
 
+      {!readonly && (
         <span className="fs-5 p-2">
-        {rating > 0 ? `${rating} 顆星` : '尚未評分'}
+          {rating > 0 ? `${rating} 顆星` : '尚未評分'}
         </span>
+      )}
 
     </div>
   );
