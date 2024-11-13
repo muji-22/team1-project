@@ -3,6 +3,8 @@ import React, { useEffect } from 'react'
 import { useComment } from '@/contexts/CommentContext'
 import { useAuth } from '@/contexts/AuthContext'
 import StarRating from '../comment/StarRating'
+import Pagination from '@/components/product/Pagination'
+import { FaTrash } from 'react-icons/fa';
 
 const CommentList = ({ productId, user }) => {
   const { 
@@ -17,7 +19,7 @@ const CommentList = ({ productId, user }) => {
   } = useComment()
 
   useEffect(() => {
-    fetchComments(productId, 1, 5) // 預設載入第一頁，每頁5筆
+    fetchComments(productId, 1, 4) // 預設載入第一頁，每頁5筆
   }, [productId])
 
   const handleDelete = async (commentId) => {
@@ -36,7 +38,7 @@ const CommentList = ({ productId, user }) => {
   return (
     <div>
       {/* 平均評分 */}
-      <div className="d-flex align-items-center gap-3 mb-4">
+      <div className="d-flex align-items-center gap-3 mb-5 justify-content-center">
         <h4 className="mb-0">商品評價</h4>
         <div className="d-flex align-items-center">
           <StarRating 
@@ -80,10 +82,10 @@ const CommentList = ({ productId, user }) => {
                   {/* 刪除按鈕 (僅顯示給評價作者) */}
                   {user?.id === comment.user_id && (
                     <button
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-link"
                       onClick={() => handleDelete(comment.id)}
                     >
-                      刪除
+                      <FaTrash className='text-danger'/>
                     </button>
                   )}
                 </div>
@@ -108,68 +110,13 @@ const CommentList = ({ productId, user }) => {
 
       {/* 分頁 - 只在評論超過5筆時顯示 */}
       {comments.length > 0 && totalPages > 1 && (
-        <nav className="d-flex justify-content-center mt-4">
-          <ul className="pagination">
-            {/* 上一頁按鈕 */}
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button
-                className="page-link"
-                onClick={() => fetchComments(productId, currentPage - 1, 5)}
-                disabled={currentPage === 1}
-              >
-                &laquo;
-              </button>
-            </li>
-
-            {/* 頁碼按鈕 */}
-            {[...Array(totalPages)].map((_, index) => {
-              const pageNumber = index + 1;
-              // 當頁數很多時，只顯示當前頁附近的頁碼
-              if (
-                pageNumber === 1 ||
-                pageNumber === totalPages ||
-                (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
-              ) {
-                return (
-                  <li 
-                    key={index}
-                    className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() => fetchComments(productId, pageNumber, 5)}
-                    >
-                      {pageNumber}
-                    </button>
-                  </li>
-                );
-              } else if (
-                pageNumber === currentPage - 3 ||
-                pageNumber === currentPage + 3
-              ) {
-                // 顯示省略號
-                return (
-                  <li key={index} className="page-item disabled">
-                    <span className="page-link">...</span>
-                  </li>
-                );
-              }
-              return null;
-            })}
-
-            {/* 下一頁按鈕 */}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-              <button
-                className="page-link"
-                onClick={() => fetchComments(productId, currentPage + 1, 5)}
-                disabled={currentPage === totalPages}
-              >
-                &raquo;
-              </button>
-            </li>
-          </ul>
-        </nav>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => fetchComments(productId, page, 4)}
+        />
       )}
+      
     </div>
   )
 }

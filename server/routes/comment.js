@@ -18,7 +18,10 @@ router.post('/', authenticateToken, async (req, res) => {
     )
 
     if (existingComment.length > 0) {
-      return res.status(400).json({ message: '已經評價過此商品' })
+      return res.status(400).json({ 
+        status: 'error',
+        message: '已經評價過此商品' 
+      })
     }
 
     // 新增評價
@@ -40,7 +43,10 @@ router.post('/', authenticateToken, async (req, res) => {
     })
   } catch (error) {
     console.error('新增評價失敗:', error)
-    res.status(500).json({ message: '新增評價失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '新增評價失敗' 
+    })
   }
 })
 
@@ -89,7 +95,10 @@ router.get('/product/:productId', async (req, res) => {
     })
   } catch (error) {
     console.error('取得評價列表失敗:', error)
-    res.status(500).json({ message: '取得評價列表失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '取得評價列表失敗' 
+    })
   }
 })
 
@@ -107,7 +116,10 @@ router.put('/:commentId', authenticateToken, async (req, res) => {
     )
 
     if (existingComment.length === 0) {
-      return res.status(403).json({ message: '無權限修改此評價' })
+      return res.status(403).json({ 
+        status: 'error',
+        message: '無權限修改此評價' 
+      })
     }
 
     // 更新評價
@@ -122,7 +134,10 @@ router.put('/:commentId', authenticateToken, async (req, res) => {
     })
   } catch (error) {
     console.error('修改評價失敗:', error)
-    res.status(500).json({ message: '修改評價失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '修改評價失敗' 
+    })
   }
 })
 
@@ -139,7 +154,10 @@ router.delete('/:commentId', authenticateToken, async (req, res) => {
     )
 
     if (existingComment.length === 0) {
-      return res.status(403).json({ message: '無權限刪除此評價' })
+      return res.status(403).json({ 
+        status: 'error',
+        message: '無權限刪除此評價' 
+      })
     }
 
     // 軟刪除評價
@@ -154,34 +172,46 @@ router.delete('/:commentId', authenticateToken, async (req, res) => {
     })
   } catch (error) {
     console.error('刪除評價失敗:', error)
-    res.status(500).json({ message: '刪除評價失敗' })
+    res.status(500).json({ 
+      status: 'error',
+      message: '刪除評價失敗' 
+    })
   }
 })
 
-// 取得可評價的訂單
-router.get('/available-orders/:productId', authenticateToken, async (req, res) => {
-  const userId = req.user.id
-  const productId = req.params.productId
+// 5. 獲取可評價訂單
+router.get('/product/:productId/orders', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+  const productId = req.params.productId;
 
   try {
     const [orders] = await pool.execute(
       `SELECT DISTINCT o.id, o.created_at
        FROM orders o
        JOIN order_items oi ON o.id = oi.order_id
-       LEFT JOIN product_comment pc ON o.id = pc.order_id AND oi.product_id = pc.product_id
+       LEFT JOIN product_comment pc 
+         ON o.id = pc.order_id 
+         AND oi.product_id = pc.product_id
+         AND pc.user_id = o.user_id
        WHERE o.user_id = ?
-       AND oi.product_id = ?
-       AND o.order_status = 3  # 已完成的訂單
-       AND pc.id IS NULL  # 還未評價的訂單
+         AND oi.product_id = ?
+         AND o.order_status = 3  # 已完成的訂單
+         AND pc.id IS NULL  # 尚未評價的訂單
        ORDER BY o.created_at DESC`,
       [userId, productId]
-    )
+    );
 
-    res.json(orders)
+    res.json({
+      status: 'success',
+      data: orders
+    });
   } catch (error) {
-    console.error('獲取可評價訂單失敗:', error)
-    res.status(500).json({ message: '獲取可評價訂單失敗' })
+    console.error('獲取可評價訂單失敗:', error);
+    res.status(500).json({ 
+      status: 'error',
+      message: '獲取可評價訂單失敗'
+    });
   }
-})
+});
 
 export default router
