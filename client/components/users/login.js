@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { MdAccountCircle } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import Swal from "sweetalert2";
 
 export default function Login({ setCurrentForm }) {
   const { login } = useAuth();
@@ -43,6 +44,11 @@ export default function Login({ setCurrentForm }) {
 
     try {
       await login(formData);
+      Swal.fire({
+        icon: "success",
+        title: "登入成功",
+        text: `歡迎`,
+      });
     } catch (error) {
       setError(error.message || "登入失敗");
     } finally {
@@ -52,7 +58,7 @@ export default function Login({ setCurrentForm }) {
 
   return (
     <>
-    
+      <div className={styles.space}></div>
       <form className={styles.resgiter} onSubmit={handleSubmit}>
         <div className={styles.top}>
 

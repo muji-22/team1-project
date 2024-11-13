@@ -6,6 +6,7 @@ import {
   GiDiceSixFacesTwo,
   GiDiceSixFacesThree,
 } from "react-icons/gi";
+import Swal from "sweetalert2";
 
 export default function ResetPassword() {
   const { updatePasswordData } = useAuth();
@@ -37,7 +38,10 @@ export default function ResetPassword() {
 
     try {
       await updatePasswordData(formData);
-      alert("密碼修改成功！");
+      Swal.fire({
+        icon: "success",
+        title: "密碼修改成功",
+      });
       setError("");
       setFormData({ currentPassword: "", newPassword: "", newPassword2: "" });
     } catch (error) {

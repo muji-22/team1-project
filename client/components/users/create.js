@@ -61,6 +61,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import Swal from "sweetalert2";
 
 export default function Register({ setCurrentForm }) {
   const router = useRouter();
@@ -94,14 +95,15 @@ export default function Register({ setCurrentForm }) {
       setError("再輸入一次密碼");
       return;
     }
-    if (!formData.email) {
-      setError("信箱不得為空");
-      return;
-    }
     if (formData.password !== formData.confirmPassword) {
       setError("密碼與確認密碼不符");
       return;
     }
+    if (!formData.email) {
+      setError("信箱不得為空");
+      return;
+    }
+    
 
     setError("");
     // setIsLoading(true);
@@ -130,6 +132,11 @@ export default function Register({ setCurrentForm }) {
       }
 
       // 註冊成功，導向登入頁
+      Swal.fire({
+        icon: "success",
+        title: "註冊成功",
+        text: `前往登入`,
+      });
       router.push("/auth/login");
       setTimeout(() => {
         // 註冊成功後重新整理頁面
@@ -150,6 +157,7 @@ export default function Register({ setCurrentForm }) {
   };
   return (
     <>
+      <div className={styles.space}></div>
       <form onSubmit={handleSubmit} className={styles.resgiter}>
         <div className={styles.top}>
           <div></div>

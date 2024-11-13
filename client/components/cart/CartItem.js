@@ -5,6 +5,7 @@ import { FaTrash } from 'react-icons/fa';
 import { useCart } from '@/contexts/CartContext';
 import Link from 'next/link';
 import styles from '@/styles/cart.module.css';
+import Swal from 'sweetalert2';
 
 const CartItem = ({ item, onUpdate }) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -44,11 +45,22 @@ const CartItem = ({ item, onUpdate }) => {
 
   // 刪除處理
   const handleDelete = async () => {
-    if (!window.confirm('確定要刪除此商品嗎？')) return;
-
     try {
-      await removeCartItem(item.id);
-      await onUpdate();
+      const result = await Swal.fire({
+        title: '確定要刪除此商品嗎？',
+        icon: 'warning',
+        iconColor: '#ff6b6b',
+        showCancelButton: true,
+        confirmButtonColor: '#ff6b6b',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '確定刪除',
+        cancelButtonText: '取消'
+      });
+  
+      if (result.isConfirmed) {
+        await removeCartItem(item.id);
+        await onUpdate();
+      }
     } catch (error) {
       console.error('刪除失敗:', error);
     }
