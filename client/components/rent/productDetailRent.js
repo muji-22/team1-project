@@ -84,12 +84,6 @@ const ProductDetailRent = ({
             value={quantity}
             onChange={handleQuantityChange}
           />
-        </div><div className="col-8 mt-3">
-          租借天數 
-          <DayAdjuster 
-            value={days}
-            onChange={handleDaysChange}
-          />
         </div>
         <h5 className="col-3">總價${(deposit+rental_fee*days)*quantity}</h5>
       </div>
