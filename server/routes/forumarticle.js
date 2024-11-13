@@ -28,6 +28,14 @@ router.get('/', async (req, res) => {
   }
 })
 
-
+router.get('/article', async(req,res)=>{
+  try{
+    const [content] = await db.query("SELECT * FROM forum_article WHERE id = 1")
+    res.json(content)
+    console.log(content);
+  }catch(error){
+     console.error(error)
+  }
+})
 
 export default router
