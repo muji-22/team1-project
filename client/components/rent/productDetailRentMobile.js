@@ -85,11 +85,7 @@ const ProductDetailSideMobile = ({
           />
         </div>
         <div className="col-12 mt-3 text-center">
-        租借天數 
-          <DayAdjuster 
-            value={days}
-            onChange={handleDaysChange}
-          />
+        租借天數:最少三天，加入購物車後選擇天數
         </div>
         <h5 className="col-12 mt-4 text-center">總價${(deposit+rental_fee*days)*quantity}</h5>
       </div>

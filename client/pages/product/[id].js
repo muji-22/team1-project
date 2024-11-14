@@ -109,11 +109,11 @@ function ProductDetail() {
                 <div className="col-md-12 col-lg-6">
                     <div
                         id="carouselExampleIndicators"
-                        className="carousel slide"
+                        className={`carousel slide ${style.carouselSlide}`}
                     >
-                        <div className="carousel-indicators">
+                        <ol className={`carousel-indicators ${style.carouselIndicators}`}>
                             {[0, 1, 2].map((index) => (
-                                <button
+                                <li
                                     key={index}
                                     type="button"
                                     data-bs-target="#carouselExampleIndicators"
@@ -125,9 +125,9 @@ function ProductDetail() {
                                         index === 0 ? "true" : "false"
                                     }
                                     aria-label={`Slide ${index + 1}`}
-                                />
+                                ><img src={`http://localhost:3005/productImages/${product.id}/${product.id}-${index+1}.jpg`} className={`d-block w-100 ${style.thumbnail}`}/></li>
                             ))}
-                        </div>
+                        </ol>
 
                         <div
                             className={`carousel-inner img-fluid ${style.productImgContainer}`}
