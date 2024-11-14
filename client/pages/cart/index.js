@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 export default function CartPage() {
   // Auth 相關
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading } = useAuth();
   const router = useRouter();
   const { fetchCartCount } = useCart();
 
@@ -36,6 +36,8 @@ export default function CartPage() {
 
   // 檢查登入狀態
   useEffect(() => {
+    if (loading) return;
+
     if (!isAuthenticated()) {
       toast.error("請先登入");
       router.push("/auth/login");
@@ -44,7 +46,7 @@ export default function CartPage() {
 
     // 初始化購物車
     initializeCart();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, loading]);
 
   // 初始化購物車
   const initializeCart = async () => {
@@ -153,6 +155,11 @@ export default function CartPage() {
         return null;
     }
   };
+
+  if (loading) {
+    return <div>載入中...</div>; // 或是使用你的載入動畫組件
+  }
+
 
   return (
     <>

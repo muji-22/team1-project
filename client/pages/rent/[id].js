@@ -252,8 +252,9 @@ function ProductRent() {
       </div>
 
       {/* 注意事項 */}
-      <RentNotice />
-      <RentNotice2 />
+      <RentNotice/>
+      <br/>
+      <RentNotice2/>
 
       {/* 評價區塊 */}
       <div className="my-5">

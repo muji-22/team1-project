@@ -4,11 +4,11 @@
 
 
 .wrap {
-    max-width: 1440px;
+    max-width: 1920px;
     height: 90vh;
     margin: auto;
     display: flex;
-    background: url("../../public/images/login-bg.jpg") no-repeat;
+    background: url("../../public/images/login-bg.jpg") no-repeat center center;
     background-size: 100% 100%;
     margin-bottom: 40px;
 }

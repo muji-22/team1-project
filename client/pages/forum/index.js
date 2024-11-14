@@ -1,85 +1,173 @@
-import React from "react";
-import dynamic from "next/dynamic";
-import Link from "next/link";
-import styles from "@/styles/forum.module.css";
-import Video from "@/components/forum/Video";
-import ArticleList from "@/components/forum/ArticleList";
-function forumPage() {
-  return (
-    <>
-      <div className="main container mt-5">
-        <h1 className={"title"}>熱門文章</h1>
-        <div className={styles.searchbar}>
-          搜尋
-          <input type="text" />
-        </div>
-        <div className="container"><ArticleList></ArticleList></div>
-        
-      
-      </div>
-      <div className={styles.banner}>
-        <div className="container">
-          <h1 className={`${styles.title} `}>熱門教學影片</h1>
-          <div className="d-flex">
-            <div>
-              <svg
-                width="38"
-                height="38"
-                viewBox="0 0 38 38"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="-0.5"
-                  y="0.5"
-                  width="37"
-                  height="37"
-                  rx="4.5"
-                  transform="matrix(-1 0 0 1 37 0)"
-                  stroke="white"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M18.9209 11.4231C18.7665 11.0051 18.438 10.8747 18.1871 11.132L11.2538 18.243C11.0961 18.4048 11 18.6913 11 19C11 19.3087 11.0961 19.5952 11.2538 19.757L18.1871 26.868C18.438 27.1253 18.7665 26.9949 18.9209 26.5769C19.0753 26.1588 18.997 25.6113 18.7462 25.354L13.4176 19.8889H26.4667C26.7612 19.8889 27 19.4909 27 19C27 18.5091 26.7612 18.1111 26.4667 18.1111H13.4176L18.7462 12.646C18.997 12.3887 19.0753 11.8412 18.9209 11.4231Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-            <div>
-              <svg
-                width="38"
-                height="38"
-                viewBox="0 0 38 38"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="0.5"
-                  y="0.5"
-                  width="37"
-                  height="37"
-                  rx="4.5"
-                  stroke="white"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M19.0791 11.4231C19.2335 11.0051 19.562 10.8747 19.8129 11.132L26.7462 18.243C26.9039 18.4048 27 18.6913 27 19C27 19.3087 26.9039 19.5952 26.7462 19.757L19.8129 26.868C19.562 27.1253 19.2335 26.9949 19.0791 26.5769C18.9247 26.1588 19.003 25.6113 19.2538 25.354L24.5824 19.8889H11.5333C11.2388 19.8889 11 19.4909 11 19C11 18.5091 11.2388 18.1111 11.5333 18.1111H24.5824L19.2538 12.646C19.003 12.3887 18.9247 11.8412 19.0791 11.4231Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className={`${styles.videoContainer} d-flex`}>
-            <Video></Video>
-            <Video></Video>
-            <Video></Video>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
+// pages/forum/index.js
+import React, { useState, useEffect } from 'react'
+import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap'
+import Link from 'next/link'
+import { useAuth } from '@/contexts/AuthContext'
+import { FaSearch, FaRegCommentDots } from 'react-icons/fa'
+import { toast } from 'react-toastify'
+import moment from 'moment'
+import 'moment/locale/zh-tw'
+moment.locale('zh-tw')
 
-export default forumPage;
+export default function ForumList() {
+  const { isAuthenticated } = useAuth()
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [keyword, setKeyword] = useState('')
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+
+  // 載入文章列表
+  const fetchPosts = async (pageNum = 1, search = '') => {
+    try {
+      setLoading(true)
+      const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts`)
+      url.searchParams.append('page', pageNum)
+      if (search) {
+        url.searchParams.append('keyword', search)
+      }
+
+      const response = await fetch(url)
+      const data = await response.json()
+
+      if (response.ok) {
+        setPosts(data.data.posts)
+        setTotalPages(data.data.pagination.total_pages)
+      } else {
+        throw new Error(data.message || '載入文章失敗')
+      }
+    } catch (error) {
+      console.error('載入文章失敗:', error)
+      toast.error('載入文章失敗')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 搜尋處理
+  const handleSearch = (e) => {
+    e.preventDefault()
+    setPage(1)
+    fetchPosts(1, keyword)
+  }
+
+  // 換頁處理
+  const handlePageChange = (newPage) => {
+    setPage(newPage)
+    fetchPosts(newPage, keyword)
+  }
+
+  useEffect(() => {
+    fetchPosts()
+  }, [])
+
+  return (
+    <Container className="py-4">
+      {/* 標題區 */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>討論區</h2>
+        {isAuthenticated() && (
+          <Link href="/forum/edit" className="btn btn-custom">
+            發表文章
+          </Link>
+        )}
+      </div>
+
+      {/* 搜尋區 */}
+      <Card className="mb-4">
+        <Card.Body>
+          <Form onSubmit={handleSearch}>
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="搜尋文章..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+              <Button variant="outline-secondary" type="submit">
+                <FaSearch />
+              </Button>
+            </InputGroup>
+          </Form>
+        </Card.Body>
+      </Card>
+
+      {/* 文章列表 */}
+      {loading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : posts.length > 0 ? (
+        <>
+          <Row xs={1} md={2} lg={3} className="g-4 mb-4">
+            {posts.map((post) => (
+              <Col key={post.id}>
+                <Card className="h-100">
+                  <Card.Body>
+                    <Link 
+                      href={`/forum/${post.id}`}
+                      className="text-decoration-none text-dark"
+                    >
+                      <Card.Title className="mb-3">{post.title}</Card.Title>
+                    </Link>
+                    <Card.Text className="text-muted small">
+                      {post.content.length > 100 
+                        ? post.content.substring(0, 100) + '...' 
+                        : post.content
+                      }
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Footer className="bg-white">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="d-flex align-items-center">
+                        <img
+                          src={post.author_avatar || '/default-avatar.png'}
+                          alt={post.author_name}
+                          className="rounded-circle"
+                          width="24"
+                          height="24"
+                        />
+                        <span className="ms-2 small">{post.author_name}</span>
+                      </div>
+                      <div className="d-flex align-items-center text-muted small">
+                        <FaRegCommentDots className="me-1" />
+                        <span>{post.reply_count}</span>
+                      </div>
+                    </div>
+                    <div className="text-muted small mt-2">
+                      {moment(post.created_at).fromNow()}
+                    </div>
+                  </Card.Footer>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+
+          {/* 分頁 */}
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center">
+              <div className="btn-group">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                  <Button
+                    key={num}
+                    variant={num === page ? 'custom' : 'outline-custom'}
+                    onClick={() => handlePageChange(num)}
+                  >
+                    {num}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="text-center py-5">
+          <h4>目前還沒有文章</h4>
+          <p className="text-muted">成為第一個發文的人吧！</p>
+        </div>
+      )}
+    </Container>
+  )
+}
