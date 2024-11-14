@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { useCart } from '@/contexts/CartContext';
 import Swal from 'sweetalert2';
+import styles from '@/styles/cart.module.css';
 
 const StepThree = ({
   setstepType,
@@ -303,9 +304,9 @@ const StepThree = ({
               返回修改
             </Button>
             <Button
-              variant="primary"
+              variant="custom"
               onClick={handleConfirmOrder}
-              className="px-4"
+              className={`px-4 ${styles.checkoutButton} ${styles.BBBtn}`} 
               disabled={isProcessing}
             >
               {isProcessing ? '處理中...' : '確認下單'}

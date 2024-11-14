@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from '@/styles/cart.module.css';
+import HangingButton from '@/components/cart/testbtn';
 
 const StepTwo = ({
   setstepType,
@@ -44,13 +45,16 @@ const StepTwo = ({
       return;
     }
 
-    // 更新訂單資訊
-    setOrderName(formData.name);
-    setOrderPhone(formData.phone);
-    setOrderAddress(formData.address);
+     // 延遲 0.5 秒後執行提交
+     setTimeout(() => {
+      // 更新訂單資訊
+      setOrderName(formData.name);
+      setOrderPhone(formData.phone);
+      setOrderAddress(formData.address);
 
-    // 前往下一步
-    setstepType(3);
+      // 前往下一步
+      setstepType(3);
+    }, 800); // 延遲 800 毫秒
   };
 
   // 表單欄位變更處理
@@ -137,17 +141,17 @@ const StepTwo = ({
                 <Button
                   variant="outline-secondary"
                   onClick={() => setstepType(1)}
-                  className="px-4"
+                  className={`px-4 ${styles.BBBtn}`}
                 >
                   返回購物車
                 </Button>
-                <Button 
-                  variant="custom" 
-                  type="submit"
-                  className="px-4"
+                <HangingButton 
+                  variant="custom " 
+                  type= "submit"
+                  className={`px-4 ${styles.nextButton} ${styles.BBBtn}`}
                 >
                   下一步
-                </Button>
+                </HangingButton>
               </div>
             </Form>
           </div>
