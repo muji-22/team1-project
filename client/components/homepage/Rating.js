@@ -104,7 +104,7 @@ const Rating = () => {
       {/* 標題區塊 */}
       <div className="row justify-content-center mb-4">
         <div className="col-md-8 text-center">
-          <h2 className="display-4 fw-bold mb-3">顧客評分</h2>
+          <h2 className="display-4 mb-3">顧客評分</h2>
           <p className="lead text-secondary">探索最受歡迎的遊戲商品</p>
         </div>
       </div>
