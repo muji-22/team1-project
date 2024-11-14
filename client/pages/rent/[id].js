@@ -1,7 +1,7 @@
 // pages/rent/[id].js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import style from "@/styles/productDetail.module.css";
+import style from "@/styles/productDetailRent.module.css";
 import ProductDetailRent from "@/components/rent/productDetailRent";
 import ProductDetailRentMobile from "@/components/rent/productDetailRentMobile";
 import ProductDetailMainNotice from "@/components/product/productDetailMainNotice";
@@ -13,17 +13,16 @@ import RentNotice from "@/components/rent/rentNotice";
 import RentNotice2 from "@/components/rent/rentNotice2";
 import MayFavoriteRent from "@/components/rent/mayFavoriteRent";
 import AddToCartButton from "@/components/product/AddToCartButton";
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from "@/contexts/AuthContext";
 import FavoriteButton from "@/components/rent/FavoriteButton";
 import Link from "next/link";
-import CommentList from '@/components/comment/CommentList'
-import CommentForm from '@/components/comment/CommentForm'
-
+import CommentList from "@/components/comment/CommentList";
+import CommentForm from "@/components/comment/CommentForm";
 
 function ProductRent() {
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,9 +38,7 @@ function ProductRent() {
 
       try {
         setLoading(true);
-        const response = await fetch(
-          `http://localhost:3005/api/rents/${id}`
-        );
+        const response = await fetch(`http://localhost:3005/api/rents/${id}`);
 
         if (response.status === 404) {
           setError("找不到該商品");
@@ -105,7 +102,7 @@ function ProductRent() {
 
   return (
     <div className="container mt-3">
-      {/* 麵包屑 */}            
+      {/* 麵包屑 */}
       <Breadcrumb
         items={[
           { label: "首頁", href: "/" },
@@ -114,15 +111,17 @@ function ProductRent() {
         ]}
       />
 
-
       {/* 內容區 */}
       <div className={`row mainContain ${style.mainContain}`}>
         {/* 左側商品圖片區 */}
         <div className="col-md-12 col-lg-6">
-          <div id="carouselExampleIndicators" className="carousel slide">
-            <div className="carousel-indicators">
+          <div
+            id="carouselExampleIndicators"
+            className={`carousel slide ${style.carouselSlide}`}
+          >
+            <ol className={`carousel-indicators ${style.carouselIndicators}`}>
               {[0, 1, 2].map((index) => (
-                <button
+                <li
                   key={index}
                   type="button"
                   data-bs-target="#carouselExampleIndicators"
@@ -132,9 +131,16 @@ function ProductRent() {
                   }`}
                   aria-current={index === 0 ? "true" : "false"}
                   aria-label={`Slide ${index + 1}`}
-                />
+                >
+                  <img
+                    src={`http://localhost:3005/productImages/${product.id}/${
+                      product.id
+                    }-${index + 1}.jpg`}
+                    className="d-block w-100 img-thumbnail"
+                  />
+                </li>
               ))}
-            </div>
+            </ol>
 
             <div
               className={`carousel-inner img-fluid ${style.productImgContainer}`}
@@ -250,28 +256,25 @@ function ProductRent() {
       <br/>
       <RentNotice2/>
 
-       {/* 評價區塊 */}
-       <div className="my-5">
+      {/* 評價區塊 */}
+      <div className="my-5">
         <div className="container">
           {/* 已經購買過的使用者才能評價 */}
           {user && (
-            <CommentForm 
-              productId={product.id} 
+            <CommentForm
+              productId={product.id}
               onSuccess={() => {
                 // 評價成功後的處理
               }}
             />
           )}
-          <CommentList 
-            productId={product.id}
-            user={user}
-          />
+          <CommentList productId={product.id} user={user} />
         </div>
       </div>
 
       {/* 可能喜歡 */}
       <div className="d-flex justify-content-center">
-      <MayFavoriteRent currentProduct={product} />
+        <MayFavoriteRent currentProduct={product} />
       </div>
     </div>
   );

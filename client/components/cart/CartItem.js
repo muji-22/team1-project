@@ -29,7 +29,7 @@ const CartItem = ({ item, onUpdate }) => {
 
   // 租借天數變更處理
   const handleDaysChange = async (newDays) => {
-    if (newDays < 1 || isUpdating) return;
+    if (newDays < 3 || isUpdating) return;
 
     setIsUpdating(true);
     try {
