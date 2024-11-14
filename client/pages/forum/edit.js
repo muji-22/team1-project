@@ -15,7 +15,7 @@ const Editor = dynamic(
 export default function PostEdit() {
   const router = useRouter()
   const { id } = router.query
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -23,43 +23,57 @@ export default function PostEdit() {
 
   // 檢查登入狀態
   useEffect(() => {
-    if (!loading && !isAuthenticated()) {
-      toast.error('請先登入')
-      router.push('/auth/login')
-    }
-  }, [isAuthenticated, loading])
+    const checkAuth = async () => {
+      // 等待身份驗證完成
+      if (authLoading) return;
+      
+      // 檢查 token 和登入狀態
+      const token = localStorage.getItem('token');
+      if (!token || !isAuthenticated()) {
+        toast.error('請先登入')
+        router.push('/auth/login')
+        return;
+      }
+    };
+
+    checkAuth();
+  }, [isAuthenticated, authLoading, router]);
 
   // 如果是編輯模式，載入文章內容
   useEffect(() => {
     const fetchPost = async () => {
-      if (!id) return
+      if (!id || authLoading) return;  // 等待身份驗證完成
 
       try {
-        setLoading(true)
+        setLoading(true);
+        const token = localStorage.getItem('token');
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts/${id}`
-        )
-        const data = await response.json()
+          `${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts/${id}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+        const data = await response.json();
 
         if (response.ok) {
-          setTitle(data.data.post.title)
-          setContent(data.data.post.content)
+          setTitle(data.data.post.title);
+          setContent(data.data.post.content);
         } else {
-          throw new Error(data.message || '載入文章失敗')
+          throw new Error(data.message || '載入文章失敗');
         }
       } catch (error) {
-        console.error('載入文章失敗:', error)
-        toast.error('載入文章失敗')
-        router.push('/forum')
+        console.error('載入文章失敗:', error);
+        toast.error('載入文章失敗');
+        router.push('/forum');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    if (id) {
-      fetchPost()
-    }
-  }, [id])
+    fetchPost();
+  }, [id, authLoading]);
 
   // 表單提交處理
   const handleSubmit = async (e) => {
@@ -107,6 +121,17 @@ export default function PostEdit() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // 顯示載入中狀態
+  if (authLoading || loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
   return (

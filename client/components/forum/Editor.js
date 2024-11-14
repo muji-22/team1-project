@@ -1,261 +1,171 @@
 // components/forum/Editor.js
-import React, { useState, useEffect, useCallback } from 'react'
-import { EditorState, convertToRaw, ContentState } from 'draft-js'
-import { Editor } from 'react-draft-wysiwyg'
+import React, { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
+import 'draft-js/dist/Draft.css'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { EditorState, ContentState, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
 import { toast } from 'react-toastify'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+
+// 動態引入編輯器組件
+const Editor = dynamic(
+  () => import('react-draft-wysiwyg').then((mod) => mod.Editor),
+  { ssr: false }
+)
 
 const DraftEditor = ({ 
-  editorState, 
-  onEditorStateChange, 
+  editorState: initialContent, 
+  onEditorStateChange,
   placeholder = '請輸入內容...',
   height = '300px'
 }) => {
-  // 初始化編輯器狀態
-  const [editorStateInternal, setEditorStateInternal] = useState(() => {
-    if (typeof editorState === 'string') {
-      // 如果是 HTML 字串，轉換成 EditorState
-      const contentBlock = htmlToDraft(editorState)
-      if (contentBlock) {
-        const contentState = ContentState.createFromBlockArray(
-          contentBlock.contentBlocks
-        )
-        return EditorState.createWithContent(contentState)
-      }
-    }
-    return EditorState.createEmpty()
-  })
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
-  // 當編輯器內容變更時
-  const handleEditorStateChange = useCallback((state) => {
-    setEditorStateInternal(state)
-    // 轉換成 HTML 並傳給父組件
-    const html = draftToHtml(convertToRaw(state.getCurrentContent()))
-    onEditorStateChange(html)
-  }, [onEditorStateChange])
-
-  // 當傳入的 editorState 變更時
+  // 初始化編輯器內容
   useEffect(() => {
-    if (typeof editorState === 'string' && editorState !== draftToHtml(convertToRaw(editorStateInternal.getCurrentContent()))) {
-      const contentBlock = htmlToDraft(editorState)
+    if (typeof initialContent === 'string' && initialContent) {
+      const contentBlock = htmlToDraft(initialContent)
       if (contentBlock) {
-        const contentState = ContentState.createFromBlockArray(
-          contentBlock.contentBlocks
-        )
-        setEditorStateInternal(EditorState.createWithContent(contentState))
+        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks)
+        setEditorState(EditorState.createWithContent(contentState))
       }
     }
-  }, [editorState])
+  }, [initialContent])
 
-  // 工具列設定
-  const toolbarOptions = {
-    options: ['inline', 'blockType', 'list', 'link', 'emoji', 'image', 'history'],
-    inline: {
-      options: ['bold', 'italic', 'underline', 'strikethrough'],
-      bold: { className: 'bordered-option-classname' },
-      italic: { className: 'bordered-option-classname' },
-      underline: { className: 'bordered-option-classname' },
-      strikethrough: { className: 'bordered-option-classname' },
-    },
-    blockType: {
-      className: 'bordered-option-classname',
-    },
-    list: {
-      options: ['unordered', 'ordered'],
-    },
-    link: {
-      showOpenOptionOnHover: true,
-      defaultTargetOption: '_blank',
-    },
-    emoji: {
-      className: 'bordered-option-classname',
-    },
-    image: {
-      alignmentEnabled: true,
-      uploadEnabled: true,
-      uploadCallback: async (file) => {
-        try {
-          const formData = new FormData()
-          formData.append('image', file)
-
-          const token = localStorage.getItem('token')
-          const response = await fetch(`http://localhost:3005/api/upload/forum-image`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            },
-            body: formData
-          })
-
-          if (!response.ok) {
-            throw new Error('圖片上傳失敗')
-          }
-
-          const data = await response.json()
-          return {
-            data: {
-              link: `http://localhost:3005${data.data.url}`
-            }
-          }
-        } catch (error) {
-          console.error('圖片上傳失敗:', error)
-          toast.error('圖片上傳失敗')
-          return { data: { link: null } }
-        }
-      },
-      previewImage: true,
-      inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/webp',
-      alt: { present: true, mandatory: false },
-    },
-    history: {
-      undo: { className: 'bordered-option-classname' },
-      redo: { className: 'bordered-option-classname' },
-    },
+  // 處理編輯器內容變化
+  const handleEditorStateChange = (newState) => {
+    setEditorState(newState)
+    if (onEditorStateChange) {
+      const html = draftToHtml(convertToRaw(newState.getCurrentContent()))
+      onEditorStateChange(html)
+    }
   }
 
   return (
-    <div className="border rounded">
+    <div className="editor-wrapper">
       <Editor
-        editorState={editorStateInternal}
+        editorState={editorState}
         onEditorStateChange={handleEditorStateChange}
         wrapperClassName="wrapper-class"
         editorClassName="editor-class"
         toolbarClassName="toolbar-class"
-        toolbar={toolbarOptions}
         placeholder={placeholder}
-        editorStyle={{
-          height,
-          padding: '0 15px',
-          overflowY: 'auto'
+        toolbar={{
+          options: ['inline', 'blockType', 'list', 'textAlign', 'link', 'emoji', 'image', 'history'],
+          inline: {
+            options: ['bold', 'italic', 'underline', 'strikethrough'],
+          },
+          blockType: {
+            inDropdown: true,
+            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote'],
+          },
+          list: {
+            inDropdown: true,
+            options: ['unordered', 'ordered'],
+          },
+          textAlign: {
+            inDropdown: true,
+            options: ['left', 'center', 'right', 'justify'],
+          },
+          link: {
+            inDropdown: false,
+            showOpenOptionOnHover: true,
+            defaultTargetOption: '_blank',
+            options: ['link', 'unlink'],
+          },
+          emoji: {
+            inDropdown: true,
+          },
+          image: {
+            uploadCallback: async (file) => {
+              try {
+                const formData = new FormData()
+                formData.append('image', file)
+                
+                const token = localStorage.getItem('token')
+                const response = await fetch('http://localhost:3005/api/upload/forum-image', {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${token}`
+                  },
+                  body: formData
+                })
+
+                if (!response.ok) throw new Error('圖片上傳失敗')
+                
+                const data = await response.json()
+                return { data: { link: `http://localhost:3005${data.data.url}` } }
+              } catch (error) {
+                console.error('圖片上傳失敗:', error)
+                toast.error('圖片上傳失敗')
+                return { data: { link: null } }
+              }
+            },
+            previewImage: true,
+            inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+            alt: { present: true, mandatory: false },
+          },
         }}
         localization={{
-          locale: 'zh_TW',
-          translations: {
-            'generic.add': '新增',
-            'generic.remove': '移除',
-            'components.controls.blocktype.normal': '一般',
-            'components.controls.blocktype.h1': '標題 1',
-            'components.controls.blocktype.h2': '標題 2',
-            'components.controls.blocktype.h3': '標題 3',
-            'components.controls.blocktype.h4': '標題 4',
-            'components.controls.blocktype.h5': '標題 5',
-            'components.controls.blocktype.h6': '標題 6',
-            'components.controls.blocktype.blockquote': '引用',
-            'components.controls.blocktype.code': '程式碼',
-            'components.controls.image.fileUpload': '上傳圖片',
-            'components.controls.image.byURL': '圖片網址',
-            'components.controls.image.dropFileText': '拖曳圖片或點擊上傳',
-            'components.controls.link.linkTitle': '連結標題',
-            'components.controls.link.linkTarget': '連結目標',
-            'components.controls.link.linkTargetOption': '在新視窗開啟',
-          }
+          locale: 'zh',
         }}
       />
       <style jsx global>{`
+        .editor-wrapper {
+          width: 100%;
+        }
         .wrapper-class {
-          min-height: ${height};
+          padding: 1rem;
+          border: 1px solid #ccc;
         }
         .editor-class {
-          font-size: 16px;
-          line-height: 1.5;
-          min-height: calc(${height} - 100px);
+          background-color: #fff;
+          padding: 1rem;
+          min-height: ${height};
         }
         .toolbar-class {
-          border-bottom: 1px solid #E0E0E0;
-          background: #f8f9fa;
-        }
-        .public-DraftStyleDefault-block {
-          margin: 0.5em 0;
-        }
-        .bordered-option-classname {
-          border-radius: 4px;
-          transition: all 0.2s ease;
+          border: 1px solid #ccc !important;
+          margin-bottom: 0 !important;
         }
         .rdw-option-wrapper {
-          border: none;
+          border: 1px solid #F1F1F1;
           padding: 5px;
           min-width: 25px;
-          height: 25px;
-          border-radius: 4px;
+          height: 20px;
+          border-radius: 2px;
           margin: 0 4px;
-          transition: all 0.2s ease;
-        }
-        .rdw-option-wrapper:hover {
-          box-shadow: none;
-          background: #e9ecef;
-        }
-        .rdw-option-active {
-          box-shadow: none;
-          background: #dee2e6;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          background: white;
+          text-transform: capitalize;
         }
         .rdw-dropdown-wrapper {
-          border: 1px solid #dee2e6;
-          border-radius: 4px;
+          height: 30px;
+          background: white;
+          cursor: pointer;
+          border: 1px solid #F1F1F1;
+          border-radius: 2px;
+          margin: 0 3px;
+          text-transform: capitalize;
+          background: white;
         }
         .rdw-dropdown-wrapper:hover {
-          box-shadow: none;
-          background: #f8f9fa;
+          box-shadow: 1px 1px 0px #BFBDBD;
         }
         .rdw-dropdown-optionwrapper {
-          border: 1px solid #dee2e6;
-          border-radius: 4px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .rdw-link-modal {
-          border-radius: 4px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .rdw-image-modal {
-          border-radius: 4px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .rdw-emoji-modal {
-          border-radius: 4px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .rdw-embedded-modal {
-          border-radius: 4px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .public-DraftEditorPlaceholder-root {
-          color: #6c757d;
-        }
-        .public-DraftEditor-content {
-          img {
-            max-width: 100%;
-            height: auto;
-            margin: 0.5em 0;
-          }
-          blockquote {
-            border-left: 5px solid #e9ecef;
-            margin: 0;
-            padding-left: 1em;
-            color: #6c757d;
-          }
-        }
-        .rdw-image-alignment-options-popup {
-          border: 1px solid #dee2e6;
-          border-radius: 4px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .rdw-image-alignment-option {
-          border: none;
-          padding: 5px;
-          min-width: 25px;
-          height: 25px;
-          border-radius: 4px;
-          margin: 0 4px;
-          transition: all 0.2s ease;
-        }
-        .rdw-image-alignment-option:hover {
-          box-shadow: none;
-          background: #e9ecef;
-        }
-        .rdw-image-alignment-option-active {
-          box-shadow: none;
-          background: #dee2e6;
+          z-index: 100;
+          position: relative;
+          border: 1px solid #F1F1F1;
+          width: 98%;
+          background: white;
+          border-radius: 2px;
+          margin: 0;
+          padding: 0;
+          max-height: 250px;
+          overflow-y: scroll;
         }
       `}</style>
     </div>

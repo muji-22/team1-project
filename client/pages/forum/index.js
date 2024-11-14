@@ -10,9 +10,9 @@ import 'moment/locale/zh-tw'
 moment.locale('zh-tw')
 
 export default function ForumList() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, loading } = useAuth()
   const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [postLoading, setPostLoading] = useState(true)
   const [keyword, setKeyword] = useState('')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
@@ -20,7 +20,7 @@ export default function ForumList() {
   // 載入文章列表
   const fetchPosts = async (pageNum = 1, search = '') => {
     try {
-      setLoading(true)
+      setPostLoading(true)
       let url = `http://localhost:3005/api/forum/posts?page=${pageNum}`
       if (search) {
         url = `http://localhost:3005/api/forum/search?keyword=${search}&page=${pageNum}`
@@ -43,7 +43,7 @@ export default function ForumList() {
       console.error('載入文章失敗:', error)
       toast.error('載入文章失敗')
     } finally {
-      setLoading(false)
+      setPostLoading(false)
     }
   }
 
@@ -60,9 +60,24 @@ export default function ForumList() {
     fetchPosts(newPage, keyword)
   }
 
+  // 初始載入文章，等待身份驗證完成
   useEffect(() => {
-    fetchPosts()
-  }, [])
+    // 等待身份驗證載入完成
+    if (loading) return;
+    
+    fetchPosts();
+  }, [loading]);
+
+  // 顯示載入中
+  if (loading || postLoading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <Container className="py-4">
@@ -96,13 +111,7 @@ export default function ForumList() {
       </Card>
 
       {/* 文章列表 */}
-      {loading ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : posts.length > 0 ? (
+      {posts.length > 0 ? (
         <>
           <Row xs={1} md={2} lg={3} className="g-4 mb-4">
             {posts.map((post) => (
@@ -131,6 +140,9 @@ export default function ForumList() {
                           className="rounded-circle"
                           width="24"
                           height="24"
+                          onError={(e) => {
+                            e.target.src = "/default-avatar.png"
+                          }}
                         />
                         <span className="ms-2 small">{post.author_name}</span>
                       </div>
