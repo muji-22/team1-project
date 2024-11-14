@@ -125,7 +125,7 @@ function ProductDetail() {
                                         index === 0 ? "true" : "false"
                                     }
                                     aria-label={`Slide ${index + 1}`}
-                                ><img src={`http://localhost:3005/productImages/${product.id}/${product.id}-${index+1}.jpg`} className="d-block w-100 img-thumbnail"/></li>
+                                ><img src={`http://localhost:3005/productImages/${product.id}/${product.id}-${index+1}.jpg`} className={`d-block w-100 ${style.thumbnail}`}/></li>
                             ))}
                         </ol>
 

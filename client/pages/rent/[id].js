@@ -136,7 +136,7 @@ function ProductRent() {
                     src={`http://localhost:3005/productImages/${product.id}/${
                       product.id
                     }-${index + 1}.jpg`}
-                    className="d-block w-100 img-thumbnail"
+                    className={`d-block w-100 ${style.thumbnail}`}
                   />
                 </li>
               ))}
