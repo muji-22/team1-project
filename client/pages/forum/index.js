@@ -21,15 +21,18 @@ export default function ForumList() {
   const fetchPosts = async (pageNum = 1, search = '') => {
     try {
       setLoading(true)
-      const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts`)
-      url.searchParams.append('page', pageNum)
+      let url = `http://localhost:3005/api/forum/posts?page=${pageNum}`
       if (search) {
-        url.searchParams.append('keyword', search)
+        url = `http://localhost:3005/api/forum/search?keyword=${search}&page=${pageNum}`
       }
-
+  
+      console.log('Fetching posts from:', url) // 除錯用
+  
       const response = await fetch(url)
       const data = await response.json()
-
+  
+      console.log('Response:', data) // 除錯用
+  
       if (response.ok) {
         setPosts(data.data.posts)
         setTotalPages(data.data.pagination.total_pages)

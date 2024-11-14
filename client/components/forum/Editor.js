@@ -81,7 +81,7 @@ const DraftEditor = ({
           formData.append('image', file)
 
           const token = localStorage.getItem('token')
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload/forum-image`, {
+          const response = await fetch(`http://localhost:3005/api/upload/forum-image`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -96,7 +96,7 @@ const DraftEditor = ({
           const data = await response.json()
           return {
             data: {
-              link: `${process.env.NEXT_PUBLIC_API_URL}${data.data.url}`
+              link: `http://localhost:3005${data.data.url}`
             }
           }
         } catch (error) {
@@ -234,6 +234,28 @@ const DraftEditor = ({
             padding-left: 1em;
             color: #6c757d;
           }
+        }
+        .rdw-image-alignment-options-popup {
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .rdw-image-alignment-option {
+          border: none;
+          padding: 5px;
+          min-width: 25px;
+          height: 25px;
+          border-radius: 4px;
+          margin: 0 4px;
+          transition: all 0.2s ease;
+        }
+        .rdw-image-alignment-option:hover {
+          box-shadow: none;
+          background: #e9ecef;
+        }
+        .rdw-image-alignment-option-active {
+          box-shadow: none;
+          background: #dee2e6;
         }
       `}</style>
     </div>
