@@ -247,6 +247,7 @@ function ProductRent() {
 
       {/* 注意事項 */}
       <RentNotice/>
+      <br/>
       <RentNotice2/>
 
        {/* 評價區塊 */}
