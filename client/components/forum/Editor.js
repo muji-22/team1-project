@@ -1,175 +1,118 @@
 // components/forum/Editor.js
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import 'draft-js/dist/Draft.css'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { EditorState, ContentState, convertToRaw } from 'draft-js'
-import draftToHtml from 'draftjs-to-html'
-import htmlToDraft from 'html-to-draftjs'
-import { toast } from 'react-toastify'
+import 'react-quill/dist/quill.snow.css'
+import PropTypes from 'prop-types'
 
-// 動態引入編輯器組件
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then((mod) => mod.Editor),
-  { ssr: false }
+const ReactQuill = dynamic(
+  () => import('react-quill'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="editor-loading">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">載入編輯器中...</span>
+        </div>
+      </div>
+    )
+  }
 )
 
-const DraftEditor = ({ 
-  editorState: initialContent, 
+const QuillEditor = ({
+  editorState: initialContent,
   onEditorStateChange,
   placeholder = '請輸入內容...',
   height = '300px'
 }) => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty())
+  const [mounted, setMounted] = useState(false)
+  const [content, setContent] = useState('')
 
-  // 初始化編輯器內容
   useEffect(() => {
-    if (typeof initialContent === 'string' && initialContent) {
-      const contentBlock = htmlToDraft(initialContent)
-      if (contentBlock) {
-        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks)
-        setEditorState(EditorState.createWithContent(contentState))
-      }
+    setMounted(true)
+    if (initialContent) {
+      setContent(initialContent)
     }
   }, [initialContent])
 
-  // 處理編輯器內容變化
-  const handleEditorStateChange = (newState) => {
-    setEditorState(newState)
-    if (onEditorStateChange) {
-      const html = draftToHtml(convertToRaw(newState.getCurrentContent()))
-      onEditorStateChange(html)
-    }
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'align': [] }],
+      ['link', 'image'],
+      ['clean']
+    ]
   }
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline',
+    'list', 'bullet',
+    'align',
+    'link'
+  ]
+
+  if (!mounted) return null
 
   return (
     <div className="editor-wrapper">
-      <Editor
-        editorState={editorState}
-        onEditorStateChange={handleEditorStateChange}
-        wrapperClassName="wrapper-class"
-        editorClassName="editor-class"
-        toolbarClassName="toolbar-class"
+      <ReactQuill
+        theme="snow"
+        value={content}
+        onChange={(value) => {
+          setContent(value)
+          onEditorStateChange?.(value)
+        }}
+        modules={modules}
+        formats={formats}
         placeholder={placeholder}
-        toolbar={{
-          options: ['inline', 'blockType', 'list', 'textAlign', 'link', 'emoji', 'image', 'history'],
-          inline: {
-            options: ['bold', 'italic', 'underline', 'strikethrough'],
-          },
-          blockType: {
-            inDropdown: true,
-            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote'],
-          },
-          list: {
-            inDropdown: true,
-            options: ['unordered', 'ordered'],
-          },
-          textAlign: {
-            inDropdown: true,
-            options: ['left', 'center', 'right', 'justify'],
-          },
-          link: {
-            inDropdown: false,
-            showOpenOptionOnHover: true,
-            defaultTargetOption: '_blank',
-            options: ['link', 'unlink'],
-          },
-          emoji: {
-            inDropdown: true,
-          },
-          image: {
-            uploadCallback: async (file) => {
-              try {
-                const formData = new FormData()
-                formData.append('image', file)
-                
-                const token = localStorage.getItem('token')
-                const response = await fetch('http://localhost:3005/api/upload/forum-image', {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': `Bearer ${token}`
-                  },
-                  body: formData
-                })
-
-                if (!response.ok) throw new Error('圖片上傳失敗')
-                
-                const data = await response.json()
-                return { data: { link: `http://localhost:3005${data.data.url}` } }
-              } catch (error) {
-                console.error('圖片上傳失敗:', error)
-                toast.error('圖片上傳失敗')
-                return { data: { link: null } }
-              }
-            },
-            previewImage: true,
-            inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
-            alt: { present: true, mandatory: false },
-          },
-        }}
-        localization={{
-          locale: 'zh',
-        }}
+        style={{ height }}
       />
       <style jsx global>{`
         .editor-wrapper {
-          width: 100%;
+          background: white;
+          border-radius: 4px;
+          overflow: hidden;
         }
-        .wrapper-class {
-          padding: 1rem;
-          border: 1px solid #ccc;
-        }
-        .editor-class {
-          background-color: #fff;
-          padding: 1rem;
-          min-height: ${height};
-        }
-        .toolbar-class {
-          border: 1px solid #ccc !important;
-          margin-bottom: 0 !important;
-        }
-        .rdw-option-wrapper {
-          border: 1px solid #F1F1F1;
-          padding: 5px;
-          min-width: 25px;
-          height: 20px;
-          border-radius: 2px;
-          margin: 0 4px;
+        .editor-loading {
           display: flex;
           justify-content: center;
           align-items: center;
-          cursor: pointer;
-          background: white;
-          text-transform: capitalize;
+          height: ${height};
+          background: #f8f9fa;
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
         }
-        .rdw-dropdown-wrapper {
-          height: 30px;
-          background: white;
-          cursor: pointer;
-          border: 1px solid #F1F1F1;
-          border-radius: 2px;
-          margin: 0 3px;
-          text-transform: capitalize;
-          background: white;
+        .ql-toolbar {
+          border-top: 1px solid #dee2e6 !important;
+          border-left: 1px solid #dee2e6 !important;
+          border-right: 1px solid #dee2e6 !important;
+          border-bottom: none !important;
+          border-radius: 4px 4px 0 0;
+          background: #f8f9fa;
         }
-        .rdw-dropdown-wrapper:hover {
-          box-shadow: 1px 1px 0px #BFBDBD;
+        .ql-container {
+          border: 1px solid #dee2e6 !important;
+          border-radius: 0 0 4px 4px;
+          min-height: ${height};
+          font-size: 16px;
         }
-        .rdw-dropdown-optionwrapper {
-          z-index: 100;
-          position: relative;
-          border: 1px solid #F1F1F1;
-          width: 98%;
-          background: white;
-          border-radius: 2px;
-          margin: 0;
-          padding: 0;
-          max-height: 250px;
-          overflow-y: scroll;
+        .ql-editor {
+          min-height: ${height};
+          max-height: 500px;
+          overflow-y: auto;
         }
       `}</style>
     </div>
   )
 }
 
-export default DraftEditor
+QuillEditor.propTypes = {
+  editorState: PropTypes.string,
+  onEditorStateChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  height: PropTypes.string
+}
+
+export default QuillEditor

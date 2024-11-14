@@ -6,10 +6,13 @@ import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'react-toastify'
 import dynamic from 'next/dynamic'
 
-// 動態載入編輯器，避免 SSR 問題
+// 動態載入編輯器，並添加載入時的佔位元件
 const Editor = dynamic(
   () => import('@/components/forum/Editor'),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <p>載入編輯器中...</p>
+  }
 )
 
 export default function PostEdit() {
@@ -20,6 +23,16 @@ export default function PostEdit() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [validated, setValidated] = useState(false)
+  const [editorReady, setEditorReady] = useState(false)
+
+  useEffect(() => {
+    // 確保組件完全掛載後再初始化編輯器
+    setEditorReady(true)
+  }, [])
+
+  const handleEditorChange = (newContent) => {
+    setContent(newContent)
+  }
 
   // 檢查登入狀態
   useEffect(() => {
@@ -134,6 +147,7 @@ export default function PostEdit() {
     );
   }
 
+  // 在渲染編輯器時添加條件檢查
   return (
     <Container className="py-4">
       <Card className="shadow-sm">
@@ -160,11 +174,13 @@ export default function PostEdit() {
             {/* 內容 */}
             <Form.Group className="mb-4">
               <Form.Label>內容</Form.Label>
-              <Editor
-                editorState={content}
-                onEditorStateChange={setContent}
-                placeholder="來分享些什麼吧..."
-              />
+              {editorReady && (
+                <Editor
+                  initialContent={content}
+                  onChange={handleEditorChange}
+                  readOnly={loading}
+                />
+              )}
             </Form.Group>
 
             {/* 按鈕區 */}
