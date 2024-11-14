@@ -219,23 +219,21 @@ router.get('/product/:productId/orders', authenticateToken, async (req, res) => 
 
 router.get('/top-rated', async (req, res) => {
   try {
-    // 修改 SQL 查詢，即使沒有評分也會顯示商品
+    // 修改 SQL 查詢，只顯示有評分的商品
     const [products] = await pool.execute(`
       SELECT 
         p.*,
-        COALESCE(AVG(CASE WHEN pc.status = 1 THEN pc.score END), 0) as avg_score,
-        COUNT(DISTINCT CASE WHEN pc.status = 1 THEN pc.id END) as review_count
+        ROUND(AVG(pc.score), 1) as avg_score,
+        COUNT(DISTINCT pc.id) as review_count
       FROM product p
-      LEFT JOIN product_comment pc ON p.id = pc.product_id
-      WHERE p.valid = 1
+      INNER JOIN product_comment pc ON p.id = pc.product_id
+      WHERE p.valid = 1 
+        AND pc.status = 1
       GROUP BY p.id
+      HAVING review_count > 0
       ORDER BY 
-        CASE 
-          WHEN COUNT(DISTINCT CASE WHEN pc.status = 1 THEN pc.id END) > 0 
-          THEN AVG(CASE WHEN pc.status = 1 THEN pc.score END) 
-          ELSE 0 
-        END DESC,
-        review_count DESC, 
+        avg_score DESC,
+        review_count DESC,
         p.id DESC
       LIMIT 12
     `);
@@ -246,7 +244,7 @@ router.get('/top-rated', async (req, res) => {
       name: product.name,
       price: product.price,
       image: product.image,
-      avg_score: Number(product.avg_score || 0).toFixed(1),
+      avg_score: Number(product.avg_score).toFixed(1),
       review_count: parseInt(product.review_count),
       description: product.description,
       min_users: product.min_users,
@@ -254,8 +252,6 @@ router.get('/top-rated', async (req, res) => {
       min_age: product.min_age,
       playtime: product.playtime
     }));
-
-    console.log('查詢到的商品:', formattedProducts); // 除錯用
 
     res.json({
       status: 'success',
@@ -266,10 +262,9 @@ router.get('/top-rated', async (req, res) => {
     console.error('取得高分商品失敗:', error);
     res.status(500).json({ 
       status: 'error',
-      message: '取得高分商品失敗',
-      error: error.message
+      message: '取得高分商品失敗'
     });
   }
 });
 
-export default router
+export default router;
