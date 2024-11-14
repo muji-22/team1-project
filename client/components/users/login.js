@@ -110,9 +110,7 @@ export default function Login({ setCurrentForm }) {
             {isLoading ? "登入中..." : "登入"}
           </button>
 
-          <div className={styles.divider}>
-            <span className={styles.dividerText}>或</span>
-          </div>
+          
 
           <button
             type="button"
@@ -120,7 +118,7 @@ export default function Login({ setCurrentForm }) {
             onClick={handleGoogleLogin}
             disabled={isLoading}
           >
-            <FcGoogle className={styles.googleIcon} />
+            <FcGoogle />
             使用 Google 帳號登入
           </button>
 
