@@ -4,6 +4,7 @@ import { CartProvider } from "../contexts/CartContext"; //購物車
 import { CommentProvider } from "../contexts/CommentContext"; //評價
 import { ToastContainer } from "react-toastify"; //提示吐司
 import { LoadingProvider } from "../contexts/LoadingContext"; //Loading
+import { GoogleAuthProvider } from "../contexts/GoogleAuthContext"; //Google登入
 import { useRouter } from 'next/router';
 import { useEffect } from "react";
 import { useLoading } from "@/contexts/LoadingContext";
@@ -33,7 +34,7 @@ function RouteLoader() {
       
     };
 
-    
+
 
     router.events.on("routeChangeStart", handleStart);
     router.events.on("routeChangeComplete", handleComplete);
@@ -64,6 +65,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <LoadingProvider>
       <AuthProvider>
+      <GoogleAuthProvider>
         <CartProvider>
           <CommentProvider>
             <RouteLoader />
@@ -86,6 +88,7 @@ function MyApp({ Component, pageProps }) {
             </Layout>
           </CommentProvider>
         </CartProvider>
+        </GoogleAuthProvider>
       </AuthProvider>
     </LoadingProvider>
   );
