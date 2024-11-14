@@ -4,7 +4,7 @@
     align-items: center;
     flex-wrap: wrap;
     transform-origin: center center;
-    width: 56vh;
+    width: 45vh;
     height: auto;
     aspect-ratio: 1/1;
     animation: diceRotate 3s linear infinite;
@@ -12,8 +12,8 @@
   
   .dice {
     position: absolute;
-    width: 14vh;
-    height: 14vh;
+    width: 10vh;
+    height: 10vh;
     transform-style: preserve-3d;
     animation: spinner 3s linear infinite;
     margin: 7vh;
@@ -56,11 +56,12 @@
     }
   }
   
+  /* 骰子邊線 */
   .side {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #302322;
+    background: #d4d4d4;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,18 +79,19 @@
     background-repeat: no-repeat;
   }
   
+  /* 骰子底色 */
   .side:before {
     position: absolute;
     box-sizing: border-box;
     content: "";
     width: 92%;
     height: 92%;
-    background: #e8e0d5;
-    border-radius: 15%;
+    background: #ffffff;
+    
   }
   
   .one {
-    transform: translateY(7vh) rotateX(-90deg);
+    transform: translateY(5vh) rotateX(-90deg);
   }
   
   .one:after {
@@ -98,7 +100,7 @@
   }
   
   .two {
-    transform: translateX(7vh) rotateY(-90deg);
+    transform: translateX(5vh) rotateY(-90deg);
   }
   
   .two:after {
@@ -107,7 +109,7 @@
   }
   
   .three {
-    transform: translateZ(-7vh) rotateY(0deg);
+    transform: translateZ(-5vh) rotateY(0deg);
   }
   
   .three:after {
@@ -116,7 +118,7 @@
   }
   
   .four {
-    transform: translateZ(7vh) rotateY(0deg);
+    transform: translateZ(5vh) rotateY(0deg);
   }
   
   .four:after {
@@ -125,7 +127,7 @@
   }
   
   .five {
-    transform: translateX(-7vh) rotateY(-90deg);
+    transform: translateX(-5vh) rotateY(-90deg);
   }
   
   .five:after {
@@ -134,7 +136,7 @@
   }
   
   .six {
-    transform: translateY(-7vh) rotateX(-90deg);
+    transform: translateY(-5vh) rotateX(-90deg);
   }
   
   .six:after {
