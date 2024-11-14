@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useGoogleAuth } from "../../contexts/GoogleAuthContext";
 import styles from "./login.module.css";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { MdAccountCircle } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { FcGoogle } from "react-icons/fc";
 import Swal from "sweetalert2";
-import { IoIosEye,IoIosEyeOff  } from "react-icons/io";
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
 export default function Login({ setCurrentForm }) {
   const { login } = useAuth();
+  const { handleGoogleLogin } = useGoogleAuth();
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     account: "",
@@ -56,9 +59,10 @@ export default function Login({ setCurrentForm }) {
       setIsLoading(false);
     }
   };
+
   const [isActive, setIsActive] = useState(false);
   const handleClick = () => {
-    setIsActive(prevState => !prevState);
+    setIsActive((prevState) => !prevState);
   };
 
   return (
@@ -68,35 +72,57 @@ export default function Login({ setCurrentForm }) {
         <div className={styles.top}>
           <div className={styles.title}>會員登入</div>
           <div>
-           <label><MdAccountCircle  className={styles.icon}/></label> 
-          <input
-            type="text" // 修改：將 "account" 改為 "text"
-            name="account" // 修改：添加 name 屬性
-            className={styles.inputGroup}
-            placeholder="帳號"
-            value={formData.account}
-            onChange={handleChange}
-          />
+            <label>
+              <MdAccountCircle className={styles.icon} />
+            </label>
+            <input
+              type="text"
+              name="account"
+              className={styles.inputGroup}
+              placeholder="帳號"
+              value={formData.account}
+              onChange={handleChange}
+            />
           </div>
 
           <div>
-          <label><RiLockPasswordFill  className={styles.icon}/></label>
-          <input
-            type={isActive?'text': 'password'}
-            name="password" // 修改：添加 name 屬性
-            className={styles.inputGroup}
-            placeholder="密碼"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <div className={styles.eye}  onClick={handleClick}>{isActive?<IoIosEye  />:<IoIosEyeOff />}</div>
+            <label>
+              <RiLockPasswordFill className={styles.icon} />
+            </label>
+            <input
+              type={isActive ? "text" : "password"}
+              name="password"
+              className={styles.inputGroup}
+              placeholder="密碼"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <div className={styles.eye} onClick={handleClick}>
+              {isActive ? <IoIosEye /> : <IoIosEyeOff />}
+            </div>
           </div>
 
-          <button type="submit" className={styles.btnResgiter}>
-            登入
+          <button 
+            type="submit" 
+            className={styles.btnResgiter}
+            disabled={isLoading}
+          >
+            {isLoading ? "登入中..." : "登入"}
           </button>
 
-          
+          <div className={styles.divider}>
+            <span className={styles.dividerText}>或</span>
+          </div>
+
+          <button
+            type="button"
+            className={styles.googleButton}
+            onClick={handleGoogleLogin}
+            disabled={isLoading}
+          >
+            <FcGoogle className={styles.googleIcon} />
+            使用 Google 帳號登入
+          </button>
 
           <div className={styles.box}>
             <span className={styles.message}>
@@ -105,31 +131,28 @@ export default function Login({ setCurrentForm }) {
             </span>
           </div>
 
-        <div className={styles.test}>
-        <div className={styles.check}>
-            <input
-              type="checkbox"
-              name="remember"
-              checked={formData.remember}
-              onChange={handleChange}
-            />
-            <label htmlFor="remember">
-              記住我
-            </label>
-          </div>
+          <div className={styles.test}>
+            <div className={styles.check}>
+              <input
+                type="checkbox"
+                name="remember"
+                checked={formData.remember}
+                onChange={handleChange}
+              />
+              <label htmlFor="remember">記住我</label>
+            </div>
 
-          <Link href="/auth/forgot" className={styles.link}>
-            <button
-              className={styles.forgrt}
-              onClick={() => {
-                setCurrentForm("forgot");
-              }}
-            >
-              忘記密碼?
-            </button>
-          </Link>
-        </div>
-          
+            <Link href="/auth/forgot" className={styles.link}>
+              <button
+                className={styles.forgrt}
+                onClick={() => {
+                  setCurrentForm("forgot");
+                }}
+              >
+                忘記密碼?
+              </button>
+            </Link>
+          </div>
         </div>
         <div className={styles.line}>
           <div className={styles.bottom}>

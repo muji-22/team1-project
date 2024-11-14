@@ -16,6 +16,7 @@ import forumRouter from './routes/forumarticle.js'
 import publishRouter from './routes/publish.js'
 import 'dotenv/config'
 import recommendationsRouter from './routes/recommendations.js'
+import googleAuthRouter from './routes/googleAuth.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -47,6 +48,7 @@ app.use('/api/newsletter', newsletterRouter)
 app.use('/api/comments', commentRouter)
 app.use('/api/recommendations', recommendationsRouter)
 app.use('/api/orders', orderRouter)
+app.use('/api/google', googleAuthRouter)
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {
