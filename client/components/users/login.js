@@ -118,8 +118,8 @@ export default function Login({ setCurrentForm }) {
             onClick={handleGoogleLogin}
             disabled={isLoading}
           >
-            <FcGoogle />
-            使用 Google 帳號登入
+            <FcGoogle className={styles.googleIcon}/>
+            Google 帳號登入
           </button>
 
           <div className={styles.box}>

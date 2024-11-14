@@ -41,7 +41,7 @@ export default function UserForm() {
               className={styles.userPic1}
               style={{
                 backgroundImage: user?.avatar_url 
-                  ? `url(http://localhost:3005${user.avatar_url})` 
+                  ? `url(${user.avatar_url})` 
                   : 'url(http://localhost:3005/avatar/default-avatar.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'

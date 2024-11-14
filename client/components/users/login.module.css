@@ -191,10 +191,10 @@
 .googleButton {
   width: 80%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid gray;
   border-radius: 5px;
-  background: white;
-  color: #333;
+  background: gainsboro;
+  color: black;
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -207,7 +207,8 @@
 }
 
 .googleButton:hover {
-  background-color: #f5f5f5;
+  box-shadow: 3px 3px 3px black;
+  text-shadow: 1px 1px 1px gray;
 }
 
 .googleButton:disabled {
@@ -250,7 +251,7 @@
 
   .resgiter {
     max-width: 500px;
-    height: 550px;
+    height: 500px;
     border-radius: 20px;
     margin-inline: auto;
     background: rgba(220, 220, 220, 0.5);
@@ -274,7 +275,7 @@
   .eye{
     margin-inline-start: 330px;
     margin-top: -45px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
   }
 
   .btnResgiter {
@@ -288,6 +289,9 @@
     border: 0px;
     font-size: 24px;
     box-shadow: 3px 3px 5px gray;
+  }
+  .googleButton {
+    width: 75%;
   }
 
   .bottom {
