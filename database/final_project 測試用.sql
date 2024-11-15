@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-13 16:11:35
+-- 產生時間： 2024-11-15 20:48:51
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -66,9 +66,8 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`id`, `cart_id`, `product_id`, `type`, `quantity`, `rental_start_date`, `rental_end_date`, `created_at`, `updated_at`, `rental_days`) VALUES
-(50, 1, 548, 'rental', 2, NULL, NULL, '2024-11-13 11:47:22', '2024-11-13 11:47:32', 3),
-(51, 1, 547, 'rental', 1, NULL, NULL, '2024-11-13 11:47:32', '2024-11-13 11:47:32', 3),
-(52, 1, 546, 'rental', 3, NULL, NULL, '2024-11-13 11:47:32', '2024-11-13 11:47:33', 3);
+(54, 1, 1, 'sale', 1, NULL, NULL, '2024-11-13 21:27:45', '2024-11-13 21:27:45', 3),
+(55, 1, 1, 'rental', 1, NULL, NULL, '2024-11-13 21:27:56', '2024-11-13 21:27:56', 3);
 
 -- --------------------------------------------------------
 
@@ -127,6 +126,70 @@ CREATE TABLE `favorites` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- 傾印資料表的資料 `favorites`
+--
+
+INSERT INTO `favorites` (`id`, `user_id`, `product_id`, `created_at`) VALUES
+(24, 1, 2, '2024-11-14 20:31:36'),
+(25, 1, 3, '2024-11-14 20:31:36');
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `forum_posts`
+--
+
+CREATE TABLE `forum_posts` (
+  `id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL,
+  `title` varchar(255) NOT NULL COMMENT '文章標題',
+  `content` longtext NOT NULL COMMENT '文章內容',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `status` tinyint(1) DEFAULT 1 COMMENT '狀態：1顯示、0隱藏',
+  `cover_image` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 傾印資料表的資料 `forum_posts`
+--
+
+INSERT INTO `forum_posts` (`id`, `user_id`, `title`, `content`, `created_at`, `updated_at`, `status`, `cover_image`) VALUES
+(1, 1, 'CC', '<p>CCCC<img src=\"http://localhost:3005/uploads/forum/forum-1731656835050-154417418.jpg\"></p>', '2024-11-15 15:47:33', '2024-11-15 19:49:28', 0, NULL),
+(2, 1, '123', '<p>CCC<img src=\"http://localhost:3005/uploads/forum/forum-1731662453024-525350050.jpg\"></p>', '2024-11-15 17:20:55', '2024-11-15 19:49:25', 0, 'forum-1731671139780-774465544.jpg'),
+(3, 1, '八八八', '<p>免費的看台滿時間就可以領<a href=\"https://truth.bahamut.com.tw/s01/202411/forum/79688/ad2efcac72f98c61d3d25941d38404bb.PNG\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://truth.bahamut.com.tw/s01/202411/forum/79688/ad2efcac72f98c61d3d25941d38404bb.PNG\"></a></p><p><br></p>', '2024-11-15 19:48:46', '2024-11-15 19:49:20', 0, NULL),
+(4, 1, '測試', '<p><img src=\"http://localhost:3005/uploads/forum/forum-1731671775059-425392861.jpg\"></p>', '2024-11-15 19:56:16', '2024-11-15 19:58:53', 0, 'forum-1731671776516-111537069.jpg'),
+(5, 1, 'A', '<p><img src=\"http://localhost:3005/uploads/forum/forum-1731672028969-633199313.jpg\"></p>', '2024-11-15 20:00:39', '2024-11-15 20:02:01', 0, 'forum-1731672039168-901562017.jpg'),
+(6, 1, 'CC', '<p><img src=\"http://localhost:3005/uploads/forum/forum-1731672192384-310193902.jpg\"></p>', '2024-11-15 20:03:19', '2024-11-15 20:03:33', 0, 'forum-1731672199715-933187399.jpg'),
+(7, 1, 'C', '<p><img src=\"http://localhost:3005/uploads/forum/forum-1731672266179-197179029.jpg\"></p>', '2024-11-15 20:04:31', '2024-11-15 20:04:36', 0, 'forum-1731672271507-525169415.jpg'),
+(8, 1, 'A', '<p><img src=\"http://localhost:3005/uploads/forum/forum-1731672571257-984192949.jpg\"></p>', '2024-11-15 20:09:36', '2024-11-15 20:09:45', 0, 'forum-1731672576788-840069626.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `forum_replies`
+--
+
+CREATE TABLE `forum_replies` (
+  `id` int(10) NOT NULL,
+  `post_id` int(10) NOT NULL COMMENT '關聯的文章id',
+  `user_id` int(10) NOT NULL COMMENT '回覆者id',
+  `content` longtext NOT NULL COMMENT '回覆內容',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `status` tinyint(1) DEFAULT 1 COMMENT '狀態：1顯示、0隱藏'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 傾印資料表的資料 `forum_replies`
+--
+
+INSERT INTO `forum_replies` (`id`, `post_id`, `user_id`, `content`, `created_at`, `updated_at`, `status`) VALUES
+(1, 1, 1, '<p>試試看回復 ㄏㄏㄏ</p>', '2024-11-15 16:13:14', '2024-11-15 16:13:14', 1),
+(2, 1, 1, '<p>QQQQQQQQQQQQQQQQQ</p>', '2024-11-15 16:13:27', '2024-11-15 16:13:27', 1),
+(3, 4, 1, '<p>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</p>', '2024-11-15 19:57:02', '2024-11-15 19:57:02', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -175,11 +238,11 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `recipient_name`, `recipient_phone`, `recipient_address`, `total_amount`, `discount_amount`, `final_amount`, `coupon_id`, `payment_method`, `payment_status`, `order_status`, `created_at`, `updated_at`) VALUES
-(1, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 16425, 0, 16425, NULL, 'credit_card', 0, 1, '2024-11-12 13:17:02', '2024-11-12 13:17:02'),
-(2, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 10470, 0, 10470, NULL, 'credit_card', 0, 1, '2024-11-12 13:38:20', '2024-11-12 13:38:20'),
-(3, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 890, 0, 890, NULL, 'credit_card', 0, 1, '2024-11-12 13:44:44', '2024-11-12 13:44:44'),
-(4, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 3470, 0, 3470, NULL, 'credit_card', 0, 1, '2024-11-12 13:46:48', '2024-11-12 13:46:48'),
-(5, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 890, 0, 890, NULL, 'credit_card', 0, 1, '2024-11-12 13:50:45', '2024-11-12 13:50:45'),
+(1, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 16425, 0, 16425, NULL, 'credit_card', 1, 3, '2024-11-12 13:17:02', '2024-11-13 20:07:11'),
+(2, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 10470, 0, 10470, NULL, 'credit_card', 1, 3, '2024-11-12 13:38:20', '2024-11-13 20:07:24'),
+(3, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 890, 0, 890, NULL, 'credit_card', 1, 3, '2024-11-12 13:44:44', '2024-11-13 20:07:27'),
+(4, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 3470, 0, 3470, NULL, 'credit_card', 1, 3, '2024-11-12 13:46:48', '2024-11-13 20:07:37'),
+(5, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 890, 0, 890, NULL, 'credit_card', 1, 3, '2024-11-12 13:50:45', '2024-11-13 20:07:44'),
 (6, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 2610, 0, 2610, NULL, 'transfer', 0, 1, '2024-11-12 14:59:35', '2024-11-12 14:59:35'),
 (7, 1, '王大明', '0912345671', '台北市中正區1號', 1200, 0, 1200, NULL, 'credit_card', 1, 3, '2024-11-13 11:02:47', '2024-11-13 11:02:47'),
 (8, 2, '李小華', '0912345672', '台北市信義區2號', 1500, 100, 1400, NULL, 'credit_card', 1, 3, '2024-11-13 11:02:47', '2024-11-13 11:02:47'),
@@ -200,7 +263,15 @@ INSERT INTO `orders` (`id`, `user_id`, `recipient_name`, `recipient_phone`, `rec
 (23, 2, '李小華', '0912345672', '台北市信義區2號', 2400, 200, 2200, NULL, 'credit_card', 1, 3, '2024-11-13 11:02:47', '2024-11-13 11:02:47'),
 (24, 3, '張美玲', '0912345673', '台北市大安區3號', 1600, 0, 1600, NULL, 'transfer', 1, 3, '2024-11-13 11:02:47', '2024-11-13 11:02:47'),
 (25, 4, '陳志明', '0912345674', '台北市松山區4號', 2000, 100, 1900, NULL, 'credit_card', 1, 3, '2024-11-13 11:02:47', '2024-11-13 11:02:47'),
-(26, 5, '林小美', '0912345675', '台北市中山區5號', 2200, 200, 2000, NULL, 'transfer', 1, 3, '2024-11-13 11:02:47', '2024-11-13 11:02:47');
+(26, 5, '林小美', '0912345675', '台北市中山區5號', 2200, 200, 2000, NULL, 'transfer', 1, 3, '2024-11-13 11:02:47', '2024-11-13 11:02:47'),
+(27, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 7385, 0, 7385, NULL, 'credit_card', 0, 1, '2024-11-13 20:02:27', '2024-11-13 20:02:27'),
+(28, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 3000, 0, 3000, NULL, 'credit_card', 1, 3, '2024-11-13 20:19:47', '2024-11-13 20:19:47'),
+(29, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 2500, 0, 2500, NULL, 'credit_card', 1, 3, '2024-11-13 20:19:47', '2024-11-13 20:19:47'),
+(30, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 4000, 0, 4000, NULL, 'credit_card', 1, 3, '2024-11-13 20:19:47', '2024-11-13 20:19:47'),
+(31, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 3000, 0, 3000, NULL, 'credit_card', 1, 3, '2024-01-01 00:00:00', '2024-11-13 20:25:47'),
+(32, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 2500, 0, 2500, NULL, 'credit_card', 1, 3, '2024-02-01 00:00:00', '2024-11-13 20:25:47'),
+(33, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 4000, 0, 4000, NULL, 'credit_card', 1, 3, '2024-03-01 00:00:00', '2024-11-13 20:25:47'),
+(34, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 1500, 0, 1500, NULL, 'credit_card', 0, 1, '2024-11-13 20:25:47', '2024-11-13 20:25:47');
 
 -- --------------------------------------------------------
 
@@ -243,7 +314,22 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `type`, `quantity`, `
 (13, 5, 547, 'sale', 1, 890, NULL, NULL, NULL, NULL, NULL, '2024-11-12 13:50:45'),
 (14, 6, 548, 'sale', 1, 890, NULL, NULL, NULL, NULL, NULL, '2024-11-12 14:59:35'),
 (15, 6, 548, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-12 14:59:35'),
-(16, 6, 547, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-12 14:59:35');
+(16, 6, 547, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-12 14:59:35'),
+(17, 27, 548, 'rental', 2, 20, 800, 3, NULL, NULL, NULL, '2024-11-13 20:02:27'),
+(18, 27, 547, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-13 20:02:27'),
+(19, 27, 546, 'rental', 3, 35, 1400, 3, NULL, NULL, NULL, '2024-11-13 20:02:27'),
+(20, 27, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:02:27'),
+(21, 30, 1, 'sale', 1, 1000, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:19:47'),
+(22, 30, 2, 'sale', 1, 1500, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:19:47'),
+(23, 28, 3, 'sale', 1, 2500, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:19:47'),
+(24, 27, 4, 'sale', 1, 2000, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:19:47'),
+(25, 27, 5, 'sale', 1, 2000, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:19:47'),
+(26, 31, 1, 'sale', 1, 1000, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
+(27, 31, 2, 'sale', 1, 2000, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
+(28, 30, 3, 'sale', 1, 2500, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
+(29, 29, 4, 'sale', 2, 1500, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
+(30, 29, 5, 'sale', 1, 1000, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
+(31, 34, 6, 'sale', 1, 1500, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47');
 
 -- --------------------------------------------------------
 
@@ -861,11 +947,22 @@ INSERT INTO `product_comment` (`id`, `user_id`, `product_id`, `order_id`, `comme
 (73, 3, 3, 13, '買來送禮很適合，親友都說讚！', 5, '2024-10-09 11:03:24', '2024-11-13 11:03:24', 1),
 (74, 4, 4, 14, '遊戲設計很用心，但希望能有中文說明書。', 4, '2024-10-04 11:03:24', '2024-11-13 11:03:24', 1),
 (75, 5, 5, 15, '很適合培養親子互動，玩得很開心。', 5, '2024-09-29 11:03:24', '2024-11-13 11:03:24', 1),
-(76, 1, 2, 16, '整體來說不錯，但遊戲配件容易掉落，需要小心保管。', 3, '2024-09-24 11:03:24', '2024-11-13 11:03:24', 1),
+(76, 1, 2, 16, '整體來說不錯，但遊戲配件容易掉落，需要小心保管。', 3, '2024-09-24 11:03:24', '2024-11-13 19:58:12', -1),
 (77, 2, 3, 17, '朋友推薦買的，果然沒讓人失望，很好玩！', 5, '2024-09-19 11:03:24', '2024-11-13 11:03:24', 1),
 (78, 3, 4, 18, 'CP值很高的一款遊戲，值得推薦給大家。', 4, '2024-09-14 11:03:24', '2024-11-13 11:03:24', 1),
 (79, 4, 5, 19, '包裝精美，送禮自用兩相宜。', 5, '2024-09-09 11:03:24', '2024-11-13 11:03:24', 1),
-(80, 5, 1, 20, '經典好玩的桌遊，老少咸宜，很推薦！', 5, '2024-09-04 11:03:24', '2024-11-13 11:03:24', 1);
+(80, 5, 1, 20, '經典好玩的桌遊，老少咸宜，很推薦！', 5, '2024-09-04 11:03:24', '2024-11-13 11:03:24', 1),
+(81, 1, 1, 30, '商品品質很好，包裝完整，玩起來很有趣！', 5, '2024-11-12 20:19:47', '2024-11-13 20:19:47', 1),
+(82, 1, 2, 30, '整體不錯，但價格稍微偏高。', 4, '2024-11-11 20:19:47', '2024-11-13 20:19:47', 1),
+(83, 1, 3, 28, '遊戲規則清楚，適合全家一起玩。', 5, '2024-11-10 20:19:47', '2024-11-13 20:19:47', 1),
+(84, 1, 4, 27, '商品收到時有些刮傷，但遊戲本身很棒！', 3, '2024-11-09 20:19:47', '2024-11-13 20:19:47', 1),
+(85, 1, 5, 27, '出貨速度快，商品質感佳。', 4, '2024-11-08 20:19:47', '2024-11-13 20:19:47', 1),
+(86, 1, 1, 30, '很適合聚會時玩，朋友們都很喜歡！', 5, '2024-11-07 20:19:47', '2024-11-13 20:19:47', 1),
+(87, 1, 2, 30, '規則簡單易懂，新手也能快速上手。', 4, '2024-11-06 20:19:47', '2024-11-13 20:19:47', 1),
+(88, 1, 3, 28, '包裝精美，送禮自用兩相宜。', 5, '2024-11-05 20:19:47', '2024-11-13 20:19:47', 1),
+(89, 1, 4, 27, '物超所值，推薦購買！', 5, '2024-11-04 20:19:47', '2024-11-13 20:19:47', 1),
+(90, 1, 5, 27, '客服態度很好，解決問題很有效率。', 4, '2024-11-03 20:19:47', '2024-11-13 20:19:47', 1),
+(91, 1, 1, 31, '我只是來試試', 5, '2024-11-13 20:59:38', '2024-11-13 20:59:38', 1);
 
 -- --------------------------------------------------------
 
@@ -4709,7 +4806,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `account`, `password`, `phone`, `avatar_url`, `created_time`, `name`, `valid`, `birthday`, `address`) VALUES
-(1, 'test1@example.com', 'test1', '$2b$10$d9l5RQ2H.2415mnVjwbOVOO2VzW/f2V/d.dr24x9oc.DFRSfPWJD6', '0912345678', '/avatar/1730960944284-128471051.png', '2024-11-01 15:49:56', '測試用戶一', 1, '1990-01-01', '台北市測試區測試路123號'),
+(1, 'test1@example.com', 'test1', '$2b$10$d9l5RQ2H.2415mnVjwbOVOO2VzW/f2V/d.dr24x9oc.DFRSfPWJD6', '0912345678', 'http://localhost:3005/avatar/1731657336274-895151120.jpg', '2024-11-01 15:49:56', '測試用戶一', 1, '1990-01-01', '台北市測試區測試路123號'),
 (2, 'test2@example.com', 'test2', '123456', '0987654321', NULL, '2024-11-01 15:49:56', '測試用戶二', 1, '1995-05-05', '新北市測試區測試路456號'),
 (3, 'user1@example.com', 'user1', '$2b$10$YourHashedPassword1', '0912345671', NULL, '2024-11-13 10:38:43', '王大明', 1, '1990-01-01', '台北市中正區1號'),
 (4, 'user2@example.com', 'user2', '$2b$10$YourHashedPassword2', '0912345672', NULL, '2024-11-13 10:38:43', '李小華', 1, '1992-02-02', '台北市信義區2號'),
@@ -4780,6 +4877,21 @@ ALTER TABLE `favorites`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_favorite` (`user_id`,`product_id`),
   ADD KEY `fk_favorites_product` (`product_id`);
+
+--
+-- 資料表索引 `forum_posts`
+--
+ALTER TABLE `forum_posts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_user` (`user_id`);
+
+--
+-- 資料表索引 `forum_replies`
+--
+ALTER TABLE `forum_replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_post` (`post_id`),
+  ADD KEY `idx_user` (`user_id`);
 
 --
 -- 資料表索引 `newsletters`
@@ -4877,7 +4989,7 @@ ALTER TABLE `cart`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `coupons`
@@ -4889,7 +5001,19 @@ ALTER TABLE `coupons`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `forum_posts`
+--
+ALTER TABLE `forum_posts`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `forum_replies`
+--
+ALTER TABLE `forum_replies`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `newsletters`
@@ -4901,13 +5025,13 @@ ALTER TABLE `newsletters`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product`
@@ -4919,7 +5043,7 @@ ALTER TABLE `product`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product_comment`
 --
 ALTER TABLE `product_comment`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product_images`
@@ -4974,6 +5098,19 @@ ALTER TABLE `cart_items`
 ALTER TABLE `favorites`
   ADD CONSTRAINT `fk_favorites_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
   ADD CONSTRAINT `fk_favorites_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- 資料表的限制式 `forum_posts`
+--
+ALTER TABLE `forum_posts`
+  ADD CONSTRAINT `fk_posts_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- 資料表的限制式 `forum_replies`
+--
+ALTER TABLE `forum_replies`
+  ADD CONSTRAINT `fk_replies_post` FOREIGN KEY (`post_id`) REFERENCES `forum_posts` (`id`),
+  ADD CONSTRAINT `fk_replies_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- 資料表的限制式 `orders`

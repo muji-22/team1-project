@@ -20,24 +20,20 @@ const StepThree = ({
   const router = useRouter();
   const { fetchCartCount } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('credit_card'); // 'credit_card' or 'transfer'
+  const [paymentMethod, setPaymentMethod] = useState('credit_card');
 
-  // 計算總金額的輔助函數
   const calculateTotalAmount = () => {
     return cartOriginDtl.reduce((total, item) => {
       if (item.type === 'rental') {
-        // 租借商品：押金 + (租金 × 天數)
         return total + 
           (item.deposit * item.quantity) + 
           (item.rental_fee * (item.rental_days || 3) * item.quantity);
       } else {
-        // 一般商品：單價 × 數量
         return total + (item.price * item.quantity);
       }
     }, 0);
   };
 
-  // 計算各類商品的小計
   const calculateSubtotals = () => {
     const subtotals = {
       sale: 0,
@@ -59,13 +55,16 @@ const StepThree = ({
     return subtotals;
   };
 
-  // 確認訂單
   const handleConfirmOrder = async () => {
     if (isProcessing) return;
-
     setIsProcessing(true);
+
     try {
-      // 1. 準備訂單數據
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('請先登入');
+      }
+
       const orderData = {
         recipient_name: orderName,
         recipient_phone: orderPhone,
@@ -87,8 +86,6 @@ const StepThree = ({
         }))
       };
 
-      // 2. 發送訂單請求
-      const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:3005/api/orders', {
         method: 'POST',
         headers: {
@@ -98,24 +95,32 @@ const StepThree = ({
         body: JSON.stringify(orderData)
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || '建立訂單失敗');
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON解析錯誤:', jsonError);
+        throw new Error('系統錯誤，請稍後再試');
       }
 
-      // 3. 清空購物車
-      await fetch('http://localhost:3005/api/cart/clear', {
+      if (!response.ok) {
+        throw new Error(data?.message || '建立訂單失敗');
+      }
+
+      // 清空購物車
+      const clearCartResponse = await fetch('http://localhost:3005/api/cart/clear', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
-      // 4. 更新購物車數量
+      if (!clearCartResponse.ok) {
+        console.error('清空購物車失敗');
+      }
+
       await fetchCartCount();
 
-      // 5. 顯示成功訊息
       await Swal.fire({
         icon: 'success',
         title: '訂單建立成功！',
@@ -125,15 +130,14 @@ const StepThree = ({
         confirmButtonColor: '#40CBCE',
       });
 
-      // 6. 導向訂單詳情頁
       router.push(`/member/orders/${data.orderId}`);
 
     } catch (error) {
-      console.error('建立訂單錯誤:', error);
+      console.error('訂單處理錯誤:', error);
       await Swal.fire({
         icon: 'error',
         title: '訂單建立失敗',
-        text: error.message || '請稍後再試',
+        text: error.message || '系統錯誤，請稍後再試',
         confirmButtonText: '確定',
         confirmButtonColor: '#dc3545',
       });
@@ -148,12 +152,10 @@ const StepThree = ({
     <Container>
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
-          {/* 訂單資訊確認 */}
           <Card className="mb-4">
             <Card.Body>
               <h5 className="mb-4">訂單資訊確認</h5>
 
-              {/* 收件資訊 */}
               <div className="mb-4">
                 <h6 className="text-muted mb-3">收件資訊</h6>
                 <p className="mb-1">收件人：{orderName}</p>
@@ -163,9 +165,7 @@ const StepThree = ({
 
               <hr />
 
-              {/* 商品清單 */}
               <div className="mb-4">
-                {/* 購買商品列表 */}
                 {cartOriginDtl.filter(item => item.type === 'sale').length > 0 && (
                   <>
                     <h6 className="text-muted mb-3">購買商品</h6>
@@ -200,7 +200,6 @@ const StepThree = ({
                   </>
                 )}
 
-                {/* 租借商品列表 */}
                 {cartOriginDtl.filter(item => item.type === 'rental').length > 0 && (
                   <>
                     <h6 className="text-muted mb-3">租借商品</h6>
@@ -243,7 +242,6 @@ const StepThree = ({
 
               <hr />
 
-              {/* 付款方式選擇 */}
               <div className="mb-4">
                 <h6 className="text-muted mb-3">付款方式</h6>
                 <Form>
@@ -267,7 +265,6 @@ const StepThree = ({
                 </Form>
               </div>
 
-              {/* 金額摘要 */}
               <div className="bg-light p-3 rounded">
                 <div className="d-flex justify-content-between mb-2">
                   <span>商品總金額</span>
@@ -293,7 +290,6 @@ const StepThree = ({
             </Card.Body>
           </Card>
 
-          {/* 按鈕區 */}
           <div className="d-flex justify-content-between gap-3 mb-5">
             <Button
               variant="outline-secondary"
