@@ -34,8 +34,32 @@ const upload = multer({
   }
 })
 
+// 錯誤處理中間件
+const errorHandler = (err, req, res, next) => {
+  console.error('上傳錯誤:', err)
+  
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({
+      status: 'error',
+      message: '檔案大小超過限制'
+    })
+  }
+  
+  if (err.code === 'UNSUPPORTED_MEDIA_TYPE') {
+    return res.status(400).json({
+      status: 'error',
+      message: '不支援的檔案格式'
+    })
+  }
+
+  res.status(500).json({
+    status: 'error',
+    message: err.message || '圖片上傳失敗'
+  })
+}
+
 // 圖片上傳 API
-router.post('/forum-image', authenticateToken, upload.single('image'), async (req, res) => {
+router.post('/forum-image', authenticateToken, upload.single('image'), async (req, res, next) => {
   try {
     const file = req.file
     if (!file) {
@@ -44,6 +68,9 @@ router.post('/forum-image', authenticateToken, upload.single('image'), async (re
         message: '請選擇要上傳的圖片' 
       })
     }
+
+    // 確保目錄存在
+    await fs.ensureDir(uploadDir)
 
     // 生成唯一檔名
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`
@@ -79,22 +106,20 @@ router.post('/forum-image', authenticateToken, upload.single('image'), async (re
     const filepath = path.join(uploadDir, filename)
     await image.toFile(filepath)
 
-    // 回傳圖片網址
-    const imageUrl = `/uploads/forum/${filename}`
+    // 回傳圖片網址 (使用絕對路徑)
     res.json({
       status: 'success',
       data: {
-        url: imageUrl
+        url: `/uploads/forum/${filename}`
       }
     })
 
   } catch (error) {
-    console.error('圖片上傳失敗:', error)
-    res.status(500).json({ 
-      status: 'error',
-      message: '圖片上傳失敗'
-    })
+    next(error)
   }
 })
+
+// 註冊錯誤處理中間件
+router.use(errorHandler)
 
 export default router

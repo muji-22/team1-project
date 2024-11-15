@@ -35,7 +35,10 @@ app.use(
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
+// 設定靜態檔案目錄
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')))
 
 // API 路由
 app.use('/api/products', productRouter)
@@ -51,7 +54,7 @@ app.use('/api/recommendations', recommendationsRouter)
 app.use('/api/orders', orderRouter)
 app.use('/api/google', googleAuthRouter)
 app.use('/api/forum', forumRouter)
-app.use('/api/upload', uploadRouter)
+app.use('/api/upload', uploadRouter)  // 添加上傳路由
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {

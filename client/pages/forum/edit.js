@@ -1,4 +1,3 @@
-// pages/forum/edit.js
 import React, { useState, useEffect } from 'react'
 import { Container, Form, Button, Card } from 'react-bootstrap'
 import { useRouter } from 'next/router'
@@ -144,65 +143,86 @@ export default function PostEdit() {
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
-    );
+    )
   }
 
   // 在渲染編輯器時添加條件檢查
   return (
     <Container className="py-4">
-      <Card className="shadow-sm">
-        <Card.Body>
-          <h2 className="mb-4">{id ? '編輯文章' : '發表新文章'}</h2>
+      <div className="forum-edit-container">
+        <Card>
+          <Card.Body>
+            <h2 className="mb-4">{id ? '編輯文章' : '發表新文章'}</h2>
 
-          <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            {/* 標題 */}
-            <Form.Group className="mb-3">
-              <Form.Label>標題</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="請輸入文章標題"
-                maxLength={100}
-              />
-              <Form.Control.Feedback type="invalid">
-                請輸入文章標題
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            {/* 內容 */}
-            <Form.Group className="mb-4">
-              <Form.Label>內容</Form.Label>
-              {editorReady && (
-                <Editor
-                  initialContent={content}
-                  onChange={handleEditorChange}
-                  readOnly={loading}
+            <Form 
+              noValidate 
+              validated={validated} 
+              onSubmit={handleSubmit}
+            >
+              {/* 標題 */}
+              <Form.Group className="mb-3">
+                <Form.Label>標題</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="請輸入文章標題"
+                  maxLength={100}
                 />
-              )}
-            </Form.Group>
+                <Form.Control.Feedback type="invalid">
+                  請輸入文章標題
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            {/* 按鈕區 */}
-            <div className="d-flex gap-2 justify-content-end">
-              <Button
-                variant="outline-secondary"
-                onClick={() => router.back()}
-                disabled={loading}
-              >
-                取消
-              </Button>
-              <Button
-                variant="custom"
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? '處理中...' : (id ? '更新文章' : '發表文章')}
-              </Button>
-            </div>
-          </Form>
-        </Card.Body>
-      </Card>
+              {/* 內容 */}
+              <Form.Group className="mb-4">
+                <Form.Label>內容</Form.Label>
+                <div className="editor-container">
+                  {editorReady && (
+                    <Editor
+                      initialContent={content}
+                      onChange={handleEditorChange}
+                      readOnly={loading}
+                    />
+                  )}
+                </div>
+              </Form.Group>
+
+              {/* 按鈕區 */}
+              <div className="d-flex gap-2 justify-content-end">
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => router.back()}
+                  disabled={loading}
+                >
+                  取消
+                </Button>
+                <Button
+                  variant="custom"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? '處理中...' : (id ? '更新文章' : '發表文章')}
+                </Button>
+              </div>
+            </Form>
+          </Card.Body>
+        </Card>
+
+        <style jsx global>{`
+          .forum-edit-container {
+            margin-bottom: 2rem;
+          }
+          .editor-container {
+            min-height: 350px;
+            margin-bottom: 1rem;
+          }
+          .editor-container .ql-editor {
+            min-height: 300px;
+          }
+        `}</style>
+      </div>
     </Container>
   )
 }
