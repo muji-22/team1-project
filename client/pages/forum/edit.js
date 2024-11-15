@@ -215,11 +215,12 @@ export default function PostEdit() {
             margin-bottom: 2rem;
           }
           .editor-container {
-            min-height: 350px;
-            margin-bottom: 1rem;
+            min-height: 50vh;
+            margin-bottom: 4rem;
           }
           .editor-container .ql-editor {
-            min-height: 300px;
+            min-height: 50vh;
+            border: 1px solid #ccc;
           }
         `}</style>
       </div>
