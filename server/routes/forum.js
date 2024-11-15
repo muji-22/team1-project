@@ -1,9 +1,13 @@
-// routes/forum.js
 import express from 'express'
 import pool from '../config/db.js'
 import { authenticateToken } from '../middlewares/auth.js'
+import fs from 'fs-extra'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 const router = express.Router()
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // 取得文章列表 (含分頁)
 router.get('/posts', async (req, res) => {
@@ -105,8 +109,9 @@ router.get('/posts/:id', async (req, res) => {
 
 // 新增文章 (需登入)
 router.post('/posts', authenticateToken, async (req, res) => {
+  const conn = await pool.getConnection()
   try {
-    const { title, content } = req.body
+    const { title, content, cover_image } = req.body // 從請求中獲取 cover_image
     const userId = req.user.id
 
     // 驗證標題和內容
@@ -117,11 +122,15 @@ router.post('/posts', authenticateToken, async (req, res) => {
       })
     }
 
-    // 新增文章
-    const [result] = await pool.execute(
-      'INSERT INTO forum_posts (user_id, title, content) VALUES (?, ?, ?)',
-      [userId, title, content]
+    await conn.beginTransaction()
+
+    // 新增文章 (加入 cover_image)
+    const [result] = await conn.execute(
+      'INSERT INTO forum_posts (user_id, title, content, cover_image) VALUES (?, ?, ?, ?)',
+      [userId, title, content, cover_image]
     )
+
+    await conn.commit()
 
     res.status(201).json({
       status: 'success',
@@ -131,24 +140,30 @@ router.post('/posts', authenticateToken, async (req, res) => {
       }
     })
   } catch (error) {
+    await conn.rollback()
     console.error('發文失敗:', error)
     res.status(500).json({
       status: 'error',
       message: '發文失敗'
     })
+  } finally {
+    conn.release()
   }
 })
 
 // 更新文章 (需登入)
 router.put('/posts/:id', authenticateToken, async (req, res) => {
+  const conn = await pool.getConnection()
   try {
-    const { title, content } = req.body
+    const { title, content, cover_image } = req.body
     const userId = req.user.id
     const postId = req.params.id
 
-    // 檢查是否為文章作者
-    const [posts] = await pool.execute(
-      'SELECT user_id FROM forum_posts WHERE id = ? AND status = 1',
+    await conn.beginTransaction()
+
+    // 檢查是否為文章作者和獲取舊的圖片資訊
+    const [posts] = await conn.execute(
+      'SELECT user_id, cover_image as old_cover_image FROM forum_posts WHERE id = ? AND status = 1',
       [postId]
     )
 
@@ -166,34 +181,52 @@ router.put('/posts/:id', authenticateToken, async (req, res) => {
       })
     }
 
-    // 更新文章
-    await pool.execute(
-      'UPDATE forum_posts SET title = ?, content = ? WHERE id = ?',
-      [title, content, postId]
+    // 如果有新的封面圖片且與舊圖片不同，刪除舊圖片
+    if (cover_image && posts[0].old_cover_image && cover_image !== posts[0].old_cover_image) {
+      const oldImagePath = path.join(__dirname, '../public/uploads/forum', posts[0].old_cover_image)
+      try {
+        await fs.remove(oldImagePath)
+      } catch (error) {
+        console.error('刪除舊封面圖片失敗:', error)
+      }
+    }
+
+    // 更新文章 (加入 cover_image)
+    await conn.execute(
+      'UPDATE forum_posts SET title = ?, content = ?, cover_image = ? WHERE id = ?',
+      [title, content, cover_image, postId]
     )
+
+    await conn.commit()
 
     res.json({
       status: 'success',
       message: '文章更新成功'
     })
   } catch (error) {
+    await conn.rollback()
     console.error('更新文章失敗:', error)
     res.status(500).json({
       status: 'error',
       message: '更新文章失敗'
     })
+  } finally {
+    conn.release()
   }
 })
 
 // 刪除文章 (需登入)
 router.delete('/posts/:id', authenticateToken, async (req, res) => {
+  const conn = await pool.getConnection()
   try {
     const userId = req.user.id
     const postId = req.params.id
 
-    // 檢查是否為文章作者
-    const [posts] = await pool.execute(
-      'SELECT user_id FROM forum_posts WHERE id = ? AND status = 1',
+    await conn.beginTransaction()
+
+    // 檢查是否為文章作者並獲取封面圖片資訊
+    const [posts] = await conn.execute(
+      'SELECT user_id, cover_image FROM forum_posts WHERE id = ? AND status = 1',
       [postId]
     )
 
@@ -212,21 +245,36 @@ router.delete('/posts/:id', authenticateToken, async (req, res) => {
     }
 
     // 軟刪除文章
-    await pool.execute(
+    await conn.execute(
       'UPDATE forum_posts SET status = 0 WHERE id = ?',
       [postId]
     )
+
+    // 如果有封面圖片，刪除圖片檔案
+    if (posts[0].cover_image) {
+      const imagePath = path.join(__dirname, '../public/uploads/forum', posts[0].cover_image)
+      try {
+        await fs.remove(imagePath)
+      } catch (error) {
+        console.error('刪除封面圖片失敗:', error)
+      }
+    }
+
+    await conn.commit()
 
     res.json({
       status: 'success',
       message: '文章刪除成功'
     })
   } catch (error) {
+    await conn.rollback()
     console.error('刪除文章失敗:', error)
     res.status(500).json({
       status: 'error',
       message: '刪除文章失敗'
     })
+  } finally {
+    conn.release()
   }
 })
 
