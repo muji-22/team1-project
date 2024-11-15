@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-14 15:28:36
+-- 產生時間： 2024-11-15 16:37:18
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -34,8 +34,16 @@ CREATE TABLE `forum_posts` (
   `content` longtext NOT NULL COMMENT '文章內容',
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `status` tinyint(1) DEFAULT 1 COMMENT '狀態：1顯示、0隱藏'
+  `status` tinyint(1) DEFAULT 1 COMMENT '狀態：1顯示、0隱藏',
+  `cover_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 傾印資料表的資料 `forum_posts`
+--
+
+INSERT INTO `forum_posts` (`id`, `user_id`, `title`, `content`, `created_at`, `updated_at`, `status`, `cover_image`) VALUES
+(1, 1, 'CC', '<p>CCCC<img src=\"http://localhost:3005/uploads/forum/forum-1731656835050-154417418.jpg\"></p>', '2024-11-15 15:47:33', '2024-11-15 15:47:33', 1, NULL);
 
 --
 -- 已傾印資料表的索引
@@ -56,7 +64,7 @@ ALTER TABLE `forum_posts`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `forum_posts`
 --
 ALTER TABLE `forum_posts`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 已傾印資料表的限制式
