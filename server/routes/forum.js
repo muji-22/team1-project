@@ -14,23 +14,39 @@ const __dirname = path.dirname(__filename)
 function extractImagesFromContent(content) {
   if (!content) return [];
   
-  const imgRegex = /<img[^>]+src="([^">]+)"/g;
-  const images = new Set(); // 使用 Set 來避免重複
-  let match;
-  
-  while ((match = imgRegex.exec(content)) !== null) {
-    const src = match[1];
-    // 只處理我們上傳的圖片
-    if (src.startsWith('/uploads/forum/')) {
-      const filename = src.split('/').pop();
-      // 基本的檔名驗證
-      if (filename && !filename.includes('..') && !filename.includes('/')) {
-        images.add(filename);
+  try {
+    // 去除任何 HTML encode
+    content = content.replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+    
+    const images = new Set(); // 使用 Set 來避免重複
+    
+    // 針對編輯器的圖片格式進行匹配
+    // 同時處理一般的 <img> 標籤和編輯器特殊格式
+    const regex = /<img[^>]+src="([^">]+)"[^>]*>|"url":"([^"]+)"/g;
+    let match;
+
+    while ((match = regex.exec(content)) !== null) {
+      // match[1] 是一般 img 標籤的 src
+      // match[2] 是編輯器特殊格式的 url
+      const imageUrl = match[1] || match[2];
+      
+      if (imageUrl && imageUrl.includes('/uploads/forum/')) {
+        // 取得檔名
+        const filename = imageUrl.split('/').pop();
+        // 基本的檔名驗證
+        if (filename && !filename.includes('..') && !filename.includes('/')) {
+          images.add(filename);
+        }
       }
     }
+
+    console.log('Extracted images:', Array.from(images)); // 用於除錯
+    return Array.from(images);
+
+  } catch (error) {
+    console.error('解析內容圖片失敗:', error);
+    return [];
   }
-  
-  return Array.from(images);
 }
 
 // 輔助函數：刪除單個圖片
