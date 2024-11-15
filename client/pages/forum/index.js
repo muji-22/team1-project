@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { FaSearch, FaRegCommentDots } from 'react-icons/fa'
+import { FaSearch, FaRegCommentDots, FaRegNewspaper } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import 'moment/locale/zh-tw'
@@ -116,21 +116,42 @@ export default function ForumList() {
           <Row xs={1} md={2} lg={3} className="g-4 mb-4">
             {posts.map((post) => (
               <Col key={post.id}>
-                <Card className="h-100">
-                  <Card.Body>
+                <Card className="h-100 forum-card">
+                  {/* 封面圖片區 */}
+                  <Link 
+                    href={`/forum/${post.id}`}
+                    className="text-decoration-none"
+                  >
+                    <div className="cover-image-wrapper">
+                      {post.cover_image ? (
+                        <Card.Img
+                          variant="top"
+                          src={`http://localhost:3005/uploads/forum/${post.cover_image}`}
+                          alt={post.title}
+                          className="cover-image"
+                          onError={(e) => {
+                            e.target.src = "http://localhost:3005/productImages/default-post.png"
+                          }}
+                        />
+                      ) : (
+                        <div className="default-cover">
+                          <FaRegNewspaper size={32} className="text-muted" />
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+
+                  <Card.Body className="d-flex flex-column">
                     <Link 
                       href={`/forum/${post.id}`}
                       className="text-decoration-none text-dark"
                     >
-                      <Card.Title className="mb-3">{post.title}</Card.Title>
+                      <Card.Title className="h5 mb-3">
+                        {post.title}
+                      </Card.Title>
                     </Link>
-                    <Card.Text className="text-muted small">
-                      {post.content.length > 100 
-                        ? post.content.substring(0, 100) + '...' 
-                        : post.content
-                      }
-                    </Card.Text>
                   </Card.Body>
+                  
                   <Card.Footer className="bg-white">
                     <div className="d-flex justify-content-between align-items-center">
                       <div className="d-flex align-items-center">
@@ -146,13 +167,15 @@ export default function ForumList() {
                         />
                         <span className="ms-2 small">{post.author_name}</span>
                       </div>
-                      <div className="d-flex align-items-center text-muted small">
-                        <FaRegCommentDots className="me-1" />
-                        <span>{post.reply_count}</span>
+                      <div className="d-flex align-items-center gap-3">
+                        <div className="d-flex align-items-center text-muted small">
+                          <FaRegCommentDots className="me-1" />
+                          <span>{post.reply_count}</span>
+                        </div>
+                        <small className="text-muted">
+                          {moment(post.created_at).fromNow()}
+                        </small>
                       </div>
-                    </div>
-                    <div className="text-muted small mt-2">
-                      {moment(post.created_at).fromNow()}
                     </div>
                   </Card.Footer>
                 </Card>
@@ -183,6 +206,54 @@ export default function ForumList() {
           <p className="text-muted">成為第一個發文的人吧！</p>
         </div>
       )}
+
+      {/* 添加樣式 */}
+      <style jsx global>{`
+        .forum-card {
+          transition: transform 0.2s;
+        }
+        
+        .forum-card:hover {
+          transform: translateY(-5px);
+        }
+
+        .cover-image-wrapper {
+          position: relative;
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
+          background-color: #f8f9fa;
+        }
+
+        .cover-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .forum-card:hover .cover-image {
+          transform: scale(1.05);
+        }
+
+        .default-cover {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #f8f9fa;
+        }
+
+        .card-title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          min-height: 3rem;
+        }
+      `}</style>
     </Container>
   )
 }

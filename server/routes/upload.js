@@ -35,13 +35,13 @@ const upload = multer({
 })
 
 // 錯誤處理中間件
-const errorHandler = (err, req, res, next) => {
+const handleError = (err, req, res, next) => {
   console.error('上傳錯誤:', err)
   
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({
       status: 'error',
-      message: '檔案大小超過限制'
+      message: '檔案大小不能超過 5MB'
     })
   }
   
@@ -54,72 +54,53 @@ const errorHandler = (err, req, res, next) => {
 
   res.status(500).json({
     status: 'error',
-    message: err.message || '圖片上傳失敗'
+    message: '圖片上傳失敗'
   })
 }
 
 // 圖片上傳 API
-router.post('/forum-image', authenticateToken, upload.single('image'), async (req, res, next) => {
+router.post('/forum-image', authenticateToken, upload.single('image'), async (req, res) => {
   try {
-    const file = req.file
-    if (!file) {
-      return res.status(400).json({ 
-        status: 'error', 
-        message: '請選擇要上傳的圖片' 
+    if (!req.file) {
+      return res.status(400).json({
+        status: 'error',
+        message: '請選擇要上傳的圖片'
       })
     }
 
-    // 確保目錄存在
-    await fs.ensureDir(uploadDir)
-
-    // 生成唯一檔名
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`
-    const ext = path.extname(file.originalname).toLowerCase()
-    const filename = `forum-${uniqueSuffix}${ext}`
+    const filename = `forum-${uniqueSuffix}.jpg`
+    const filepath = path.join(uploadDir, filename)
 
     // 使用 sharp 處理圖片
-    const image = sharp(file.buffer)
-    const metadata = await image.metadata()
-
-    // 如果圖片太大，進行壓縮
-    if (metadata.width > 1920) {
-      image.resize(1920, null, {
-        withoutEnlargement: true
+    await sharp(req.file.buffer)
+      .resize(1200, 630, {
+        fit: 'cover',
+        position: 'centre'
       })
-    }
+      .jpeg({
+        quality: 80,
+        progressive: true
+      })
+      .toFile(filepath)
 
-    // 根據不同格式進行最佳化
-    switch (metadata.format) {
-      case 'jpeg':
-        image.jpeg({ quality: 80 })
-        break
-      case 'png':
-        image.png({ compressionLevel: 9 })
-        break
-      case 'webp':
-        image.webp({ quality: 80 })
-        break
-      // gif 保持原樣
-    }
-
-    // 儲存圖片
-    const filepath = path.join(uploadDir, filename)
-    await image.toFile(filepath)
-
-    // 回傳圖片網址 (使用絕對路徑)
     res.json({
       status: 'success',
       data: {
+        filename: filename,
         url: `/uploads/forum/${filename}`
       }
     })
-
   } catch (error) {
-    next(error)
+    console.error('圖片處理失敗:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '圖片處理失敗'
+    })
   }
 })
 
 // 註冊錯誤處理中間件
-router.use(errorHandler)
+router.use(handleError)
 
 export default router
