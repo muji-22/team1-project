@@ -1,34 +1,27 @@
-// components/forum/Editor.js
-import React, { useState, useEffect } from 'react'
+import React, { useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 import PropTypes from 'prop-types'
 
-const ReactQuill = dynamic(
-  () => import('react-quill'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="editor-loading">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">載入編輯器中...</span>
-        </div>
-      </div>
-    )
-  }
-)
+const ReactQuill = dynamic(() => import('react-quill'), {
+  ssr: false,
+  loading: () => <div>載入中...</div>
+})
 
-const QuillEditor = ({
-  editorState,
-  onEditorStateChange,
-  placeholder = '請輸入內容...',
-  height = '300px'
-}) => {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+const QuillEditor = ({ value, onChange, readOnly }) => {
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'align': [] }],
+        ['link', 'image'],
+        ['clean']
+      ],
+      handlers: { image: imageHandler }
+    }
+  }), [])
 
   // 圖片上傳處理函數
   function imageHandler() {
@@ -50,7 +43,7 @@ const QuillEditor = ({
           const response = await fetch('http://localhost:3005/api/upload/forum-image', {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${token}`
+              'Authorization': `Bearer ${token}` 
             },
             body: formData
           })
@@ -79,89 +72,59 @@ const QuillEditor = ({
     }
   }
 
-  const modules = {
-    toolbar: {
-      container: [
-        [{ 'header': [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'align': [] }],
-        ['link', 'image'],
-        ['clean']
-      ],
-      handlers: {
-        image: imageHandler
-      }
-    }
-  }
-
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline',
-    'list', 'bullet',
-    'align',
-    'link', 'image'
-  ]
-
-  if (!mounted) return null
-
   return (
-    <div className="editor-wrapper">
+    <div className="quill-editor">
       <ReactQuill
         theme="snow"
-        value={editorState}
-        onChange={onEditorStateChange}
+        value={value || ''}
+        onChange={onChange}
         modules={modules}
-        formats={formats}
-        placeholder={placeholder}
-        style={{ height }}
+        formats={[
+          'header',
+          'bold', 'italic', 'underline',
+          'list', 'bullet',
+          'align',
+          'link', 'image'
+        ]}
+        readOnly={readOnly}
+        className="editor-inner"
       />
       <style jsx global>{`
-  .editor-wrapper {
-    background: white;
-    border-radius: 4px;
-    height: ${height}; /* 固定整體高度 */
-    display: flex;
-    flex-direction: column;
-  }
+        .quill-editor {
+          display: flex;
+          flex-direction: column;
+          min-height: 500px;
+          width: 100%;
+          background: white;
+        }
 
-  .ql-toolbar {
-    border-top: 1px solid #dee2e6 !important;
-    border-left: 1px solid #dee2e6 !important;
-    border-right: 1px solid #dee2e6 !important;
-    border-bottom: none !important;
-    border-radius: 4px 4px 0 0;
-    background: #f8f9fa;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 1000 !important;
-    flex-shrink: 0; /* 防止工具列縮小 */
-  }
+        .quill-editor .ql-toolbar {
+          border: 1px solid #ccc;
+          border-bottom: none;
+          border-radius: 4px 4px 0 0;
+          background: #f8f9fa;
+        }
 
-  .ql-container {
-    border: 1px solid #dee2e6 !important;
-    border-radius: 0 0 4px 4px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 0 !important; /* 讓容器自適應剩餘空間 */
-  }
+        .quill-editor .ql-container {
+          flex-grow: 1;
+          min-height: 450px;
+          border: 1px solid #ccc;
+          border-radius: 0 0 4px 4px;
+          font-size: 16px;
+        }
 
-  .ql-editor {
-    height: 100% !important; /* 填滿容器 */
-    max-height: 100% !important;
-    overflow-y: auto !important; /* 允許垂直捲動 */
-  }
-`}</style>
+        .quill-editor .ql-editor {
+          min-height: 450px;
+        }
+      `}</style>
     </div>
   )
 }
 
 QuillEditor.propTypes = {
-  editorState: PropTypes.string,
-  onEditorStateChange: PropTypes.func,
-  placeholder: PropTypes.string,
-  height: PropTypes.string
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool
 }
 
 export default QuillEditor

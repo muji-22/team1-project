@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Form, Button, Card } from 'react-bootstrap'
+import { Container, Form, Button } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'react-toastify'
 import dynamic from 'next/dynamic'
 
-// 動態載入編輯器，並添加載入時的佔位元件
-const Editor = dynamic(
-  () => import('@/components/forum/Editor'),
-  { 
-    ssr: false,
-    loading: () => <p>載入編輯器中...</p>
-  }
-)
+const Editor = dynamic(() => import('@/components/forum/Editor'), { ssr: false })
 
 export default function PostEdit() {
   const router = useRouter()
@@ -22,15 +15,11 @@ export default function PostEdit() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [validated, setValidated] = useState(false)
-  const [editorReady, setEditorReady] = useState(false)
-
-  useEffect(() => {
-    // 確保組件完全掛載後再初始化編輯器
-    setEditorReady(true)
-  }, [])
 
   const handleEditorChange = (newContent) => {
-    setContent(newContent)
+    if (newContent !== content) {  // 只在內容真的改變時更新
+      setContent(newContent)
+    }
   }
 
   // 檢查登入狀態
@@ -150,77 +139,80 @@ export default function PostEdit() {
   return (
     <Container className="py-4">
       <div className="forum-edit-container">
-        <Card>
-          <Card.Body>
-            <h2 className="mb-4">{id ? '編輯文章' : '發表新文章'}</h2>
+        <h2 className="mb-4">{id ? '編輯文章' : '發表新文章'}</h2>
 
-            <Form 
-              noValidate 
-              validated={validated} 
-              onSubmit={handleSubmit}
+        <Form 
+          noValidate 
+          validated={validated} 
+          onSubmit={handleSubmit}
+          className="edit-form"
+        >
+          {/* 標題 */}
+          <Form.Group className="mb-3">
+            <Form.Label>標題</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="請輸入文章標題"
+              maxLength={100}
+            />
+            <Form.Control.Feedback type="invalid">
+              請輸入文章標題
+            </Form.Control.Feedback>
+          </Form.Group>
+
+          {/* 內容 */}
+          <Form.Group className="mb-4">
+            <Form.Label>內容</Form.Label>
+            <Editor
+              value={content}
+              onChange={handleEditorChange}
+              readOnly={loading}
+            />
+          </Form.Group>
+
+          {/* 按鈕區 */}
+          <div className="d-flex gap-2 justify-content-end">
+            <Button
+              variant="outline-secondary"
+              onClick={() => router.back()}
+              disabled={loading}
             >
-              {/* 標題 */}
-              <Form.Group className="mb-3">
-                <Form.Label>標題</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="請輸入文章標題"
-                  maxLength={100}
-                />
-                <Form.Control.Feedback type="invalid">
-                  請輸入文章標題
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              {/* 內容 */}
-              <Form.Group className="mb-4">
-                <Form.Label>內容</Form.Label>
-                <div className="editor-container">
-                  {editorReady && (
-                    <Editor
-                      initialContent={content}
-                      onChange={handleEditorChange}
-                      readOnly={loading}
-                    />
-                  )}
-                </div>
-              </Form.Group>
-
-              {/* 按鈕區 */}
-              <div className="d-flex gap-2 justify-content-end">
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => router.back()}
-                  disabled={loading}
-                >
-                  取消
-                </Button>
-                <Button
-                  variant="custom"
-                  type="submit"
-                  disabled={loading}
-                >
-                  {loading ? '處理中...' : (id ? '更新文章' : '發表文章')}
-                </Button>
-              </div>
-            </Form>
-          </Card.Body>
-        </Card>
+              取消
+            </Button>
+            <Button
+              variant="custom"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? '處理中...' : (id ? '更新文章' : '發表文章')}
+            </Button>
+          </div>
+        </Form>
 
         <style jsx global>{`
           .forum-edit-container {
             margin-bottom: 2rem;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          .edit-form {
+            max-width: 100%;
+          }
+          .ql-editor {
+            min-height: 300px;
+            background: white;
           }
           .editor-container {
-            min-height: 50vh;
-            margin-bottom: 4rem;
+            min-height: 400px;
+            margin-bottom: 1rem;
           }
-          .editor-container .ql-editor {
-            min-height: 50vh;
-            border: 1px solid #ccc;
+          .form-group {
+            margin-bottom: 1.5rem;
           }
         `}</style>
       </div>
