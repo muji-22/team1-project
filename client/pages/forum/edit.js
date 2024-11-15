@@ -5,7 +5,10 @@ import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'react-toastify'
 import dynamic from 'next/dynamic'
 
-const Editor = dynamic(() => import('@/components/forum/Editor'), { ssr: false })
+const Editor = dynamic(() => import('@/components/forum/Editor'), {
+  ssr: false,
+  loading: () => <p>載入編輯器中...</p>
+})
 
 export default function PostEdit() {
   const router = useRouter()
@@ -16,65 +19,62 @@ export default function PostEdit() {
   const [content, setContent] = useState('')
   const [validated, setValidated] = useState(false)
 
-  const handleEditorChange = (newContent) => {
-    if (newContent !== content) {  // 只在內容真的改變時更新
-      setContent(newContent)
-    }
-  }
-
   // 檢查登入狀態
   useEffect(() => {
     const checkAuth = async () => {
-      // 等待身份驗證完成
-      if (authLoading) return;
+      if (authLoading) return
       
-      // 檢查 token 和登入狀態
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token')
       if (!token || !isAuthenticated()) {
         toast.error('請先登入')
         router.push('/auth/login')
-        return;
       }
-    };
+    }
 
-    checkAuth();
-  }, [isAuthenticated, authLoading, router]);
+    checkAuth()
+  }, [isAuthenticated, authLoading, router])
 
-  // 如果是編輯模式，載入文章內容
+  // 載入文章內容（編輯模式）
   useEffect(() => {
     const fetchPost = async () => {
-      if (!id || authLoading) return;  // 等待身份驗證完成
+      if (!id || authLoading) return
 
       try {
-        setLoading(true);
-        const token = localStorage.getItem('token');
+        setLoading(true)
+        const token = localStorage.getItem('token')
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts/${id}`,
+          `http://localhost:3005/api/forum/posts/${id}`,
           {
             headers: {
               'Authorization': `Bearer ${token}`
             }
           }
-        );
-        const data = await response.json();
+        )
 
-        if (response.ok) {
-          setTitle(data.data.post.title);
-          setContent(data.data.post.content);
-        } else {
-          throw new Error(data.message || '載入文章失敗');
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.message || '載入文章失敗')
         }
-      } catch (error) {
-        console.error('載入文章失敗:', error);
-        toast.error('載入文章失敗');
-        router.push('/forum');
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchPost();
-  }, [id, authLoading]);
+        const data = await response.json()
+        setTitle(data.data.post.title)
+        setContent(data.data.post.content)
+      } catch (error) {
+        console.error('載入文章失敗:', error)
+        toast.error(error.message)
+        router.push('/forum')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPost()
+  }, [id, authLoading])
+
+  // 編輯器內容變更處理
+  const handleEditorChange = (newContent) => {
+    setContent(newContent)
+  }
 
   // 表單提交處理
   const handleSubmit = async (e) => {
@@ -87,7 +87,8 @@ export default function PostEdit() {
       return
     }
 
-    if (!content) {
+    // 內容驗證
+    if (!content || content.trim() === '<p><br></p>') {
       toast.warning('請輸入文章內容')
       return
     }
@@ -96,26 +97,31 @@ export default function PostEdit() {
       setLoading(true)
       const token = localStorage.getItem('token')
       const url = id 
-        ? `${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts/${id}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts`
+        ? `http://localhost:3005/api/forum/posts/${id}`
+        : 'http://localhost:3005/api/forum/posts'
       
+      const postData = {
+        title: title.trim(),
+        content: content
+      }
+
       const response = await fetch(url, {
         method: id ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ title, content })
+        body: JSON.stringify(postData)
       })
 
-      const data = await response.json()
-
-      if (response.ok) {
-        toast.success(id ? '文章更新成功' : '發文成功')
-        router.push(id ? `/forum/${id}` : '/forum')
-      } else {
-        throw new Error(data.message || (id ? '更新文章失敗' : '發文失敗'))
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || (id ? '更新文章失敗' : '發文失敗'))
       }
+
+      await response.json()
+      toast.success(id ? '文章更新成功' : '發文成功')
+      router.push(id ? `/forum/${id}` : '/forum')
     } catch (error) {
       console.error(id ? '更新文章失敗:' : '發文失敗:', error)
       toast.error(error.message)
@@ -124,7 +130,7 @@ export default function PostEdit() {
     }
   }
 
-  // 顯示載入中狀態
+  // 載入中狀態
   if (authLoading || loading) {
     return (
       <div className="text-center py-5">
@@ -135,7 +141,6 @@ export default function PostEdit() {
     )
   }
 
-  // 在渲染編輯器時添加條件檢查
   return (
     <Container className="py-4">
       <div className="forum-edit-container">
@@ -163,7 +168,7 @@ export default function PostEdit() {
             </Form.Control.Feedback>
           </Form.Group>
 
-          {/* 內容 */}
+          {/* 內容編輯器 */}
           <Form.Group className="mb-4">
             <Form.Label>內容</Form.Label>
             <Editor

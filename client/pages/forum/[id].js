@@ -1,4 +1,3 @@
-// pages/forum/[id].js
 import React, { useState, useEffect } from 'react'
 import { Container, Card, Button, Form } from 'react-bootstrap'
 import { useRouter } from 'next/router'
@@ -32,14 +31,19 @@ export default function PostDetail() {
   const fetchPost = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts/${id}`)
+      const response = await fetch(`http://localhost:3005/api/forum/posts/${id}`)
       const data = await response.json()
+      console.log('文章資料:', data) // 用於除錯
 
-      if (response.ok) {
-        setPost(data.data.post)
-        setReplies(data.data.replies)
-      } else {
+      if (!response.ok) {
         throw new Error(data.message || '載入文章失敗')
+      }
+
+      if (data.status === 'success' && data.data.post) {
+        setPost(data.data.post)
+        setReplies(data.data.replies || [])
+      } else {
+        throw new Error('無效的文章資料')
       }
     } catch (error) {
       console.error('載入文章失敗:', error)
@@ -60,7 +64,7 @@ export default function PostDetail() {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts/${id}/replies`,
+        `http://localhost:3005/api/forum/posts/${id}/replies`,
         {
           method: 'POST',
           headers: {
@@ -104,7 +108,7 @@ export default function PostDetail() {
       if (result.isConfirmed) {
         const token = localStorage.getItem('token')
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/forum/posts/${id}`,
+          `http://localhost:3005/api/forum/posts/${id}`,
           {
             method: 'DELETE',
             headers: {
@@ -145,7 +149,7 @@ export default function PostDetail() {
       if (result.isConfirmed) {
         const token = localStorage.getItem('token')
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/forum/replies/${replyId}`,
+          `http://localhost:3005/api/forum/replies/${replyId}`,
           {
             method: 'DELETE',
             headers: {
@@ -219,11 +223,15 @@ export default function PostDetail() {
           {/* 作者資訊 */}
           <div className="d-flex align-items-center mb-3">
             <img
-              src={post.author_avatar || '/default-avatar.png'}
+              src={post.author_avatar || 'http://localhost:3005/avatar/default-avatar.png'}
               alt={post.author_name}
               className="rounded-circle"
               width="40"
               height="40"
+              onError={(e) => {
+                e.target.onerror = null
+                e.target.src = 'http://localhost:3005/avatar/default-avatar.png'
+              }}
             />
             <div className="ms-2">
               <div>{post.author_name}</div>
@@ -263,8 +271,8 @@ export default function PostDetail() {
           <Card className="mb-3">
             <Card.Body>
               <Editor
-                editorState={replyContent}
-                onEditorStateChange={setReplyContent}
+                value={replyContent}
+                onChange={setReplyContent}
                 placeholder="寫下你的回覆..."
               />
               <div className="mt-3 d-flex justify-content-end gap-2">
@@ -292,11 +300,15 @@ export default function PostDetail() {
               <div className="d-flex justify-content-between">
                 <div className="d-flex align-items-center mb-3">
                   <img
-                    src={reply.author_avatar || '/default-avatar.png'}
+                    src={reply.author_avatar || 'http://localhost:3005/avatar/default-avatar.png'}
                     alt={reply.author_name}
                     className="rounded-circle"
                     width="32"
                     height="32"
+                    onError={(e) => {
+                      e.target.onerror = null
+                      e.target.src = 'http://localhost:3005/avatar/default-avatar.png'
+                    }}
                   />
                   <div className="ms-2">
                     <div>{reply.author_name}</div>
