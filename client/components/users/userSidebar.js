@@ -11,7 +11,7 @@ export default function UserSideBar({ onItemClick }) {
         { id: 'resetPassword', lable: '修改密碼', icon: <FaKey size={20} /> },
         { id: 'coupon', lable: '我的優惠券', icon: <RiCoupon5Fill size={20} /> },
         { id: 'favorites', lable: '收藏', icon: <FaHeart size={20} /> },
-        { id: 'record', lable: '歷史訂單', icon: <HiDocumentText size={20} /> }
+        { id: 'orders', lable: '歷史訂單', icon: <HiDocumentText size={20} /> }
     ]
 
 

@@ -7,9 +7,14 @@ import { sendOrderConfirmationEmail } from '../services/emailService.js'
 const router = express.Router()
 
 // 價格驗證函數
-const validatePrices = async (conn, items, final_amount, discount_amount = 0) => {
+const validatePrices = async (
+  conn,
+  items,
+  final_amount,
+  discount_amount = 0
+) => {
   let calculatedTotal = 0
-  
+
   for (const item of items) {
     const [product] = await conn.query(
       `SELECT ${item.type === 'sale' ? 'price, valid' : 'rental_fee, deposit, valid'} 
@@ -25,13 +30,14 @@ const validatePrices = async (conn, items, final_amount, discount_amount = 0) =>
     if (item.type === 'sale') {
       calculatedTotal += product[0].price * item.quantity
     } else {
-      calculatedTotal += (product[0].rental_fee * (item.rental_days || 3) * item.quantity) + 
-                        (product[0].deposit * item.quantity)
+      calculatedTotal +=
+        product[0].rental_fee * (item.rental_days || 3) * item.quantity +
+        product[0].deposit * item.quantity
     }
   }
 
   calculatedTotal -= discount_amount
-  
+
   // 允許 1 元誤差
   if (Math.abs(calculatedTotal - final_amount) > 1) {
     throw new Error('訂單金額驗證失敗，請重新整理購物車')
@@ -60,41 +66,101 @@ const validateCoupon = async (conn, userId, couponId, orderTotal) => {
   return coupon[0]
 }
 
+// 取得使用者的訂單列表
+router.get('/', authenticateToken, async (req, res) => {
+  let conn
+  try {
+    conn = await pool.getConnection()
+
+    // 取得使用者所有訂單
+    const [orders] = await conn.query(
+      `SELECT id, created_at, recipient_name, 
+              total_amount, discount_amount, final_amount,
+              payment_status, order_status
+       FROM orders 
+       WHERE user_id = ?
+       ORDER BY created_at DESC`, // 依建立時間降序排列
+      [req.user.id]
+    )
+
+    // 取得每個訂單的商品資訊
+    for (let order of orders) {
+      const [items] = await conn.query(
+        `SELECT oi.*, 
+                CASE 
+                  WHEN oi.type = 'rental' THEN r.name
+                  ELSE p.name 
+                END as product_name,
+                CASE 
+                  WHEN oi.type = 'rental' THEN r.image
+                  ELSE p.image 
+                END as product_image
+         FROM order_items oi
+         LEFT JOIN product p ON oi.product_id = p.id AND oi.type = 'sale'
+         LEFT JOIN rent r ON oi.product_id = r.id AND oi.type = 'rental'
+         WHERE oi.order_id = ?`,
+        [order.id]
+      )
+
+      // 加入商品資訊到訂單物件
+      order.items = items.map((item) => ({
+        ...item,
+        name: item.product_name,
+        image: item.product_image,
+      }))
+    }
+
+    res.json(orders)
+  } catch (error) {
+    console.error('取得訂單列表錯誤:', error)
+    res.status(500).json({
+      message: '系統錯誤，無法取得訂單列表',
+    })
+  } finally {
+    if (conn) {
+      conn.release()
+    }
+  }
+})
+
 // 建立訂單
 router.post('/', authenticateToken, async (req, res) => {
   let conn
   try {
-    const { 
-      recipient_name, 
-      recipient_phone, 
+    const {
+      recipient_name,
+      recipient_phone,
       recipient_address,
       total_amount,
       discount_amount = 0,
       final_amount,
       coupon_id,
       payment_method,
-      items 
+      items,
     } = req.body
 
     // 基本驗證
     if (!recipient_name || !recipient_phone || !recipient_address) {
       return res.status(400).json({
         status: 'error',
-        message: '請提供完整的收件資訊'
+        message: '請提供完整的收件資訊',
       })
     }
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({
         status: 'error',
-        message: '請選購商品'
+        message: '請選購商品',
       })
     }
 
-    if (!payment_method || !['credit_card', 'transfer'].includes(payment_method)) {
+    if (
+      !payment_method ||
+      !['credit_card', 'transfer'].includes(payment_method)
+    ) {
       return res.status(400).json({
         status: 'error',
-        message: '請選擇有效的付款方式'
+        message: '請選擇有效的付款方式',
       })
     }
 
@@ -119,9 +185,15 @@ router.post('/', authenticateToken, async (req, res) => {
         coupon_id, payment_method
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        userId, recipient_name, recipient_phone, recipient_address,
-        total_amount, discount_amount, final_amount,
-        coupon_id, payment_method
+        userId,
+        recipient_name,
+        recipient_phone,
+        recipient_address,
+        total_amount,
+        discount_amount,
+        final_amount,
+        coupon_id,
+        payment_method,
       ]
     )
 
@@ -142,8 +214,13 @@ router.post('/', authenticateToken, async (req, res) => {
             price, deposit, rental_days
           ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
           [
-            orderId, item.product_id, item.type, item.quantity,
-            item.price, item.deposit, item.rental_days || 3
+            orderId,
+            item.product_id,
+            item.type,
+            item.quantity,
+            item.price,
+            item.deposit,
+            item.rental_days || 3,
           ]
         )
       } else {
@@ -151,16 +228,14 @@ router.post('/', authenticateToken, async (req, res) => {
           `INSERT INTO order_items (
             order_id, product_id, type, quantity, price
           ) VALUES (?, ?, ?, ?, ?)`,
-          [
-            orderId, item.product_id, item.type, item.quantity, item.price
-          ]
+          [orderId, item.product_id, item.type, item.quantity, item.price]
         )
       }
 
       orderItems.push({
         ...item,
         name: productInfo.name,
-        image: productInfo.image
+        image: productInfo.image,
       })
     }
 
@@ -175,10 +250,9 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     // 取得用戶 email
-    const [users] = await conn.query(
-      'SELECT email FROM users WHERE id = ?',
-      [userId]
-    )
+    const [users] = await conn.query('SELECT email FROM users WHERE id = ?', [
+      userId,
+    ])
 
     await conn.commit()
 
@@ -194,7 +268,7 @@ router.post('/', authenticateToken, async (req, res) => {
         final_amount,
         payment_method,
         items: orderItems,
-        created_at: new Date()
+        created_at: new Date(),
       }
 
       await sendOrderConfirmationEmail(users[0].email, mailData)
@@ -206,9 +280,8 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(201).json({
       status: 'success',
       message: '訂單建立成功',
-      orderId: orderId
+      orderId: orderId,
     })
-
   } catch (error) {
     if (conn) {
       await conn.rollback()
@@ -216,7 +289,7 @@ router.post('/', authenticateToken, async (req, res) => {
     console.error('建立訂單失敗:', error)
     res.status(400).json({
       status: 'error',
-      message: error.message || '建立訂單失敗'
+      message: error.message || '建立訂單失敗',
     })
   } finally {
     if (conn) {
@@ -251,7 +324,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
     if (orders.length === 0) {
       return res.status(404).json({
-        message: '找不到此訂單'
+        message: '找不到此訂單',
       })
     }
 
@@ -286,12 +359,14 @@ router.get('/:id', authenticateToken, async (req, res) => {
       discount_amount: orders[0].discount_amount,
       final_amount: orders[0].final_amount,
       payment_info: orders[0].payment_info,
-      coupon: orders[0].coupon_code ? {
-        code: orders[0].coupon_code,
-        discount: orders[0].coupon_discount,
-        type: orders[0].coupon_type
-      } : null,
-      items: items.map(item => ({
+      coupon: orders[0].coupon_code
+        ? {
+            code: orders[0].coupon_code,
+            discount: orders[0].coupon_discount,
+            type: orders[0].coupon_type,
+          }
+        : null,
+      items: items.map((item) => ({
         id: item.id,
         name: item.name,
         type: item.type,
@@ -300,18 +375,19 @@ router.get('/:id', authenticateToken, async (req, res) => {
         rental_days: item.rental_days,
         deposit: item.deposit,
         image: item.image,
-        subtotal: item.type === 'rental' 
-          ? (item.rental_days * item.unit_price * item.quantity) + (item.deposit * item.quantity)
-          : item.unit_price * item.quantity
-      }))
+        subtotal:
+          item.type === 'rental'
+            ? item.rental_days * item.unit_price * item.quantity +
+              item.deposit * item.quantity
+            : item.unit_price * item.quantity,
+      })),
     }
 
     res.json(orderData)
-
   } catch (error) {
     console.error('獲取訂單詳情失敗:', error)
     res.status(500).json({
-      message: '獲取訂單詳情失敗'
+      message: '獲取訂單詳情失敗',
     })
   } finally {
     if (conn) {
