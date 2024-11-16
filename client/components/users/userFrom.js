@@ -5,6 +5,7 @@ import UserData from './userData'
 import ResetPassword from "./resetPassword";
 import CouponsPage from "../coupon/CouponsPage";
 import FavoriteList from "../favorite/FavoriteList";
+import Orders from "../order/Orders";
 import { useAuth } from "@/contexts/AuthContext";
 import { IoHomeOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -19,7 +20,7 @@ export default function UserForm() {
     resetPassword: '修改密碼',
     coupon: '我的優惠券',
     favorites: '收藏',
-    record: '歷史訂單'
+    orders: '歷史訂單'
   }
 
   const component = {
@@ -27,7 +28,7 @@ export default function UserForm() {
     resetPassword: <ResetPassword />,
     coupon: <CouponsPage />,
     favorites: <FavoriteList />,
-    // records: <Records />
+    orders: <Orders />
   }
 
   return (

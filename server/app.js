@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import 'dotenv/config'
 import productRouter from './routes/products.js'
 import rentsRouter from './routes/rents.js'
 import authRouter from './routes/auth.js'
@@ -12,12 +13,11 @@ import favoritesRouter from './routes/favorites.js'
 import newsletterRouter from './routes/newsletter.js'
 import commentRouter from './routes/comment.js'
 import orderRouter from './routes/orders.js'
-import publishRouter from './routes/publish.js'
 import forumRouter from './routes/forum.js'
 import uploadRouter from './routes/upload.js'
-import 'dotenv/config'
 import recommendationsRouter from './routes/recommendations.js'
 import googleAuthRouter from './routes/googleAuth.js'
+import ecpayRouter from './routes/ecpay.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -55,6 +55,8 @@ app.use('/api/orders', orderRouter)
 app.use('/api/google', googleAuthRouter)
 app.use('/api/forum', forumRouter)
 app.use('/api/upload', uploadRouter)  // 添加上傳路由
+app.use('/api/ecpay', ecpayRouter)  // 添加綠界路由
+
 
 // 錯誤處理中間件
 app.use((err, req, res, next) => {

@@ -1,0 +1,254 @@
+.orderContainer {
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+   }
+   
+   .filterSection {
+    padding: 0.5rem;
+    background-color: #fff;
+   
+    position: sticky;
+    top: 0;
+    z-index: 3;
+   }
+   
+   .searchBox {
+    width: 300px;
+  margin-left: auto;
+   }
+   
+   
+   .tableWrapper {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+   }
+   
+   .loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+   }
+   
+   .orderTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+   }
+   
+   .orderTable thead tr {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 2;
+   }
+   
+   .orderTable th {
+
+    background-color: #f8f9fa;
+   
+    color: #333;
+    font-weight: 600;
+    white-space: nowrap;
+   }
+   
+   .orderTable td {
+    padding: 0.8rem;
+    vertical-align: middle;
+    
+    white-space: nowrap;
+   }
+   
+   .orderTable th:first-child,
+   .orderTable td:first-child {
+    padding-left: 1.5rem;
+   }
+   
+
+   
+   .orderTable tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+   }
+   
+   /* 狀態樣式 */
+   .paidStatus {
+    color: #2ecc71;
+    font-weight: 500;
+   }
+   
+   .unpaidStatus {
+    color: #e74c3c;
+    font-weight: 500;
+   }
+   
+   .statusBadge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+   }
+   
+   .status1 {
+    background-color: #fff3cd;
+    color: #856404;
+   }
+   
+   .status2 {
+    background-color: #cce5ff;
+    color: #004085;
+   }
+   
+   .status3 {
+    background-color: #d4edda;
+    color: #155724;
+   }
+   
+   .statusN1 {
+    background-color: #f8d7da;
+    color: #721c24;
+   }
+   
+   /* 展開狀態的樣式 */
+   .expanded {
+    background-color: #e8f4f4 !important;
+    border-bottom: none !important;
+   }
+   
+   .detailsCell {
+    padding: 0 !important;
+    background-color: white;
+    border-top: 1px solid #dee2e6 !important;
+  }
+   
+  .orderDetails {
+    padding: 1rem;
+    background-color: white;
+  }
+   
+  .orderInfo {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    text-align: left;  /* 文字靠右 */
+  }
+  
+  .orderInfo p {
+    margin-bottom: 0.5rem;
+  }
+   
+   /* 商品列表區塊 */
+   .itemList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+   }
+   
+   .itemCard {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .itemCard:last-child {
+    border-bottom: none;
+  }
+   
+  .itemImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  
+  .itemImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+   
+  .itemInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .itemInfo h6 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .itemInfo p {
+    margin-bottom: 0.25rem;
+    color: #666;
+    font-size: 0.9rem;
+  }
+   
+   
+   /* RWD 調整 */
+   @media (max-width: 992px) {
+    .filterSection {
+      padding: 0.75rem;
+    }
+
+    .searchBox {
+        width: 100%;
+      }
+   
+   
+    .orderTable th,
+    .orderTable td {
+      padding: 0.75rem;
+    }
+   
+    .orderTable th:first-child,
+    .orderTable td:first-child {
+      padding-left: 1rem;
+    }
+   
+    .orderTable th:last-child,
+    .orderTable td:last-child {
+      padding-right: 1rem;
+    }
+   
+    .itemCard {
+      flex-direction: row;
+      padding: 0.75rem;
+    }
+   
+    .itemImage {
+      width: 100px;
+      height: 100px;
+    }
+   }
+   
+   @media (max-width: 576px) {
+    .itemCard {
+      flex-direction: column;
+    }
+   
+    .itemImage {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+    }
+   
+    .itemInfo {
+      text-align: center;
+    }
+   
+    .orderTable th,
+    .orderTable td {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+   }
