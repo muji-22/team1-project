@@ -144,7 +144,7 @@ router.post('/callback', async (req, res) => {
       await pool.query(
         `UPDATE orders 
          SET payment_status = 1, 
-             order_status = 2,
+             order_status = 3,
              updated_at = NOW() 
          WHERE id = ?`,
         [orderId]
