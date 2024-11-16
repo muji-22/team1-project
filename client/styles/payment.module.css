@@ -1,0 +1,32 @@
+/* styles/payment.module.css */
+.successIcon {
+    animation: scaleIn 0.5s ease-out;
+  }
+  
+  .downloadBtn:hover {
+    background-color: #40CBCE;
+    border-color: #40CBCE;
+    color: white;
+  }
+  
+  .completeBtn {
+    background-color: #40CBCE;
+    border-color: #40CBCE;
+    color: white;
+  }
+  
+  .completeBtn:hover {
+    background-color: #3BB6B9;
+    border-color: #3BB6B9;
+  }
+  
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
