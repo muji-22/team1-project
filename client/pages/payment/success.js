@@ -219,7 +219,7 @@ export default function PaymentSuccess() {
           {/* 按鈕區 */}
           <div className="d-flex justify-content-center gap-3">
             <Button 
-              variant="outline-primary" 
+              variant="outline-secondary" 
               onClick={handleSaveAsImage}
               className={styles.downloadBtn}
             >
