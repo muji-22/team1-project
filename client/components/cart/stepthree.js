@@ -1,14 +1,6 @@
 // components/cart/StepThree.js
-import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Form,
-  Alert,
-} from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { useRouter } from "next/router";
 import { useCart } from "@/contexts/CartContext";
 import Swal from "sweetalert2";
@@ -28,24 +20,6 @@ const StepThree = ({
   const router = useRouter();
   const { fetchCartCount } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("credit_card");
-  const [testCardInfo, setTestCardInfo] = useState(null);
-
-  // 取得測試用信用卡資訊
-  useEffect(() => {
-    const fetchTestCardInfo = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3005/api/ecpay/test-credit-card"
-        );
-        const data = await response.json();
-        setTestCardInfo(data);
-      } catch (error) {
-        console.error("取得測試卡號失敗:", error);
-      }
-    };
-    fetchTestCardInfo();
-  }, []);
 
   const calculateTotalAmount = () => {
     return cartOriginDtl.reduce((total, item) => {
@@ -83,7 +57,6 @@ const StepThree = ({
     return subtotals;
   };
 
-  // 處理綠界支付
   const handleEcpayPayment = async (orderId) => {
     try {
       const response = await fetch(
@@ -103,7 +76,6 @@ const StepThree = ({
         throw new Error(data.message || "建立支付失敗");
       }
 
-      // 建立表單並提交到綠界
       const form = document.createElement("form");
       form.method = "POST";
       form.action = data.paymentUrl;
@@ -147,7 +119,7 @@ const StepThree = ({
         discount_amount: discountAmount,
         final_amount: discountPrice,
         coupon_id: cartCouponId,
-        payment_method: paymentMethod,
+        payment_method: "credit_card",
         items: cartOriginDtl.map((item) => ({
           product_id: item.product_id || item.id,
           type: item.type,
@@ -175,7 +147,6 @@ const StepThree = ({
         throw new Error(data.message || "建立訂單失敗");
       }
 
-      // 清空購物車
       const clearCartResponse = await fetch(
         "http://localhost:3005/api/cart/clear",
         {
@@ -191,23 +162,7 @@ const StepThree = ({
       }
 
       await fetchCartCount();
-
-      // 根據付款方式處理
-      if (paymentMethod === "credit_card") {
-        // 導向綠界支付
-        await handleEcpayPayment(data.orderId);
-      } else {
-        // 銀行轉帳
-        await Swal.fire({
-          icon: "success",
-          title: "訂單建立成功！",
-          text: "請依照邀請信內容完成付款",
-          iconColor: "#40CBCE",
-          confirmButtonText: "查看訂單",
-          confirmButtonColor: "#40CBCE",
-        });
-        router.push(`/member/orders/${data.orderId}`);
-      }
+      await handleEcpayPayment(data.orderId);
     } catch (error) {
       console.error("訂單處理錯誤:", error);
       await Swal.fire({
@@ -345,38 +300,21 @@ const StepThree = ({
 
               <div className="mb-4">
                 <h6 className="text-muted mb-3">付款方式</h6>
-                <Form>
+                <div className="d-flex align-items-center gap-2 mb-3">
                   <Form.Check
                     type="radio"
-                    id="credit_card"
+                    id="ecpay"
                     name="payment_method"
-                    label="信用卡付款"
-                    checked={paymentMethod === "credit_card"}
-                    onChange={() => setPaymentMethod("credit_card")}
-                    className="mb-2"
+                    checked={true}
+                    readOnly
+                    className="m-0"
                   />
-                  {paymentMethod === "credit_card" && testCardInfo && (
-                    <Alert variant="info" className="mt-2 mb-3">
-                      <small>
-                        測試用信用卡資訊：
-                        <br />
-                        卡號：{testCardInfo.cardNumber}
-                        <br />
-                        到期日：{testCardInfo.expiryDate}
-                        <br />
-                        安全碼：{testCardInfo.cvv}
-                      </small>
-                    </Alert>
-                  )}
-                  <Form.Check
-                    type="radio"
-                    id="transfer"
-                    name="payment_method"
-                    label="銀行轉帳"
-                    checked={paymentMethod === "transfer"}
-                    onChange={() => setPaymentMethod("transfer")}
+                  <img
+                    src="/images/logo200x120.png"
+                    alt="綠界金流"
+                    style={{ width: "100px", height: "auto" }}
                   />
-                </Form>
+                </div>
               </div>
 
               <div className="bg-light p-3 rounded">
@@ -429,7 +367,7 @@ const StepThree = ({
               className={`px-4 ${styles.checkoutButton} ${styles.BBBtn}`}
               disabled={isProcessing}
             >
-              {isProcessing ? "處理中..." : "確認下單"}
+              {isProcessing ? "處理中..." : "結帳"}
             </Button>
           </div>
         </Col>

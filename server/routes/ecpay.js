@@ -84,6 +84,7 @@ router.post('/create-payment/:orderId', authenticateToken, async (req, res) => {
       String(now.getSeconds()).padStart(2, '0')}`
 
     // 建立綠界訂單資料
+    // 參考https://developers.ecpay.com.tw/?p=2864
     const ecpayData = {
       MerchantID: ECPAY_MERCHANT_ID,
       MerchantTradeNo: `${order.id}${Date.now().toString().slice(-6)}`,
@@ -96,12 +97,7 @@ router.post('/create-payment/:orderId', authenticateToken, async (req, res) => {
       OrderResultURL: `${ECPAY_ORDER_RESULT_URL}?orderId=${orderId}`,
       ClientBackURL: ECPAY_ORDER_RESULT_URL,
       ChoosePayment: 'ALL',
-      EncryptType: 1,
-      // 測試用信用卡資訊
-      CustomField1: '4311-9522-2222-2222',
-      CustomField2: '222',
-      CustomField3: '12/25',
-      Language: 'ZH_TW'
+      EncryptType: 1
     }
 
     // 產生檢查碼
@@ -166,13 +162,5 @@ router.post('/callback', async (req, res) => {
   }
 })
 
-// 取得測試用信用卡資訊
-router.get('/test-credit-card', (req, res) => {
-  res.json({
-    cardNumber: '4311-9522-2222-2222',
-    expiryDate: '12/25',
-    cvv: '222'
-  })
-})
 
 export default router
