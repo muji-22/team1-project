@@ -130,7 +130,7 @@ export default function PaymentSuccess() {
     <Container className="py-5">
       <Card className="border-0 shadow-sm">
         <Card.Body className="py-5">
-          <div ref={orderContentRef}>
+          <div className='p-5' ref={orderContentRef}>
             {/* 成功圖示 */}
             <div className={`${styles.successIcon} mb-4 text-center`}>
               <CheckCircle size={60} color="#40CBCE" />
