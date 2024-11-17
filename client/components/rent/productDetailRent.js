@@ -63,10 +63,10 @@ const ProductDetailRent = ({
   return (
     <>
       <div className="row">
-        <div className="col-9">
+        <div className="col-11">
           <h4 style={{ fontWeight: "700" }}>(租借){name}</h4>
         </div>
-        <div className="col-3">
+        <div className="col-1 text-end">
           <FavoriteButton
             productId={id}
             isFavorited={isFavorited}
@@ -76,8 +76,8 @@ const ProductDetailRent = ({
             className="btn"
           />
         </div>
-        <h5 className="col-4">押金${deposit}</h5>
-        <h5 className="col-4">租金${rental_fee}/天</h5>
+        <h5 className="col-12">押金${deposit}</h5>
+        <h5 className="col-12">租金${rental_fee}/天</h5>
         <div className="col-8 mt-3">
           商品數量 
           <QuantityAdjuster   
@@ -87,11 +87,11 @@ const ProductDetailRent = ({
         </div><div className="col-8 mt-3">
           租借天數:最少三天，加入購物車後選擇天數
         </div>
-        <h5 className="col-3 mt-3">總價${(deposit+rental_fee*days)*quantity}</h5>
+        <h5 className="col-4 mt-3 text-end">總價${(deposit+rental_fee*days)*quantity}</h5>
       </div>
 
       <div className="row align-items-center g-2 mt-4 mb-2">
-        <div className="col-sm-5">
+        <div className="col-sm-6">
           <AddToCartButton
             className="btn buttonCustomC w-100  gap-2" 
             productId={id}
@@ -102,7 +102,7 @@ const ProductDetailRent = ({
             type="rental"
           />
         </div>
-        <div className="col-sm-5">
+        <div className="col-sm-6">
           <Link
             href={`/product/${id}`}
             className="btn btn-success w-100 rounded-pill d-flex align-items-center justify-content-center py-2"
