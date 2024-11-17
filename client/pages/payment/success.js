@@ -168,9 +168,30 @@ export default function PaymentSuccess() {
                     <td>{orderDetails?.recipient_phone}</td>
                   </tr>
                   <tr>
-                    <td className="text-muted">收件地址</td>
-                    <td>{orderDetails?.recipient_address}</td>
+                    <td className="text-muted">收件方式</td>
+                    <td>
+                      {orderDetails?.delivery_method === "711"
+                        ? "7-11 取貨"
+                        : "宅配到府"}
+                    </td>
                   </tr>
+                  {orderDetails?.delivery_method === "711" ? (
+                    <>
+                      <tr>
+                        <td className="text-muted">門市名稱</td>
+                        <td>{orderDetails?.store_name}</td>
+                      </tr>
+                      <tr>
+                        <td className="text-muted">門市地址</td>
+                        <td>{orderDetails?.recipient_address}</td>
+                      </tr>
+                    </>
+                  ) : (
+                    <tr>
+                      <td className="text-muted">收件地址</td>
+                      <td>{orderDetails?.recipient_address}</td>
+                    </tr>
+                  )}
                 </tbody>
               </Table>
             </div>
