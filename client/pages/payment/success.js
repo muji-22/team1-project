@@ -143,7 +143,7 @@ export default function PaymentSuccess() {
       text: "期待您再次光臨",
       confirmButtonColor: "#40CBCE",
     }).then(() => {
-      router.push("/member/orders");
+      router.push("/auth/user?tab=orders");
     });
   };
 

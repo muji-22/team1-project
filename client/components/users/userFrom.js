@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { IoHomeOutline } from "react-icons/io5";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Link from "next/link";
+import Breadcrumb from '../Breadcrumb'
 
 export default function UserForm() {
   const router = useRouter()
@@ -50,13 +51,29 @@ export default function UserForm() {
     }, undefined, { shallow: true })
   }
 
+  // 根據當前分頁生成麵包屑項目
+  const breadcrumbItems = [
+    {
+      label: '首頁',
+      href: '/',
+    },
+    {
+      label: '會員中心',
+      href: '/auth/user',
+    },
+    {
+      label: title[active], // 使用現有的 title 物件
+      href: `/user?tab=${active}`,
+      active: true,
+    },
+  ]
+
   return (
     <>
-      <div className={styles.breadcrumb}>
-        <Link href="/"><IoHomeOutline color="#40CBCE"/></Link>
-        <MdKeyboardArrowRight color="blue"/>
-        <span className={styles.text}>{title[active]}</span>
+      <div className="container">
+      <Breadcrumb items={breadcrumbItems}/>
       </div>
+
       <main className={styles.main}>
         <div className={styles.wrap}>
           <div className={styles.leftUser}>
