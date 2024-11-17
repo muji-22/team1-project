@@ -52,10 +52,10 @@ const ProductDetailSide = ({
   return (
     <>
       <div className="row">
-        <div className="col-9">
+        <div className="col-11">
           <h4 style={{ fontWeight: "700" }}>{name}</h4>
         </div>
-        <div className="col-3">
+        <div className="col-1">
           <FavoriteButton
             productId={id}
             isFavorited={isFavorited}
@@ -65,7 +65,7 @@ const ProductDetailSide = ({
             className="btn"
           />
         </div>
-        <h5 className="col-3">${price}</h5>
+        <h5 className="col-3 mt-3">${price}</h5>
         <div className="col-9 mt-3"></div>
         <div className="col-8 mt-3">
           商品數量 
@@ -77,14 +77,14 @@ const ProductDetailSide = ({
       </div>
 
       <div className="row align-items-center g-2 mt-4 mb-2">
-        <div className="col-sm-5">
+        <div className="col-sm-6">
           <AddToCartButton
             className="btn buttonCustomC w-100  gap-2" 
             productId={id}
             quantity={quantity}
           />
         </div>
-        <div className="col-sm-5">
+        <div className="col-sm-6">
           <Link
             href={`/rent/${id}`}
             className="btn btn-success w-100 rounded-pill d-flex align-items-center justify-content-center py-2"
