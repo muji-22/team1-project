@@ -141,8 +141,8 @@ function Header() {
                         </Link>
                       </li>
                       <li>
-                        <Link href="/member/orders" className="dropdown-item">
-                          訂單查詢
+                        <Link href="/auth/user?tab=orders" className="dropdown-item">
+                          歷史訂單
                         </Link>
                       </li>
                       <li>
