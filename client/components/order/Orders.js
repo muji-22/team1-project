@@ -111,7 +111,20 @@ export default function Orders() {
                         <div className={styles.orderInfo}>
                           <p>收件人：{order.recipient_name}</p>
                           <p>電話：{order.recipient_phone}</p>
-                          <p>地址：{order.recipient_address}</p>
+                          <p>
+                            收件方式：
+                            {order.delivery_method === "home"
+                              ? "宅配到府"
+                              : "7-11 超商取貨"}
+                          </p>
+                          {order.delivery_method === "711" ? (
+                            <>
+                              <p>門市名稱：{order.store_name}</p>
+                              <p>門市地址：{order.recipient_address}</p>
+                            </>
+                          ) : (
+                            <p>收件地址：{order.recipient_address}</p>
+                          )}
                         </div>
                         <div className={styles.itemList}>
                           {order.items?.map((item, index) => (

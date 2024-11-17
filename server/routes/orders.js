@@ -76,10 +76,12 @@ router.get('/', authenticateToken, async (req, res) => {
     const [orders] = await conn.query(
       `SELECT id, created_at, recipient_name, 
               total_amount, discount_amount, final_amount,
-              payment_status, order_status
+              payment_status, order_status,
+              delivery_method, store_name,  
+              recipient_phone, recipient_address
        FROM orders 
        WHERE user_id = ?
-       ORDER BY created_at DESC`, // 依建立時間降序排列
+       ORDER BY created_at DESC`,
       [req.user.id]
     )
 
