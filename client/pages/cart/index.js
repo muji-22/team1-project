@@ -23,6 +23,7 @@ export default function CartPage() {
   const [cartProductDtl, setCartProductDtl] = useState([]);
   const [cartOriginDtl, setCartOriginDtl] = useState([]);
   const [scrollRatio, setScrollRatio] = useState(0);
+  const [orderStoreName, setOrderStoreName] = useState('');
 
   const [orderInfo, setOrderInfo] = useState({
     name: user?.name || "",
@@ -121,6 +122,7 @@ export default function CartPage() {
             setOrderName={(value) => updateOrderInfo({ name: value })}
             setOrderPhone={(value) => updateOrderInfo({ phone: value })}
             setOrderAddress={(value) => updateOrderInfo({ address: value })}
+            setOrderStoreName={setOrderStoreName}
           />
         );
       case 3:
@@ -132,6 +134,7 @@ export default function CartPage() {
             orderName={orderInfo.name}
             orderPhone={orderInfo.phone}
             orderAddress={orderInfo.address}
+            orderStoreName={orderStoreName}
             cartCouponId={cartCouponId}
             cartOriginDtl={cartOriginDtl}
             cartProducDtl={cartProductDtl}

@@ -11,6 +11,7 @@ const StepThree = ({
   orderName,
   orderPhone,
   orderAddress,
+  orderStoreName,
   discountPrice,
   discountAmount,
   cartCouponId,
@@ -111,10 +112,20 @@ const StepThree = ({
         throw new Error("請先登入");
       }
 
+      const deliveryMethod = orderStoreName ? '711' : 'home';
+
+      console.log('配送相關資訊：', {
+        delivery_method: deliveryMethod,
+        store_name: orderStoreName,
+        address: orderAddress
+      });
+
       const orderData = {
         recipient_name: orderName,
         recipient_phone: orderPhone,
         recipient_address: orderAddress,
+        store_name: orderStoreName || null,
+        delivery_method: deliveryMethod,
         total_amount: calculateTotalAmount(),
         discount_amount: discountAmount,
         final_amount: discountPrice,
@@ -131,6 +142,8 @@ const StepThree = ({
           }),
         })),
       };
+
+      console.log('送出的訂單資料：', orderData);
 
       const response = await fetch("http://localhost:3005/api/orders", {
         method: "POST",
@@ -191,9 +204,18 @@ const StepThree = ({
                 <h6 className="text-muted mb-3">收件資訊</h6>
                 <p className="mb-1">收件人：{orderName}</p>
                 <p className="mb-1">聯絡電話：{orderPhone}</p>
-                <p className="mb-0">收件地址：{orderAddress}</p>
+                <p className="mb-1">
+                  收件方式：{orderStoreName ? "7-11 超商取貨" : "宅配到府"}
+                </p>
+                {orderStoreName ? (
+                  <>
+                    <p className="mb-1">門市名稱：{orderStoreName}</p>
+                    <p className="mb-0">門市地址：{orderAddress}</p>
+                  </>
+                ) : (
+                  <p className="mb-0">收件地址：{orderAddress}</p>
+                )}
               </div>
-
               <hr />
 
               <div className="mb-4">

@@ -136,6 +136,8 @@ router.post('/', authenticateToken, async (req, res) => {
       final_amount,
       coupon_id,
       payment_method,
+      store_name,
+      delivery_method,
       items,
     } = req.body
 
@@ -182,8 +184,8 @@ router.post('/', authenticateToken, async (req, res) => {
       `INSERT INTO orders (
         user_id, recipient_name, recipient_phone, recipient_address,
         total_amount, discount_amount, final_amount, 
-        coupon_id, payment_method
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        coupon_id, payment_method, store_name, delivery_method
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         recipient_name,
@@ -194,6 +196,8 @@ router.post('/', authenticateToken, async (req, res) => {
         final_amount,
         coupon_id,
         payment_method,
+        store_name,
+        delivery_method,
       ]
     )
 
@@ -307,7 +311,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
     conn = await pool.getConnection()
 
-    // 獲取訂單主檔資料
+    // 修改 SQL 查詢，加入 store_name
     const [orders] = await conn.query(
       `SELECT o.*, 
               c.code as coupon_code, 
@@ -352,6 +356,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
       recipient_name: orders[0].recipient_name,
       recipient_phone: orders[0].recipient_phone,
       recipient_address: orders[0].recipient_address,
+      delivery_method: orders[0].delivery_method,
+      store_name: orders[0].store_name,
       payment_method: orders[0].payment_method,
       payment_status: orders[0].payment_status,
       order_status: orders[0].order_status,
