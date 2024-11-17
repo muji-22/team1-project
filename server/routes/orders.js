@@ -184,10 +184,20 @@ router.post('/', authenticateToken, async (req, res) => {
     // 創建訂單主檔
     const [orderResult] = await conn.query(
       `INSERT INTO orders (
-        user_id, recipient_name, recipient_phone, recipient_address,
-        total_amount, discount_amount, final_amount, 
-        coupon_id, payment_method, store_name, delivery_method
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        user_id, 
+        recipient_name, 
+        recipient_phone, 
+        recipient_address,
+        total_amount, 
+        discount_amount, 
+        final_amount, 
+        coupon_id, 
+        payment_method, 
+        store_name, 
+        delivery_method,
+        order_status,      /* 新增此欄位 */
+        payment_status     /* 新增此欄位 */
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         recipient_name,
@@ -200,6 +210,8 @@ router.post('/', authenticateToken, async (req, res) => {
         payment_method,
         store_name,
         delivery_method,
+        1,  /* 設定初始狀態為處理中 */
+        0   /* 設定初始付款狀態為未付款 */
       ]
     )
 
@@ -320,7 +332,9 @@ router.get('/:id', authenticateToken, async (req, res) => {
               c.discount as coupon_discount,
               c.type as coupon_type,
               u.email as user_email,
-              u.name as user_name
+              u.name as user_name,
+              o.delivery_method,  /* 確保有這些欄位 */
+              o.store_name
        FROM orders o
        LEFT JOIN coupons c ON o.coupon_id = c.id
        LEFT JOIN users u ON o.user_id = u.id
@@ -404,4 +418,42 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 })
 
-export default router
+
+// 新增更新訂單狀態的路由
+router.put('/:orderId/complete', authenticateToken, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    
+    const { orderId } = req.params;
+    
+    const [result] = await conn.query(
+      `UPDATE orders 
+       SET payment_status = 1, 
+           order_status = 3,
+           updated_at = NOW()
+       WHERE id = ? AND user_id = ?`,
+      [orderId, req.user.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: '找不到此訂單'
+      });
+    }
+
+    res.json({
+      message: '訂單狀態更新成功'
+    });
+
+  } catch (error) {
+    console.error('更新訂單狀態錯誤:', error);
+    res.status(500).json({
+      message: '系統錯誤'
+    });
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+export default router;

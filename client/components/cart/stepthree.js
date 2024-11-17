@@ -131,6 +131,8 @@ const StepThree = ({
         final_amount: discountPrice,
         coupon_id: cartCouponId,
         payment_method: "credit_card",
+        order_status: 1,  // 新增：初始狀態為處理中
+        payment_status: 0,  // 新增：初始狀態為未付款
         items: cartOriginDtl.map((item) => ({
           product_id: item.product_id || item.id,
           type: item.type,

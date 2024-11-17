@@ -20,27 +20,63 @@ export default function PaymentSuccess() {
         // 從 URL 取得訂單編號
         const { orderId } = router.query;
         if (!orderId) return;
-
+    
+        // 先取得訂單詳情
         const response = await fetch(
           `http://localhost:3005/api/orders/${orderId}`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           }
         );
-
-        if (!response.ok) throw new Error("訂單載入失敗");
-
+    
+        if (!response.ok) throw new Error('訂單載入失敗');
+    
         const data = await response.json();
+    
+        // 只在訂單未付款時才更新狀態
+        if (data.payment_status === 0) {
+          const updateResponse = await fetch(
+            `http://localhost:3005/api/orders/${orderId}/complete`,
+            {
+              method: 'PUT',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+            }
+          );
+    
+          if (!updateResponse.ok) {
+            console.error('更新訂單狀態失敗');
+          } else {
+            // 重新取得更新後的訂單資料
+            const refreshResponse = await fetch(
+              `http://localhost:3005/api/orders/${orderId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+              }
+            );
+            
+            if (refreshResponse.ok) {
+              const refreshData = await refreshResponse.json();
+              setOrderDetails(refreshData);
+              return;
+            }
+          }
+        }
+    
+        // 如果沒有更新或更新後重新取得失敗，使用原本的資料
         setOrderDetails(data);
       } catch (error) {
-        console.error("訂單載入錯誤:", error);
+        console.error('訂單載入錯誤:', error);
         Swal.fire({
-          icon: "error",
-          title: "訂單載入失敗",
-          text: error.message || "無法取得訂單詳細資料",
-          confirmButtonColor: "#40CBCE",
+          icon: 'error',
+          title: '訂單載入失敗',
+          text: error.message || '無法取得訂單詳細資料',
+          confirmButtonColor: '#40CBCE',
         });
       } finally {
         setLoading(false);
