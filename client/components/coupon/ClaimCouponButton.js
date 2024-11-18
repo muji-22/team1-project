@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify'; // 新增這行
+import { toast } from 'react-toastify';
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function ClaimCouponButton({ 
   couponId, 

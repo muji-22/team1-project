@@ -6,6 +6,7 @@ import { BsTrash } from 'react-icons/bs';
 import { BiLoaderAlt } from 'react-icons/bi';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-toastify';
+import { FaCheckCircle } from "react-icons/fa";
 import styles from './FavoriteList.module.scss';
 
 export default function FavoriteList() {

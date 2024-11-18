@@ -3,6 +3,7 @@ import { Container, Form, Button, Image } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'react-toastify'
+import { FaCheckCircle } from "react-icons/fa";
 import dynamic from 'next/dynamic'
 
 const Editor = dynamic(() => import('@/components/forum/Editor'), {
