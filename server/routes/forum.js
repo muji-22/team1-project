@@ -98,7 +98,7 @@ fs.ensureDir(uploadDir)
 router.get('/posts', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
+    const limit = parseInt(req.query.limit) || 12
     const offset = (page - 1) * limit
 
     // 取得文章列表與作者資訊
