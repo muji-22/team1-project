@@ -1,113 +1,117 @@
 // components/home/PromotionCarousel.js
-import React from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, Navigation, Pagination } from 'swiper/modules'
-import Link from 'next/link'
-import Image from 'next/image'
-import ClaimCouponButton from '../coupon/ClaimCouponButton'
+import React from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Scrollbar, Autoplay } from "swiper/modules";
+import Link from "next/link";
+import Image from "next/image";
+import ClaimCouponButton from "../coupon/ClaimCouponButton";
 
 // Import Swiper styles
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
+import "swiper/css/bundle";
 
 function PromotionCarousel() {
   return (
-    <div className="container mb-4">
+    <div className="container-fluid px-0">
       <Swiper
-        modules={[Autoplay, Navigation, Pagination]}
-        spaceBetween={30}
         slidesPerView={1}
+        spaceBetween={0}
+        loop={true}
+        scrollbar={{
+          hide: true,
+        }}
         autoplay={{
-          delay: 4000,
+          delay: 5000,
           disableOnInteraction: false,
         }}
-        loop={true}
-        loopAdditionalSlides={3} // 你可以將這個屬性放入 Swiper 配置中
-        className="promotion-carousel"
+        modules={[Scrollbar, Autoplay]}
       >
-        {/* 第一張輪播：註冊會員優惠 */}
         <SwiperSlide>
-          <div 
-            className="position-relative rounded-3 overflow-hidden"
-            style={{ height: '400px' }}
-          >
-            <Image
-              src="/images/promotions/pexels-sora-shimazaki-5926230.jpg"
-              alt="新會員首購優惠"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
-            />
-            <div 
-              className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-white"
-              style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
-            >
-              <h3 className="mb-3">新會員首購優惠</h3>
-              <p className="fs-5 mb-4">全館商品9折</p>
+          <div className="promotion-banner bg-dark">
+            <div className="banner-content">
+              <div className="banner-img">
+                <Image
+                  src="/images/promotions/pexels-sora-shimazaki-5926230.jpg"
+                  alt="新會員首購優惠"
+                  fill
+                  className="opacity-25"
+                  style={{ objectFit: "cover" }}
+                
+                />
+              </div>
+              <div className="banner-text text-center">
+                <h2 className="display-4 fw-bold mb-4">挖掘更多的優惠</h2>
+              
+                <Link
+                  href="/coupons"
+                  className="btn btn-custom btn-lg px-5"
+                >
+                  前往領取優惠券
+                </Link>
+              </div>
             </div>
           </div>
         </SwiperSlide>
 
-        {/* 第二張輪播：優惠券 */}
         <SwiperSlide>
-          <div 
-            className="position-relative rounded-3 overflow-hidden"
-            style={{ height: '400px' }}
-          >
-            <Image
-              src="/images/promotions/chess-8348280_1920.jpg"
-              alt="週年慶特惠"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
-            />
-            <div 
-              className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-white"
-              style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
-            >
-              <h3 className="mb-3">週年慶特惠</h3>
-              <p className="fs-5 mb-4">指定商品買一送一</p>
-              <ClaimCouponButton 
-                couponId={1}
-                className="btn btn-light btn-lg"
-                buttonText="領取優惠券"
-              />
+          <div className="promotion-banner bg-dark">
+            <div className="banner-content">
+              <div className="banner-img">
+                <Image
+                  src="/images/promotions/chess-8348280_1920.jpg"
+                  alt="週年慶特惠"
+                  fill
+                  className="opacity-25"
+                  style={{ objectFit: "cover" }}
+                 
+                />
+              </div>
             </div>
           </div>
         </SwiperSlide>
 
-        {/* 第三張輪播：聖誕節活動 */}
         <SwiperSlide>
-          <div 
-            className="position-relative rounded-3 overflow-hidden"
-            style={{ height: '400px' }}
-          >
-            <Image
-              src="/images/promotions/pexels-suzyhazelwood-1275235.jpg"
-              alt="聖誕節優惠"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
-            />
-            <div 
-              className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-white"
-              style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
-            >
-              <h3 className="mb-3">聖誕節優惠</h3>
-              <p className="fs-5 mb-4">消費滿2000送200</p>
-              <Link 
-                href="/promotions/christmas"
-                className="btn btn-light btn-lg"
-              >
-                了解更多
-              </Link>
+          <div className="promotion-banner bg-dark">
+            <div className="banner-content">
+              <div className="banner-img">
+                <Image
+                  src="/images/promotions/pexels-suzyhazelwood-1275235.jpg"
+                  alt="PLAY"
+                  fill
+                  className="opacity-50"
+                  style={{ objectFit: "cover" }}
+                
+                />
+              </div>
             </div>
           </div>
         </SwiperSlide>
       </Swiper>
+
+      <style jsx>{`
+        .promotion-banner {
+          height: 60vh;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .banner-content {
+          position: relative;
+          width: 100%;
+          height: 100%;
+        }
+
+        .banner-text {
+          position: absolute;
+          width: 100%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: white;
+          z-index: 1;
+        }
+      `}</style>
     </div>
-  )
+  );
 }
 
-export default PromotionCarousel
+export default PromotionCarousel;
