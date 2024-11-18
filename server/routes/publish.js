@@ -1,40 +1,86 @@
-import express from 'express'
-import pool from '../config/db.js' 
-import { v4 } from 'uuid';
+import express from 'express';
+import cors from 'cors';
+import pool from '../config/db.js';
+import { v4 as uuidv4 } from 'uuid';
 
+const router = express.Router();
 
-const router = express.Router()
-const db = pool 
+// 設置 CORS
+router.use(cors({
+  origin: 'http://localhost:3000', // 前端應用的地址
+  credentials: true
+}));
 
-router.post("/api/forumpublish", async (req,res)=>{
-  if (req.method === 'POST') {
-    console.log("posting artcile");
-    try {
-      const { title, content } = req.body;
+// 確保能解析 JSON
+router.use(express.json());
+
+// 修改路由路徑（移除 api 前綴，因為可能在主應用中已經添加）
+router.post("/forumpublish", async (req, res) => {
+  try {
+    console.log('Received request body:', req.body); // 調試日誌
     
-      // 建立資料庫連線
-      const connection = await mysql.createConnection(pool);
-    
-      // 寫入資料
-      const [result] = await connection.execute(
-        'INSERT INTO forum_article (title, content, published_time) VALUES (?, ?, ?)',
-        [title, content, new Date()]
-      );
-  
-      await connection.end();
-  
-      res.status(200).json({ 
-        message: '文章發布成功',
-        id: result.insertId 
+    const { title, content } = req.body;
+
+    // 驗證請求數據
+    if (!title || !content) {
+      console.log('Missing title or content'); // 調試日誌
+      return res.status(400).json({
+        success: false,
+        message: '標題和內容不能為空'
       });
-  
-    } catch (error) {
-      console.error('資料庫錯誤:', error);
-      res.status(500).json({ message: '伺服器錯誤' });
     }
-  } else {
-  res.status(405).json({ message: '不支援的請求方法' });
-  }
-})
 
-export default router
+    // 使用連接池獲取連接
+    const connection = await pool.getConnection();
+
+    try {
+      const articleId = uuidv4();
+      
+      const query = `
+        INSERT INTO forum_article 
+        (id, title, content, published_time) 
+        VALUES (?, ?, ?, ?)
+      `;
+      
+      const [result] = await connection.execute(query, [
+        articleId,
+        title,
+        content,
+        new Date()
+      ]);
+
+      console.log('Article published successfully:', articleId); // 調試日誌
+
+      return res.status(200).json({
+        success: true,
+        message: '文章發布成功',
+        data: {
+          id: articleId,
+          title,
+          publishedTime: new Date()
+        }
+      });
+
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      return res.status(500).json({
+        success: false,
+        message: '資料庫操作失敗',
+        error: process.env.NODE_ENV === 'development' ? dbError.message : undefined
+      });
+
+    } finally {
+      connection.release();
+    }
+
+  } catch (error) {
+    console.error('Server error:', error);
+    return res.status(500).json({
+      success: false,
+      message: '伺服器內部錯誤',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+export default router;
