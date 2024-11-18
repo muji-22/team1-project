@@ -10,10 +10,14 @@ import ProductDetailMainNotice2 from "@/components/product/productDetailMainNoti
 import ProductDetailSideMobile from "@/components/product/productDetailSideMobile";
 import MayFavorite from "@/components/product/mayFavorite";
 import Breadcrumb from "@/components/Breadcrumb";
+import CommentList from '@/components/comment/CommentList'
+import CommentForm from '@/components/comment/CommentForm'
+import { useAuth } from '@/contexts/AuthContext'
 
 function ProductDetail() {
     const router = useRouter();
     const { id } = router.query;
+    const { user } = useAuth()
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -105,11 +109,11 @@ function ProductDetail() {
                 <div className="col-md-12 col-lg-6">
                     <div
                         id="carouselExampleIndicators"
-                        className="carousel slide"
+                        className={`carousel slide ${style.carouselSlide}`}
                     >
-                        <div className="carousel-indicators">
+                        <ol className={`carousel-indicators ${style.carouselIndicators}`}>
                             {[0, 1, 2].map((index) => (
-                                <button
+                                <li
                                     key={index}
                                     type="button"
                                     data-bs-target="#carouselExampleIndicators"
@@ -121,9 +125,9 @@ function ProductDetail() {
                                         index === 0 ? "true" : "false"
                                     }
                                     aria-label={`Slide ${index + 1}`}
-                                />
+                                ><img src={`http://localhost:3005/productImages/${product.id}/${product.id}-${index+1}.jpg`} className={`d-block w-100 ${style.thumbnail}`}/></li>
                             ))}
-                        </div>
+                        </ol>
 
                         <div
                             className={`carousel-inner img-fluid ${style.productImgContainer}`}
@@ -237,6 +241,25 @@ function ProductDetail() {
             <ProductDetailNotice />
             <br />
             <ProductDetailNotice2 />
+
+             {/* 評價區塊 */}
+      <div className="my-5">
+        <div className="container">
+          {/* 已經購買過的使用者才能評價 */}
+          {user && (
+            <CommentForm 
+              productId={product.id} 
+              onSuccess={() => {
+                // 評價成功後的處理
+              }}
+            />
+          )}
+          <CommentList 
+            productId={product.id}
+            user={user}
+          />
+        </div>
+      </div>
 
             {/* 可能喜歡 */}
             <div className="d-flex justify-content-center">

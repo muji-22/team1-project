@@ -13,5 +13,25 @@ OTP_SECRET=thisisaotpsecretforserver
 JWT_SECRET=your_very_long_and_secure_secret_key
 
 
+# 綠界所提供的測試 API
+# https://vendor-stage.ecpay.com.tw/User/LogOn_Step1
+ECPAY_MERCHANT_ID=3002599
+ECPAY_HASH_KEY=spPjZn66i0OhqJsQ
+ECPAY_HASH_IV=hT5OJckN45isQTTs
+
+# 前端頁面 URL (付款完成後要導向的頁面)
+ECPAY_ORDER_RESULT_URL=http://localhost:3000/payment/success
+
+# 訂單完成後的後端接收 URL
+ECPAY_RETURN_URL=http://localhost:3005/api/ecpay/callback
+
+# 訂單完成後要導向的頁面 URL
+ECPAY_ORDER_CALLBACK_URL=http://localhost:3000/payment/success
+
+
+# 超商取貨回調 URL
+SHIP_711_STORE_CALLBACK_URL=http://localhost:3000/shipment/callback
+
+
 
 #使用時在後端根目錄建立.env並把這裡的內容複製進去

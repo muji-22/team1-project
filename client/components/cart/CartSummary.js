@@ -349,8 +349,8 @@ const CartSummary = ({
 
   return (
     <Card className={`${styles.summaryCard} shadow-sm`}>
-      <Card.Body>
-        <h5 className="mb-4">訂單摘要</h5>
+      <Card.Body className={`${styles.CardShadow}`}>
+        <h5 className="mb-4 text-center">訂單摘要</h5>
 
         {/* 優惠券區域 */}
         <div className="mb-4">
@@ -441,7 +441,7 @@ const CartSummary = ({
           <Button
             variant="custom"
             size="lg"
-            className="w-100"
+            className={`w-100 ${styles.checkoutButton} ${styles.BBBtn}`} 
             onClick={handleNextStep}
             disabled={total <= 0}
           >

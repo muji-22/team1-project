@@ -297,7 +297,7 @@ router.post('/upload-avatar', authenticateToken, upload.single('avatar'), async 
     }
 
     // 設定新的大頭貼路徑 (存入資料庫的是相對路徑)
-    const avatarUrl = `/avatar/${req.file.filename}`
+    const avatarUrl = `http://localhost:3005/avatar/${req.file.filename}`
 
     // 更新資料庫
     await pool.query(

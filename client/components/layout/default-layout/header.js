@@ -1,7 +1,8 @@
 // components/layout/default-layout/header.js
-import React from "react";
+import React, { useState } from "react"; 
 import Link from "next/link";
 import styles from "@/styles/Header.module.scss";
+import { Offcanvas } from 'react-bootstrap';
 import { IoCartOutline } from "react-icons/io5";
 import { LuUser2 } from "react-icons/lu";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,19 +15,16 @@ function Header() {
   const router = useRouter();
   const { user, logout, isAuthenticated } = useAuth();
   const { cartCount } = useCart();
+  const [show, setShow] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-   // 新增關閉側邊欄的函式
-   const handleOffcanvasClose = () => {
-    const offcanvas = document.getElementById('offcanvasMenu');
-    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
-    if (bsOffcanvas) {
-      bsOffcanvas.hide();
-    }
-  };
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   // 處理登出
   const handleLogout = async () => {
     await logout();
+    handleClose();
     router.push("/auth/login");
   };
 
@@ -42,8 +40,7 @@ function Header() {
           <button
             className="navbar-toggler order-0 border-0"
             type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasMenu"
+            onClick={handleShow}
             aria-controls="offcanvasMenu"
             aria-expanded="false"
             aria-label="Toggle navigation"
@@ -91,8 +88,7 @@ function Header() {
                 <Link
                   className={`nav-link ${styles.navLink} ${
                     isActive("/rents") ? styles.active : ""
-                  }
-                `}
+                  }`}
                   href="/rents"
                 >
                   商品租賃
@@ -145,11 +141,12 @@ function Header() {
                         </Link>
                       </li>
                       <li>
-                        <Link href="/member/orders" className="dropdown-item">
-                          訂單查詢
+                        <Link href="/auth/user?tab=orders" className="dropdown-item">
+                          歷史訂單
                         </Link>
                       </li>
                       <li>
+                        
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
@@ -182,30 +179,21 @@ function Header() {
         </nav>
       </div>
 
-      {/* Offcanvas Menu */}
-      <div
-        className="offcanvas offcanvas-start"
-        tabIndex={-1}
-        id="offcanvasMenu"
-        aria-labelledby="offcanvasMenuLabel"
-      >
-        <div className="offcanvas-header bg-dark d-flex justify-content-between align-items-center">
-          <div
-            className="offcanvas-title flex-grow-1 text-center ps-4"
-            id="offcanvasMenuLabel"
-          >
+      {/* React-Bootstrap Offcanvas */}
+      <Offcanvas show={show} onHide={handleClose}>
+        <Offcanvas.Header className="bg-dark d-flex justify-content-between align-items-center">
+          <div className="offcanvas-title flex-grow-1 text-center ps-4">
             <img src="/images/LOGO-W.svg" alt="Logo" className="img-fluid" />
           </div>
           <button
             type="button"
             className="btn-close btn-close-white"
-            data-bs-dismiss="offcanvas"
+            onClick={handleClose}
             aria-label="Close"
           />
-        </div>
+        </Offcanvas.Header>
 
-        {/* 側邊登入後樣式 */}
-        <div className="offcanvas-body p-0">
+        <Offcanvas.Body className="p-0">
           {user ? (
             <>
               <div className="p-3 border-bottom border text-center">
@@ -220,6 +208,7 @@ function Header() {
                   <Link
                     className="flex-grow-1 text-decoration-none"
                     href="/auth/user"
+                    onClick={handleClose}
                   >
                     <button className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
                       <LuUser2 className="fs-2" />
@@ -229,6 +218,7 @@ function Header() {
                   <Link
                     className="flex-grow-1 text-decoration-none"
                     href="/cart"
+                    onClick={handleClose}
                   >
                     <button className="btn btn-custom w-100 d-flex align-items-center justify-content-center position-relative">
                       <IoCartOutline className="fs-2 text-white" />
@@ -242,62 +232,54 @@ function Header() {
                 </div>
               </div>
             </>
-          ) : (
-            <>{/* 未登入 */}</>
-          )}
+          ) : null}
 
           <div className="list-group list-group-flush border-bottom">
             <Link
               href="/products"
               className="list-group-item list-group-item-action"
-              onClick={handleOffcanvasClose}
+              onClick={handleClose}
             >
               商品列表
             </Link>
             <Link
               href="/rents"
               className="list-group-item list-group-item-action"
-              onClick={handleOffcanvasClose}
+              onClick={handleClose}
             >
               商品租借
             </Link>
             <Link
               href="/forum"
               className="list-group-item list-group-item-action"
-              onClick={handleOffcanvasClose}
+              onClick={handleClose}
             >
               文章
             </Link>
           </div>
 
-          {/* 登出/登入 */}
           <div className="d-flex justify-content-center position-absolute bottom-0 w-100 p-3">
             {user ? (
-              <>
-                <button
-                  className="btn buttonCustomB w-100 rounded-pill"
-                  onClick={(e) => {
-                    handleOffcanvasClose();
-                    handleLogout(e);
-                  }}
-                >
-                  登出
-                </button>
-              </>
+              <button
+                className="btn buttonCustomB w-100 rounded-pill"
+                onClick={handleLogout}
+              >
+                登出
+              </button>
             ) : (
               <div className="d-flex justify-content-center w-100">
                 <Link
                   href="/auth/login"
                   className="btn buttonCustomB w-100 rounded-pill"
-                  onClick={handleOffcanvasClose}
+                  onClick={handleClose}
                 >
                   登入
                 </Link>
               </div>
             )}
           </div>
-        </div>
-      </div>
+        </Offcanvas.Body>
+      </Offcanvas>
     </header>
   );
 }

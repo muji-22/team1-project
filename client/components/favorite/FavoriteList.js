@@ -5,10 +5,10 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { BsTrash } from 'react-icons/bs';
 import { BiLoaderAlt } from 'react-icons/bi';
 import { useAuth } from '@/contexts/AuthContext';
-import styles from './FavoriteList.module.scss';
 import { toast } from 'react-toastify';
+import styles from './FavoriteList.module.scss';
 
-function FavoriteList() {
+export default function FavoriteList() {
   const { isAuthenticated } = useAuth();
   const [favorites, setFavorites] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +80,7 @@ function FavoriteList() {
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
+      <div className={styles.spinnerContainer}>
         <BiLoaderAlt className={styles.spinner} size={40} />
         <p>載入中...</p>
       </div>
@@ -89,7 +89,7 @@ function FavoriteList() {
 
   if (favorites.length === 0) {
     return (
-      <div className={styles.emptyContainer}>
+      <div className={styles.emptyMessage}>
         <IoMdHeartEmpty size={40} />
         <p>尚無收藏商品</p>
       </div>
@@ -99,44 +99,44 @@ function FavoriteList() {
   return (
     <div className={styles.mainContent}>
       <div className={styles.listWrapper}>
-        {favorites.map((item) => (
-          <div key={item.id} className={styles.cardWrapper}>
-            <div className={styles.card}>
-              <Link 
-                href={`/product/${item.product_id}`}
-                className={styles.imageLink}
-              >
-                <img
-                  src={getImageUrl(item.product_id)}
-                  alt={item.name}
-                  className={styles.productImage}
-                  onError={handleImageError}
-                />
-              </Link>
-              <div className={styles.cardBody}>
+        <div className={styles.list}>
+          {favorites.map((item) => (
+            <div key={item.id} className={styles.cardWrapper}>
+              <div className={styles.card}>
                 <Link 
                   href={`/product/${item.product_id}`}
-                  className={styles.titleLink}
+                  className={styles.imageLink}
                 >
-                  <h5 className={styles.productTitle}>{item.name}</h5>
+                  <img
+                    src={getImageUrl(item.product_id)}
+                    alt={item.name}
+                    className={styles.productImage}
+                    onError={handleImageError}
+                  />
                 </Link>
-                <p className={styles.price}>
-                  NT$ {parseInt(item.price).toLocaleString()}
-                </p>
+                <div className={styles.cardBody}>
+                  <Link 
+                    href={`/product/${item.product_id}`}
+                    className={styles.titleLink}
+                  >
+                    <h5 className={styles.productTitle}>{item.name}</h5>
+                  </Link>
+                  <p className={styles.price}>
+                    NT$ {parseInt(item.price).toLocaleString()}
+                  </p>
+                </div>
+                <button
+                  className={styles.removeButton}
+                  onClick={() => removeFavorite(item.product_id)}
+                  title="移除收藏"
+                >
+                  <BsTrash />
+                </button>
               </div>
-              <button
-                className={styles.removeButton}
-                onClick={() => removeFavorite(item.product_id)}
-                title="移除收藏"
-              >
-                <BsTrash />
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
 }
-
-export default FavoriteList;

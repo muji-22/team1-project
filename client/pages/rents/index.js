@@ -179,7 +179,7 @@ function Rents() {
       <Breadcrumb
         items={[
           { label: "首頁", href: "/" },
-          { label: "商品租賃列表", active: true },
+          { label: "商品租賃", active: true },
         ]}
       />
 

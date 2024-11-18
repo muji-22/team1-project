@@ -9,7 +9,7 @@ export default function Avatar({ src, size = 'medium', className = '' }) {
       className={`${styles.avatar} ${styles[size]} ${className}`}
       style={{
         backgroundImage: src 
-          ? `url(http://localhost:3005${src})` 
+          ? `url(${src})` 
           : 'url(http://localhost:3005/avatar/default-avatar.png)',
       }}
     />

@@ -19,7 +19,7 @@
 .listTitle {
     color: #fff;
     display: flex;
-    background: linear-gradient(to right, #40cbce 10%, rgb(45, 172, 174) 50%, #40cbce 100%);
+    background: linear-gradient(to right, #40cbce 10%, rgb(45, 172, 174) 50%, #40cbce 100%, rgb(143, 255, 255));
     height: 70px;
     padding: 0px 10px;
     justify-content: space-around;
