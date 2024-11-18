@@ -1,6 +1,14 @@
+.name{
+  font-weight: bold;
+}.price{
+  font-weight: bold;
+}
 .subtitle{
   font-weight: bold;
 }
 .noticeLine{
   background-color: darkturquoise;
+}
+.description{
+  
 }

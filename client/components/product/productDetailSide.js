@@ -1,7 +1,7 @@
 // components/product/productDetailSide.js
 import React, { useState, useEffect } from "react";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
-import styles from "./productDetailSide.module.css";
+import style from "./productDetailSide.module.css";
 import AddToCartButton from "./AddToCartButton";
 import { useAuth } from '@/contexts/AuthContext';
 import FavoriteButton from "./FavoriteButton";
@@ -53,7 +53,7 @@ const ProductDetailSide = ({
     <>
       <div className="row">
         <div className="col-11">
-          <h4 style={{ fontWeight: "700" }}>{name}</h4>
+          <h3 className={`${style.name}`}>{name}</h3>
         </div>
         <div className="col-1">
           <FavoriteButton
@@ -65,7 +65,7 @@ const ProductDetailSide = ({
             className="btn"
           />
         </div>
-        <h5 className="col-3 mt-3">${price}</h5>
+        <h5 className={`col-3 mt-3 ${style.price}`}>${price}</h5>
         <div className="col-9 mt-3"></div>
         <div className="col-8 mt-3">
           商品數量 
@@ -94,28 +94,28 @@ const ProductDetailSide = ({
         </div>
       </div>
 
-      <p className="mt-5">{description}</p>
+      <p className={`mt-5 ${style.description}`}>{description}</p>
 
       <div className="row mt-4">
-        <p className={`${styles.subtitle}`}>規格</p>
+        <p className={`mt-3 ${style.subtitle}`}>規格</p>
         <div></div>
 
-        <div className={`mt-3 ${styles.subtitle}`}>最少玩家人數</div>
+        <div className={`mt-3 ${style.subtitle}`}>最少玩家人數</div>
         <div>
           <p>{min_users}</p>
         </div>
 
-        <div className={`${styles.subtitle}`}>最多玩家人數</div>
+        <div className={`${style.subtitle}`}>最多玩家人數</div>
         <div>
           <p>{max_users}</p>
         </div>
 
-        <div className={`${styles.subtitle}`}>建議年齡</div>
+        <div className={`${style.subtitle}`}>建議年齡</div>
         <div>
           <p>{min_age}</p>
         </div>
 
-        <div className={`${styles.subtitle}`}>平均遊玩時長</div>
+        <div className={`${style.subtitle}`}>平均遊玩時長</div>
         <div>
           <p>{playtime}分鐘</p>
         </div>

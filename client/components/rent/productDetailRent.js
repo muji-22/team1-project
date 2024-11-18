@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
 import DayAdjuster from "@/components/rent/dayAdjuster";
-import styles from "./productDetailRent.module.css";
+import style from "./productDetailRent.module.css";
 import AddToCartButton from "../product/AddToCartButton";
 import { useAuth } from '@/contexts/AuthContext';
 import FavoriteButton from "./FavoriteButton";
@@ -64,7 +64,7 @@ const ProductDetailRent = ({
     <>
       <div className="row">
         <div className="col-11">
-          <h4 style={{ fontWeight: "700" }}>(租借){name}</h4>
+          <h3 className={`${style.name}`}>(租借){name}</h3>
         </div>
         <div className="col-1 text-end">
           <FavoriteButton
@@ -76,8 +76,8 @@ const ProductDetailRent = ({
             className="btn"
           />
         </div>
-        <h5 className="col-12">押金${deposit}</h5>
-        <h5 className="col-12">租金${rental_fee}/天</h5>
+        <h5 className={`col-12 ${style.deposit}`}>押金${deposit}</h5>
+        <h5 className={`col-12 ${style.rental_fee}`}>租金${rental_fee}/天</h5>
         <div className="col-8 mt-3">
           商品數量 
           <QuantityAdjuster   
@@ -87,7 +87,7 @@ const ProductDetailRent = ({
         </div><div className="col-8 mt-3">
           租借天數:最少三天，加入購物車後選擇天數
         </div>
-        <h5 className="col-4 mt-3 text-end">總價${(deposit+rental_fee*days)*quantity}</h5>
+        <h4 className={`col-4 mt-3 text-end ${style.total}`}>總價${(deposit+rental_fee*days)*quantity}</h4>
       </div>
 
       <div className="row align-items-center g-2 mt-4 mb-2">
@@ -115,25 +115,25 @@ const ProductDetailRent = ({
       <p className="mt-5">{description}</p>
 
       <div className="row mt-4">
-        <p className={`${styles.subtitle}`}>規格</p>
+        <p className={`${style.subtitle}`}>規格</p>
         <div></div>
 
-        <div className={`mt-3 ${styles.subtitle}`}>最少玩家人數</div>
+        <div className={`mt-3 ${style.subtitle}`}>最少玩家人數</div>
         <div>
           <p>{min_users}</p>
         </div>
 
-        <div className={`${styles.subtitle}`}>最多玩家人數</div>
+        <div className={`${style.subtitle}`}>最多玩家人數</div>
         <div>
           <p>{max_users}</p>
         </div>
 
-        <div className={`${styles.subtitle}`}>建議年齡</div>
+        <div className={`${style.subtitle}`}>建議年齡</div>
         <div>
           <p>{min_age}</p>
         </div>
 
-        <div className={`${styles.subtitle}`}>平均遊玩時長</div>
+        <div className={`${style.subtitle}`}>平均遊玩時長</div>
         <div>
           <p>{playtime}分鐘</p>
         </div>

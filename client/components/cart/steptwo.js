@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useAuth } from "@/contexts/AuthContext";
 import styles from "@/styles/cart.module.css";
-import HangingButton from "@/components/cart/testbtn";
 import { useShip711StoreOpener } from "@/hooks/use-ship-711-store";
 
 const StepTwo = ({
@@ -85,13 +84,13 @@ const StepTwo = ({
     }
 
     // 延遲 0.5 秒後執行提交
-    setTimeout(() => {
+ 
       setOrderName(formData.name);
       setOrderPhone(formData.phone);
       setOrderAddress(formData.address);
       setOrderStoreName(formData.deliveryMethod === '711' ? store711.storename : '');
       setstepType(3);
-    }, 800);
+
   };
 
   // components/cart/StepTwo.js 的 return 部分
@@ -101,7 +100,7 @@ const StepTwo = ({
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <div className="border rounded p-4 bg-white shadow-sm">
-            <h4 className="mb-4">填寫收件資料</h4>
+            <h4 className="mb-4 bg-custom py-3 text-center text-white">填寫收件資料</h4>
 
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
               {/* 配送方式選擇 */}
@@ -239,13 +238,13 @@ const StepTwo = ({
                 >
                   返回購物車
                 </Button>
-                <HangingButton
+                <Button
                   variant="custom"
                   type="submit"
                   className={`px-4 ${styles.nextButton} ${styles.BBBtn}`}
                 >
                   下一步
-                </HangingButton>
+                </Button>
               </div>
             </Form>
           </div>
