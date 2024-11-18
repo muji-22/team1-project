@@ -1,5 +1,5 @@
 // pages/forum/index.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, act } from "react";
 import {
   Container,
   Row,
@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { FaSearch, FaRegCommentDots, FaRegNewspaper } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Pagination from "@/components/product/Pagination";
+import Breadcrumb from "@/components/Breadcrumb";
 import moment from "moment";
 import "moment/locale/zh-tw";
 moment.locale("zh-tw");
@@ -90,6 +91,14 @@ export default function ForumList() {
 
   return (
     <Container className="py-4">
+       {/* 麵包屑 */}
+       <Breadcrumb
+        items={[
+          { label: '首頁', href: '/' },
+          { label: '討論區', active: true }, 
+        ]}
+      />
+
       {/* 標題區 */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>討論區</h2>
