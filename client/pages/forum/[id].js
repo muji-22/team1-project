@@ -145,7 +145,15 @@ export default function PostDetail() {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("文章已刪除");
+          toast.success("文章已刪除", {
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            progress: undefined,
+            icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+          });
+  
           router.push("/forum");
         } else {
           throw new Error(data.message || "刪除文章失敗");
@@ -187,7 +195,15 @@ export default function PostDetail() {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("回覆已刪除");
+          toast.success("回覆已刪除", {
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            progress: undefined,
+            icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+          });
+  
           fetchPost(); // 重新載入文章與回覆
         } else {
           throw new Error(data.message || "刪除回覆失敗");
