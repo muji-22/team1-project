@@ -52,6 +52,8 @@ export default function Login({ setCurrentForm }) {
         icon: "success",
         title: "登入成功",
         text: `歡迎`,
+        showConfirmButton: false,
+        timer: 1500
       });
     } catch (error) {
       setError(error.message || "登入失敗");

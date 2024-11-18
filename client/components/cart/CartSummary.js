@@ -378,7 +378,7 @@ const CartSummary = ({
           {/* 選擇優惠券按鈕 */}
           <Button
             variant="outline-secondary"
-            className="w-100"
+            className={`w-100 ${styles.BBBtn}`}
             onClick={() => setShowCouponSelector(!showCouponSelector)}
             disabled={total <= 0}
           >

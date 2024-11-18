@@ -178,7 +178,15 @@ export default function PostEdit() {
       }
 
       await response.json()
-      toast.success(id ? '文章更新成功' : '發文成功')
+      toast.success(id ? '文章更新成功' : '發文成功', {
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        progress: undefined,
+        icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+      });
+
       router.push(id ? `/forum/${id}` : '/forum')
     } catch (error) {
       console.error(id ? '更新文章失敗:' : '發文失敗:', error)

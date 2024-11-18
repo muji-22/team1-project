@@ -563,7 +563,7 @@ router.get('/search', async (req, res) => {
   try {
     const { keyword } = req.query
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
+    const limit = parseInt(req.query.limit) || 12
     const offset = (page - 1) * limit
 
     if (!keyword) {

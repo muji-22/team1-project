@@ -58,7 +58,15 @@ export default function FavoriteList() {
 
       if (response.ok) {
         setFavorites(favorites.filter(item => item.product_id !== productId));
-        toast.success('成功移除收藏');
+        toast.success('成功移除收藏', {
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          progress: undefined,
+          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+        });
+
       } else {
         throw new Error('移除失敗');
       }
