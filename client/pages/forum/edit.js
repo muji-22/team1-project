@@ -114,11 +114,14 @@ export default function PostEdit() {
     }
 
     // 內容驗證
+    const contentLength = content.trim()
     if (!content || content.trim() === '<p><br></p>') {
       toast.warning('請輸入文章內容')
       return
+    }else if(contentLength.length > 5000){
+      toast.warning('超過最大字數上限')
+      return
     }
-
     try {
       setLoading(true)
       const token = localStorage.getItem('token')

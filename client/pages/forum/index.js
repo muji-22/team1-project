@@ -26,12 +26,12 @@ export default function ForumList() {
         url = `http://localhost:3005/api/forum/search?keyword=${search}&page=${pageNum}`
       }
   
-      console.log('Fetching posts from:', url) // 除錯用
+      //console.log('Fetching posts from:', url) // 除錯用
   
       const response = await fetch(url)
       const data = await response.json()
   
-      console.log('Response:', data) // 除錯用
+     // console.log('Response:', data) // 除錯用
   
       if (response.ok) {
         setPosts(data.data.posts)
