@@ -90,7 +90,7 @@ export default function CartPage() {
       }`}
     >
       <div className={`${styles.stepBox}`}>
-        <div className={styles.stepNum}>{number}</div>
+        <div>{number}</div>
       </div>
       <div className={styles.stepWord}>
         <div className="">第{number}步</div>
@@ -152,19 +152,17 @@ export default function CartPage() {
 
   return (
     <>
-      <div
-        className={`${styles.stepImg} d-flex justify-content-center align-items-center`}
-      >
-        <Container fluid="xxl">
+        <Container fluid="fluid" className={`${styles.stepImg} d-flex justify-content-center align-items-center`}>
+
           <Row
-            className={`d-flex justify-content-center align-items-center ${styles.stepBar}`}
+            className={`d-flex justify-content-center align-items-center ${styles.stepBar} fw-bold`}
           >
             {renderStepIndicator(1, "購物車")}
             {renderStepIndicator(2, "填寫資料")}
             {renderStepIndicator(3, "最後確認")}
           </Row>
+     
         </Container>
-      </div>
 
       <div className={`mb-4 mt-3`}>{renderStepContent()}</div>
     </>
