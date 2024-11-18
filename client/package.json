@@ -16,6 +16,7 @@
     "ckeditor5": "^43.3.0",
     "mysql2": "^3.11.4",
     "next": "14.2.16",
+    "quill": "^2.0.2",
     "react": "^18",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18",
