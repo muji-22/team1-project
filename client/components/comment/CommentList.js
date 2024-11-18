@@ -4,7 +4,8 @@ import { useComment } from '@/contexts/CommentContext'
 import { useAuth } from '@/contexts/AuthContext'
 import StarRating from '../comment/StarRating'
 import Pagination from '@/components/product/Pagination'
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa'
+import Swal from 'sweetalert2'
 
 const CommentList = ({ productId, user }) => {
   const { 
@@ -19,15 +20,37 @@ const CommentList = ({ productId, user }) => {
   } = useComment()
 
   useEffect(() => {
-    fetchComments(productId, 1, 4) // 預設載入第一頁，每頁5筆
+    fetchComments(productId, 1, 4) // 預設載入第一頁，每頁4筆
   }, [productId])
 
   const handleDelete = async (commentId) => {
-    if (window.confirm('確定要刪除此評價嗎？')) {
+    const result = await Swal.fire({
+      title: '確定要刪除此評價嗎？',
+      icon: "warning",
+      iconColor: '#ff6b6b',
+      showCancelButton: true,
+      confirmButtonColor: '#ff6b6b',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: '確定刪除',
+      cancelButtonText: '取消'
+    })
+
+    if (result.isConfirmed) {
       try {
         await deleteComment(commentId, productId)
+        await Swal.fire({
+          icon: "success",
+          showConfirmButton: false, 
+          timer: 1500,
+          title: '刪除成功'
+        })
       } catch (error) {
-        console.error('刪除評價失敗:', error)
+        await Swal.fire({
+          icon: 'error',
+          title: '刪除失敗',
+          text: '請稍後再試',
+          confirmButtonColor: '#ff6b6b'
+        })
       }
     }
   }
@@ -108,7 +131,7 @@ const CommentList = ({ productId, user }) => {
         </div>
       )}
 
-      {/* 分頁 - 只在評論超過5筆時顯示 */}
+      {/* 分頁 - 只在評論超過4筆時顯示 */}
       {comments.length > 0 && totalPages > 1 && (
         <Pagination 
           currentPage={currentPage}

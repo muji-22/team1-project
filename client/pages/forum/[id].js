@@ -3,7 +3,7 @@ import { Container, Card, Button, Form } from "react-bootstrap";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import { FaEdit, FaTrash, FaReply } from "react-icons/fa";
+import { FaEdit, FaTrash, FaReply, FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import moment from "moment";
 import "moment/locale/zh-tw";
@@ -102,7 +102,14 @@ export default function PostDetail() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("回覆成功");
+        toast.success("回覆成功", {
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          progress: undefined,
+          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+        });
         setReplyContent("");
         setShowReplyEditor(false);
         fetchPost(); // 重新載入文章與回覆
@@ -278,7 +285,7 @@ export default function PostDetail() {
                 <div>
                   <Link
                     href={`/forum/edit?id=${post.id}`}
-                    className="btn btn-outline-primary btn-sm me-2"
+                    className="btn btn-outline-custom btn-sm me-2"
                   >
                     <FaEdit /> 編輯
                   </Link>
