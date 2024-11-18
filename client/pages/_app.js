@@ -12,6 +12,7 @@ import { useLoading } from "@/contexts/LoadingContext";
 import Layout from "../components/layout/default-layout";
 import ScrollToTop from "@/components/ScrollToTop";
 import FullPageLoader from '@/components/loading/FullPageLoader';
+import "../styles/globals.css";
 
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Bootstrap-custom.scss";
