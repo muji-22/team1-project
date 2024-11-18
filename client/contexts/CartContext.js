@@ -66,7 +66,6 @@ export function CartProvider({ children }) {
       if (data.status === 'success') {
         await fetchCartCount();
         toast.success("成功加入購物車！", {
-          position: "bottom-center",
           autoClose: 1000,
           hideProgressBar: true,
           closeOnClick: true,
@@ -130,7 +129,14 @@ export function CartProvider({ children }) {
       const data = await response.json();
       if (data.status === 'success') {
         await fetchCartCount();
-        toast.success('已從購物車移除');
+        toast.success('已從購物車移除', {
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          progress: undefined,
+          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+        });
       }
       return data;
     } catch (error) {
@@ -156,7 +162,14 @@ export function CartProvider({ children }) {
       const data = await response.json();
       if (data.status === 'success') {
         await fetchCartCount();
-        toast.success('購物車已清空');
+        toast.success('購物車已清空', {
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          progress: undefined,
+          icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+        });
       }
       return data;
     } catch (error) {

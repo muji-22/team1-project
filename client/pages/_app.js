@@ -72,7 +72,7 @@ function MyApp({ Component, pageProps }) {
             <Layout>
               <Component {...pageProps} />
               <ToastContainer
-                position="bottom-center"
+                position="top-center"
                 autoClose={1500}
                 hideProgressBar={false}
                 newestOnTop={false}
