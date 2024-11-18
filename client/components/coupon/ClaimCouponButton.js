@@ -88,7 +88,15 @@ export default function ClaimCouponButton({
       }
 
       setIsClaimed(true);
-      toast.success('恭喜！優惠券領取成功');
+      toast.success('恭喜！優惠券領取成功', {
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        progress: undefined,
+        icon: <FaCheckCircle size={30} style={{ color: "#40CBCE" }} />,
+      });
+
       onSuccess();
 
     } catch (err) {

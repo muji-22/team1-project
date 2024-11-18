@@ -1,70 +1,80 @@
 // pages/forum/index.js
-import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap'
-import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
-import { FaSearch, FaRegCommentDots, FaRegNewspaper } from 'react-icons/fa'
-import { toast } from 'react-toastify'
-import moment from 'moment'
-import 'moment/locale/zh-tw'
-moment.locale('zh-tw')
+import React, { useState, useEffect, act } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { FaSearch, FaRegCommentDots, FaRegNewspaper } from "react-icons/fa";
+import { toast } from "react-toastify";
+import Pagination from "@/components/product/Pagination";
+import Breadcrumb from "@/components/Breadcrumb";
+import moment from "moment";
+import "moment/locale/zh-tw";
+moment.locale("zh-tw");
 
 export default function ForumList() {
-  const { isAuthenticated, loading } = useAuth()
-  const [posts, setPosts] = useState([])
-  const [postLoading, setPostLoading] = useState(true)
-  const [keyword, setKeyword] = useState('')
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(0)
+  const { isAuthenticated, loading } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [postLoading, setPostLoading] = useState(true);
+  const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   // 載入文章列表
-  const fetchPosts = async (pageNum = 1, search = '') => {
+  const fetchPosts = async (pageNum = 1, search = "") => {
     try {
-      setPostLoading(true)
-      let url = `http://localhost:3005/api/forum/posts?page=${pageNum}`
+      setPostLoading(true);
+      let url = `http://localhost:3005/api/forum/posts?page=${pageNum}&limit=12`;
       if (search) {
-        url = `http://localhost:3005/api/forum/search?keyword=${search}&page=${pageNum}`
+        url = `http://localhost:3005/api/forum/search?keyword=${search}&page=${pageNum}&limit=12`;
       }
-  
-      console.log('Fetching posts from:', url) // 除錯用
-  
-      const response = await fetch(url)
-      const data = await response.json()
-  
-      console.log('Response:', data) // 除錯用
-  
+
+      console.log("Fetching posts from:", url); // 除錯用
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      console.log("Response:", data); // 除錯用
+
       if (response.ok) {
-        setPosts(data.data.posts)
-        setTotalPages(data.data.pagination.total_pages)
+        setPosts(data.data.posts);
+        setTotalPages(data.data.pagination.total_pages);
       } else {
-        throw new Error(data.message || '載入文章失敗')
+        throw new Error(data.message || "載入文章失敗");
       }
     } catch (error) {
-      console.error('載入文章失敗:', error)
-      toast.error('載入文章失敗')
+      console.error("載入文章失敗:", error);
+      toast.error("載入文章失敗");
     } finally {
-      setPostLoading(false)
+      setPostLoading(false);
     }
-  }
+  };
 
   // 搜尋處理
   const handleSearch = (e) => {
-    e.preventDefault()
-    setPage(1)
-    fetchPosts(1, keyword)
-  }
+    e.preventDefault();
+    setPage(1);
+    fetchPosts(1, keyword);
+  };
 
   // 換頁處理
   const handlePageChange = (newPage) => {
-    setPage(newPage)
-    fetchPosts(newPage, keyword)
-  }
+    setPage(newPage);
+    fetchPosts(newPage, keyword);
+  };
 
   // 初始載入文章，等待身份驗證完成
   useEffect(() => {
     // 等待身份驗證載入完成
     if (loading) return;
-    
+
     fetchPosts();
   }, [loading]);
 
@@ -76,11 +86,19 @@ export default function ForumList() {
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <Container className="py-4">
+       {/* 麵包屑 */}
+       <Breadcrumb
+        items={[
+          { label: '首頁', href: '/' },
+          { label: '討論區', active: true }, 
+        ]}
+      />
+
       {/* 標題區 */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>討論區</h2>
@@ -118,7 +136,7 @@ export default function ForumList() {
               <Col key={post.id}>
                 <Card className="h-100 forum-card">
                   {/* 封面圖片區 */}
-                  <Link 
+                  <Link
                     href={`/forum/${post.id}`}
                     className="text-decoration-none"
                   >
@@ -130,7 +148,8 @@ export default function ForumList() {
                           alt={post.title}
                           className="cover-image"
                           onError={(e) => {
-                            e.target.src = "http://localhost:3005/productImages/default-post.png"
+                            e.target.src =
+                              "http://localhost:3005/productImages/default-post.png";
                           }}
                         />
                       ) : (
@@ -142,27 +161,29 @@ export default function ForumList() {
                   </Link>
 
                   <Card.Body className="d-flex flex-column">
-                    <Link 
+                    <Link
                       href={`/forum/${post.id}`}
                       className="text-decoration-none text-dark"
                     >
-                      <Card.Title className="h5 mb-3">
-                        {post.title}
-                      </Card.Title>
+                      <Card.Title className="h5 mb-3">{post.title}</Card.Title>
                     </Link>
                   </Card.Body>
-                  
+
                   <Card.Footer className="bg-white">
                     <div className="d-flex justify-content-between align-items-center">
                       <div className="d-flex align-items-center">
                         <img
-                          src={post.author_avatar || 'http://localhost:3005/avatar/default-avatar.png'}
+                          src={
+                            post.author_avatar ||
+                            "http://localhost:3005/avatar/default-avatar.png"
+                          }
                           alt={post.author_name}
                           className="rounded-circle"
                           width="24"
                           height="24"
                           onError={(e) => {
-                            e.target.src = "http://localhost:3005/avatar/default-avatar.png"
+                            e.target.src =
+                              "http://localhost:3005/avatar/default-avatar.png";
                           }}
                         />
                         <span className="ms-2 small">{post.author_name}</span>
@@ -185,19 +206,11 @@ export default function ForumList() {
 
           {/* 分頁 */}
           {totalPages > 1 && (
-            <div className="d-flex justify-content-center">
-              <div className="btn-group">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                  <Button
-                    key={num}
-                    variant={num === page ? 'custom' : 'outline-custom'}
-                    onClick={() => handlePageChange(num)}
-                  >
-                    {num}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           )}
         </>
       ) : (
@@ -212,7 +225,7 @@ export default function ForumList() {
         .forum-card {
           transition: transform 0.2s;
         }
-        
+
         .forum-card:hover {
           transform: translateY(-5px);
         }
@@ -255,5 +268,5 @@ export default function ForumList() {
         }
       `}</style>
     </Container>
-  )
+  );
 }
