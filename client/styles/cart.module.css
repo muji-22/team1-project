@@ -15,7 +15,6 @@
   font-size: 1.25rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,12 +22,19 @@
   box-shadow: 0px 4px 10px rgba(63, 63, 63, 0.2);
 
 }
+
 .BBBtn{
   transition: all 0.3s;
 }
 .BBBtn:hover{
   transform: scale(1.05);
   box-shadow: 0px 4px 15px rgba(63, 63, 63, 0.2);
+}
+.Imgitem{
+  transition: all 0.3s;
+}
+.Imgitem:hover{
+  transform: scale(1.2);
 }
 
 .nextButton{
@@ -83,18 +89,18 @@
 
 .stepBar {
   padding: 2rem 0;
+  color: #3a3a3a;
   /* background-color: #3a81c9; */
   
 }
-.stepNum{}
 
 .stepImg{
   background: url("../public/images/stpbar5.png") ;
-  width: 100vw;
   height: 200px;
-  background-repeat: repeat;
+  background-repeat:no-repeat;
   background-size: cover;
   opacity: 1;
+  z-index: -1;
 }
 
 .step {
@@ -115,6 +121,7 @@
   height: 80px;
   width: 80px;
   box-shadow: 1px 5px 3px 2px rgba(73, 73, 73, 0.5);
+  animation: jumpAnimation 1.5s infinite ease-in-out;
 }
 
 
@@ -129,7 +136,21 @@
   justify-content: center;
   font-weight: bold;
   font-size: 2rem;
+  transition: 0.5s;
 }
+
+@keyframes jumpAnimation {
+  0% {
+    transform: translateY(0); /* 初始位置 */
+  }
+  50% {
+    transform: translateY(-10px); /* 向上移動 20px */
+  }
+  100% {
+    transform: translateY(0); /* 回到原位置 */
+  }
+}
+
 
 .stepWord {
   align-items: center;
@@ -139,8 +160,8 @@
 
 .stepline {
   width: 200px;
-  height: 1px;
-  background-color: #8a8a8a;
+  height: 2px;
+  background-color: #3a3a3a;
   margin: 5px 0;
 }
 
@@ -165,8 +186,6 @@
     justify-content: center;
     align-items: center;
   }
-  .stepNum{
 
-  }
 
   }

@@ -200,7 +200,7 @@ const StepThree = ({
         <Col md={8} lg={6}>
           <Card className="mb-4">
             <Card.Body>
-              <h5 className="mb-4">訂單資訊確認</h5>
+              <h5 className="mb-4 bg-custom py-3 text-center text-white">訂單資訊確認</h5>
 
               <div className="mb-4">
                 <h6 className="text-muted mb-3">收件資訊</h6>

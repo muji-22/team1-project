@@ -71,12 +71,12 @@ const CartItem = ({ item, onUpdate }) => {
       <Card.Body>
         <div className="d-flex">
           {/* 商品圖片 */}
-          <div className={styles.cartItemImage}>
+          <div className={`${styles.Imgitem} ${styles.cartItemImage}`}>
             <Link href={`/${item.type === 'rental' ? 'rent' : 'product'}/${item.product_id}`}>
               <img
                 src={`http://localhost:3005/productImages/${item.product_id}/${item.product_id}-1.jpg`}
                 alt={item.name}
-                className="img-fluid rounded"
+                className={`img-fluid rounded `}
                 onError={(e) => {
                   e.target.src = "http://localhost:3005/productImages/default-product.png"
                 }}
