@@ -8,48 +8,51 @@ import Breadcrumb from "@/components/Breadcrumb";
 
 export default function Coupons() {
   // 狀態管理
-  const [coupons, setCoupons] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [userCoupons, setUserCoupons] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortType, setSortType] = useState('newest') // newest, expiringSoon
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [filterType, setFilterType] = useState('all') // all, sale, rental, both
-  const ITEMS_PER_PAGE = 6
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [userCoupons, setUserCoupons] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortType, setSortType] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filterType, setFilterType] = useState("all");
+  const ITEMS_PER_PAGE = 6;
 
   const { user, isAuthenticated } = useAuth();
 
   // 獲取所有優惠券
   const fetchCoupons = async () => {
     try {
-      const response = await fetch('http://localhost:3005/api/coupons')
-      const data = await response.json()
-      
-      // 篩選出目前可用的優惠券（排除過期和未開始的）
-      const now = new Date()
-      const availableCoupons = data.filter(coupon => {
-        const startDate = new Date(coupon.start_date)
-        const endDate = new Date(coupon.end_date)
-        return startDate <= now && endDate >= now
-      })
+      const response = await fetch("http://localhost:3005/api/coupons");
+      const data = await response.json();
 
-      setCoupons(availableCoupons)
-      setTotalPages(Math.ceil(availableCoupons.length / ITEMS_PER_PAGE))
+      // 篩選出目前可用的優惠券（排除過期和未開始的）
+      const now = new Date();
+      const availableCoupons = data.filter((coupon) => {
+        const startDate = new Date(coupon.start_date);
+        const endDate = new Date(coupon.end_date);
+        return startDate <= now && endDate >= now;
+      });
+
+      setCoupons(availableCoupons);
+      setTotalPages(Math.ceil(availableCoupons.length / ITEMS_PER_PAGE));
     } catch (err) {
-      setError('獲取優惠券失敗')
-      console.error(err)
+      setError("獲取優惠券失敗");
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // 獲取使用者的優惠券
   const fetchUserCoupons = async () => {
-    if (!isAuthenticated() || !user) return;
-
     try {
+      if (!isAuthenticated() || !user) {
+        setUserCoupons([]);
+        return;
+      }
+
       const response = await fetch(
         `http://localhost:3005/api/coupons/user/${user.id}`,
         {
@@ -62,13 +65,18 @@ export default function Coupons() {
       setUserCoupons(data);
     } catch (err) {
       console.error("獲取用戶優惠券失敗:", err);
+      setUserCoupons([]);
     }
   };
 
   useEffect(() => {
-    fetchCoupons();
-    fetchUserCoupons();
-  }, [user]);
+    const initPage = async () => {
+      await fetchCoupons();
+      await fetchUserCoupons();
+    };
+
+    initPage();
+  }, [user, isAuthenticated]);
 
   // 領取優惠券
   const handleClaimCoupon = async (couponId) => {
@@ -109,7 +117,7 @@ export default function Coupons() {
           timer: 1500,
           showConfirmButton: false,
         });
-        fetchUserCoupons(); // 重新獲取用戶優惠券列表
+        fetchUserCoupons();
       } else {
         throw new Error(data.message);
       }
@@ -125,6 +133,7 @@ export default function Coupons() {
   // 處理排序
   const handleSort = (type) => {
     setSortType(type);
+    setCurrentPage(1);
     let sorted = [...coupons];
 
     switch (type) {
@@ -143,35 +152,49 @@ export default function Coupons() {
     setCoupons(sorted);
   };
 
-  // 處理搜尋、篩選和過濾
+  // 處理搜尋文字改變
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // 處理適用範圍篩選改變
+  const handleFilterChange = (e) => {
+    setFilterType(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // 處理搜尋和篩選
   const getFilteredCoupons = () => {
-    return coupons.filter(coupon => {
-      // 搜尋條件
-      const searchMatch = 
-        coupon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        coupon.code.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // 適用範圍篩選
-      const filterMatch = 
-        filterType === 'all' || coupon.apply_to === filterType;
+    return coupons.filter((coupon) => {
+      const searchCondition = searchTerm.toLowerCase();
+      const nameMatch = coupon.name.toLowerCase().includes(searchCondition);
+      const codeMatch = coupon.code.toLowerCase().includes(searchCondition);
+      const filterMatch = filterType === "all" || coupon.apply_to === filterType;
 
-      return searchMatch && filterMatch;
+      return (nameMatch || codeMatch) && filterMatch;
     });
-  }
+  };
 
-  const filteredCoupons = getFilteredCoupons();
+  // 獲取當前頁面的優惠券
+  const getCurrentPageCoupons = () => {
+    const filtered = getFilteredCoupons();
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    return filtered.slice(indexOfFirstItem, indexOfLastItem);
+  };
 
-  // 處理分頁
-  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentCoupons = filteredCoupons.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-
+  // 處理分頁改變
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
+
+  const filteredCoupons = getFilteredCoupons();
+  const currentCoupons = getCurrentPageCoupons();
 
   if (loading) return <div className="text-center p-5">載入中...</div>;
   if (error) return <div className="text-center p-5 text-danger">{error}</div>;
@@ -180,11 +203,11 @@ export default function Coupons() {
     <div className="container py-5">
       {/* 麵包屑 */}
       <Breadcrumb
-          items={[
-            { label: "首頁", href: "/" },
-            { label: "優惠券領取", href: "/coupons", active: true},
-          ]}
-        />
+        items={[
+          { label: "首頁", href: "/" },
+          { label: "優惠券領取", href: "/coupons", active: true },
+        ]}
+      />
 
       {/* 標題區域 */}
       <div className="row mb-4">
@@ -199,19 +222,19 @@ export default function Coupons() {
         <div className="col-md-4 mb-3 mb-md-0">
           <input
             type="text"
-            className="form-control "
+            className="form-control"
             placeholder="搜尋優惠券..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
           />
         </div>
 
         {/* 適用範圍篩選 */}
         <div className="col-md-4 mb-3 mb-md-0">
-          <select 
+          <select
             className="form-select"
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
+            onChange={handleFilterChange}
           >
             <option value="all">全部優惠券</option>
             <option value="sale">限購買使用</option>
