@@ -11,6 +11,7 @@ const CartSummary = ({
   total,
   saleTotal = 0,
   rentalTotal = 0,
+  rentalFeeTotal = 0,
   setDiscountPrice,
   setDiscountAmount,
   setCartCouponId,
@@ -74,10 +75,9 @@ const CartSummary = ({
 
     // 當已選擇優惠券時，檢查對應類型的商品是否還存在
     if (appliedCoupon) {
-      const shouldRemoveCoupon = (
-        (appliedCoupon.apply_to === 'sale' && saleTotal <= 0) ||
-        (appliedCoupon.apply_to === 'rental' && rentalTotal <= 0)
-      );
+      const shouldRemoveCoupon =
+        (appliedCoupon.apply_to === "sale" && saleTotal <= 0) ||
+        (appliedCoupon.apply_to === "rental" && rentalTotal <= 0);
 
       if (shouldRemoveCoupon) {
         setAppliedCoupon(null);
@@ -99,12 +99,12 @@ const CartSummary = ({
   // 判斷優惠券是否可用
   const isCouponApplicable = (coupon) => {
     switch (coupon.apply_to) {
-      case 'sale':
+      case "sale":
         return saleTotal > 0;
-      case 'rental':
-        return rentalTotal > 0;
-      case 'both':
-        return total > 0;
+      case "rental":
+        return rentalFeeTotal  > 0;
+      case "both":
+        return (saleTotal + rentalFeeTotal) > 0;
       default:
         return false;
     }
@@ -132,19 +132,25 @@ const CartSummary = ({
 
     // 根據優惠券類型決定折扣基準
     switch (couponData.apply_to) {
-      case 'sale':
+      case "sale":
         baseAmount = saleTotal;
         break;
-      case 'rental':
-        baseAmount = rentalTotal;
+      case "rental":
+        // 只對租金部分計算折扣，不包含押金
+        baseAmount = rentalFeeTotal;
         break;
-      // case 'both' 使用 total，不需要改變
+      case "both":
+        // 全部商品折扣時，也是只對租金部分計算，不包含押金
+        baseAmount = saleTotal + rentalFeeTotal;
+        break;
     }
 
     // 計算折扣金額
     let discountAmount = 0;
-    if (couponData.type === 'percentage') {
-      discountAmount = Math.round(baseAmount * ((100 - couponData.discount) / 100));
+    if (couponData.type === "percentage") {
+      discountAmount = Math.round(
+        baseAmount * ((100 - couponData.discount) / 100)
+      );
     } else {
       discountAmount = Math.min(couponData.discount, baseAmount);
     }
@@ -254,14 +260,20 @@ const CartSummary = ({
                 return (
                   <div
                     key={coupon.id}
-                    className={`card shadow-sm w-100 ${!isApplicable ? 'opacity-50' : ''}`}
+                    className={`card shadow-sm w-100 ${
+                      !isApplicable ? "opacity-50" : ""
+                    }`}
                     onClick={() => isApplicable && handleSelectCoupon(coupon)}
-                    style={{ 
+                    style={{
                       cursor: isApplicable ? "pointer" : "not-allowed",
                     }}
                   >
                     <div className="row g-0">
-                      <div className={`col-3 ${isApplicable ? 'bg-custom' : 'bg-secondary'} d-flex align-items-center justify-content-center p-2`}>
+                      <div
+                        className={`col-3 ${
+                          isApplicable ? "bg-custom" : "bg-secondary"
+                        } d-flex align-items-center justify-content-center p-2`}
+                      >
                         <FaTicket className="text-white w-75 h-auto" />
                       </div>
                       <div className="col-9 bg-white text-dark p-1">
@@ -278,18 +290,25 @@ const CartSummary = ({
                             {formatCouponValue(coupon)}
                           </p>
                           <p className="card-text mb-0 text-secondary small">
-                            到期日：{new Date(coupon.end_date).toLocaleDateString()}
+                            到期日：
+                            {new Date(coupon.end_date).toLocaleDateString()}
                           </p>
                           <div className="d-flex gap-2 align-items-center">
-                            <span className={`badge ${isApplicable ? 'bg-secondary' : 'bg-danger'}`}>
-                              {coupon.apply_to === 'sale' && '限購買商品'}
-                              {coupon.apply_to === 'rental' && '限租借商品'}
-                              {coupon.apply_to === 'both' && '適用全部商品'}
+                            <span
+                              className={`badge ${
+                                isApplicable ? "bg-secondary" : "bg-danger"
+                              }`}
+                            >
+                              {coupon.apply_to === "sale" && "限購買商品"}
+                              {coupon.apply_to === "rental" && "限租金折抵"}
+                              {coupon.apply_to === "both" && "全部商品(不含押金)"}
                             </span>
                             {!isApplicable && (
                               <small className="text-danger">
-                                {coupon.apply_to === 'sale' && '購物車中無購買商品'}
-                                {coupon.apply_to === 'rental' && '購物車中無租借商品'}
+                                {coupon.apply_to === "sale" &&
+                                  "購物車中無購買商品"}
+                                {coupon.apply_to === "rental" &&
+                                  "購物車中無租借商品"}
                               </small>
                             )}
                           </div>
@@ -345,7 +364,11 @@ const CartSummary = ({
             onClick={() => setShowCouponSelector(!showCouponSelector)}
             disabled={total <= 0}
           >
-            {total <= 0 ? "購物車是空的" : appliedCoupon ? "更改優惠券" : "選擇優惠券"}
+            {total <= 0
+              ? "購物車是空的"
+              : appliedCoupon
+              ? "更改優惠券"
+              : "選擇優惠券"}
           </Button>
 
           {/* 優惠券選擇器 */}
@@ -363,7 +386,12 @@ const CartSummary = ({
           {/* 租借商品小計 */}
           <div className="d-flex justify-content-between mb-2 text-secondary">
             <span>租借商品小計</span>
-            <span>NT$ {rentalTotal.toLocaleString()}</span>
+            <div className="text-end">
+              <div>租金：NT$ {rentalFeeTotal.toLocaleString()}</div>
+              <div>
+                押金：NT$ {(rentalTotal - rentalFeeTotal).toLocaleString()}
+              </div>
+            </div>
           </div>
 
           {/* 商品總金額 */}
@@ -376,11 +404,14 @@ const CartSummary = ({
           {appliedCoupon && (
             <div className="d-flex justify-content-between mb-2 text-danger">
               <span>
-                優惠折抵 
-                {appliedCoupon.apply_to === 'sale' && '(限購買)'}
-                {appliedCoupon.apply_to === 'rental' && '(限租借)'}
+                優惠折抵
+                {appliedCoupon.apply_to === "sale" && "(限購買)"}
+                {appliedCoupon.apply_to === "rental" && "(限租借)"}
+                {appliedCoupon.apply_to === 'both' && '(不含押金)'}
               </span>
-              <span>-NT$ {calculateDiscount(appliedCoupon).toLocaleString()}</span>
+              <span>
+                -NT$ {calculateDiscount(appliedCoupon).toLocaleString()}
+              </span>
             </div>
           )}
 
@@ -390,7 +421,10 @@ const CartSummary = ({
           <div className="d-flex justify-content-between">
             <span className="fw-bold">應付金額</span>
             <span className="fw-bold">
-              NT$ {(total - (appliedCoupon ? calculateDiscount(appliedCoupon) : 0)).toLocaleString()}
+              NT${" "}
+              {(
+                total - (appliedCoupon ? calculateDiscount(appliedCoupon) : 0)
+              ).toLocaleString()}
             </span>
           </div>
         </div>
@@ -400,7 +434,7 @@ const CartSummary = ({
           <Button
             variant="custom"
             size="lg"
-            className={`w-100 ${styles.checkoutButton} ${styles.BBBtn}`} 
+            className={`w-100 ${styles.checkoutButton} ${styles.BBBtn}`}
             onClick={handleNextStep}
             disabled={total <= 0}
           >
