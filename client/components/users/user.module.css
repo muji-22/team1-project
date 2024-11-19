@@ -154,6 +154,10 @@
         width: 100%;
         position: relative;
     }
+    .label {
+        font-size: 14px;
+        font-weight: 600;
+    }
 
     .wrap {
         max-width: 576px;
@@ -170,8 +174,8 @@
 
     .inputContext {
         margin-left: 10px;
-        width: 55%;
-        height: 40px;
+        width: 60%;
+        height: 35px;
         border: 1px solid #40CBCE;
         font-size: 16px;
         padding-left: 25px;
