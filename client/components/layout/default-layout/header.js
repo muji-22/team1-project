@@ -136,7 +136,7 @@ function Header() {
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
-                        <Link href="/auth/user" className="dropdown-item">
+                        <Link href="/auth/user?tab=profile" className="dropdown-item">
                           會員資料
                         </Link>
                       </li>
