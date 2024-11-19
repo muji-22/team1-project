@@ -1,6 +1,7 @@
 // pages/cart/index.js
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import Head from "next/head";
 import { useCart } from "@/contexts/CartContext";
 import StepOne from "@/components/cart/Stepone";
 import StepTwo from "@/components/cart/steptwo";
@@ -41,8 +42,8 @@ export default function CartPage() {
   // 滾輪事件處理
   const handleWheel = (event) => {
     // 當圓形已經放到最大或最小時，停止對滾輪事件的反應
-    if (circleSize >= 1300 && event.deltaY > 0) return;  // 當圓形已經最大並且滾輪向下時不再增大
-    if (circleSize <= 1000 && event.deltaY < 0) return;   // 當圓形已經最小並且滾輪向上時不再縮小
+    if (circleSize >= 1300 && event.deltaY > 0) return; // 當圓形已經最大並且滾輪向下時不再增大
+    if (circleSize <= 1000 && event.deltaY < 0) return; // 當圓形已經最小並且滾輪向上時不再縮小
 
     if (event.deltaY > 0) {
       // 滾輪往下
@@ -131,8 +132,8 @@ export default function CartPage() {
             setCartCouponId={setCartCouponId}
             setCartProductDtl={setCartProductDtl}
             setCartOriginDtl={setCartOriginDtl}
-            setSaleTotal={setSaleTotal} 
-            setRentalTotal={setRentalTotal} 
+            setSaleTotal={setSaleTotal}
+            setRentalTotal={setRentalTotal}
             setRentalFeeTotal={setRentalFeeTotal}
           />
         );
@@ -171,12 +172,29 @@ export default function CartPage() {
     }
   };
 
+  const getPageTitle = () => {
+    switch (currentStep) {
+      case 1:
+        return "購物車 - 商品清單";
+      case 2:
+        return "購物車 - 填寫資料";
+      case 3:
+        return "購物車 - 確認訂單";
+      default:
+        return "購物車";
+    }
+  };
+
   if (loading) {
-    return <div>載入中...</div>; // 或是使用你的載入動畫組件
+    return <div>載入中...</div>;
   }
 
   return (
     <>
+      <Head>
+        <title>{getPageTitle()} | Pertho</title>
+      </Head>
+
       <Container
         fluid="fluid"
         className={`${styles.stepImg} d-flex justify-content-center align-items-center`}
@@ -190,7 +208,7 @@ export default function CartPage() {
         </Row>
       </Container>
 
-        <div className={`py-3 ${styles.ppageBackground}`} onWheel={handleWheel}>
+      <div className={`py-3 ${styles.ppageBackground}`} onWheel={handleWheel}>
         <div
           className={styles.Circle2}
           style={{
@@ -198,7 +216,7 @@ export default function CartPage() {
             height: `${circleSize}px`,
           }}
         ></div>
-        
+
         {renderStepContent()}
       </div>
     </>

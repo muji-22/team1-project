@@ -1,6 +1,7 @@
 // pages/product/[id].js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import style from "@/styles/productDetail.module.css";
 import ProductDetailSide from "@/components/product/productDetailSide";
 import ProductDetailNotice from "@/components/product/productDetailNotice";
@@ -93,6 +94,10 @@ function ProductDetail() {
     if (!product) return null;
 
     return (
+        <>
+        <Head>
+            <title>{product.name} | Pertho</title>
+        </Head>
         <div className="container mt-3">
             {/* 麵包屑 */}
             <Breadcrumb
@@ -266,6 +271,7 @@ function ProductDetail() {
                 <MayFavorite currentProduct={product} />
             </div>
         </div>
+        </>
     );
 }
 

@@ -1,6 +1,7 @@
 // pages/rent/[id].js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import style from "@/styles/productDetailRent.module.css";
 import ProductDetailRent from "@/components/rent/productDetailRent";
 import ProductDetailRentMobile from "@/components/rent/productDetailRentMobile";
@@ -101,6 +102,10 @@ function ProductRent() {
   if (!product) return null;
 
   return (
+    <>
+    <Head>
+      <title>{product.name} | Pertho</title>
+    </Head>
     <div className="container mt-3">
       {/* 麵包屑 */}
       <Breadcrumb
@@ -277,6 +282,7 @@ function ProductRent() {
         <MayFavoriteRent currentProduct={product} />
       </div>
     </div>
+    </>
   );
 }
 

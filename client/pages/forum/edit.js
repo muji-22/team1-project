@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
 import { Container, Form, Button, Image } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/AuthContext'
@@ -209,6 +210,10 @@ export default function PostEdit() {
   }
 
   return (
+    <>
+    <Head>
+      <title>{id ? '編輯文章' : '發表新文章'} | Pertho</title>
+    </Head>
     <Container className="py-4">
       <div className="forum-edit-container">
         <h2 className="mb-4">{id ? '編輯文章' : '發表新文章'}</h2>
@@ -341,5 +346,6 @@ export default function PostEdit() {
         `}</style>
       </div>
     </Container>
+    </>
   )
 }

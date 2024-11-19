@@ -186,7 +186,7 @@ const Footer = () => {
         <div className="row border-top pt-3 mt-5">
           <div className="col-6">
             <small className="text-dark text-start">
-              © 2024. Perthon. All rights reserved
+              © 2024. Pertho. All rights reserved
             </small>
           </div>
           <div className="col-6">

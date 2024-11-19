@@ -10,6 +10,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import Link from "next/link";
+import Head from "next/head";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaSearch, FaRegCommentDots, FaRegNewspaper } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -90,6 +91,10 @@ export default function ForumList() {
   }
 
   return (
+    <>
+    <Head>
+      <title>討論區 | Pertho</title>
+    </Head>
     <Container className="py-4">
        {/* 麵包屑 */}
        <Breadcrumb
@@ -268,5 +273,6 @@ export default function ForumList() {
         }
       `}</style>
     </Container>
+    </>
   );
 }
