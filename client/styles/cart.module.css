@@ -189,3 +189,38 @@
 
 
   }
+
+  
+  
+  @media (max-width: 390px) {
+    .PPPhonecontrol {
+      display: flex;
+      flex-direction: column; /* 設置垂直排列 */
+      align-items: start; /* 水平左對齊 */
+      gap: 10px;
+
+    }
+    
+  }
+
+  .ppageBackground {
+    position: relative;
+    background: linear-gradient(to bottom, #FAFAFC, #f1f1f1); /* 背景顏色 */
+    overflow: hidden;
+    
+  }
+ 
+
+  .Circle2{
+    position: absolute; /* 定位圓形 */
+    width: 1000px; /* 圓形的寬度 */
+    height: 1000px; /* 圓形的高度 */
+    background-color: rgba(189, 189, 189, 0.1); 
+    border-radius: 50%; /* 確保圓形 */
+    top: -500px; /* 距離父容器頂部的比例 */
+    left: -500px;/* 向左偏移，創造部分可見效果 */ 
+    transition: 0.8s;
+    
+  }
+
+    

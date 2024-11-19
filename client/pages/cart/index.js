@@ -25,6 +25,8 @@ export default function CartPage() {
   const [scrollRatio, setScrollRatio] = useState(0);
   const [orderStoreName, setOrderStoreName] = useState('');
 
+  const [circleSize, setCircleSize] = useState(1200); // 初始圓形大小
+
   const [orderInfo, setOrderInfo] = useState({
     name: user?.name || "",
     phone: user?.phone || "",
@@ -32,6 +34,21 @@ export default function CartPage() {
     note: "",
     payment: "credit_card",
   });
+
+  // 滾輪事件處理
+  const handleWheel = (event) => {
+    // 當圓形已經放到最大或最小時，停止對滾輪事件的反應
+    if (circleSize >= 1300 && event.deltaY > 0) return;  // 當圓形已經最大並且滾輪向下時不再增大
+    if (circleSize <= 1000 && event.deltaY < 0) return;   // 當圓形已經最小並且滾輪向上時不再縮小
+
+    if (event.deltaY > 0) {
+      // 滾輪往下
+      setCircleSize((prevSize) => Math.min(prevSize + 50, 1300)); // 增大圓形
+    } else {
+      // 滾輪往上
+      setCircleSize((prevSize) => Math.max(prevSize - 50, 1000)); // 減小圓形
+    }
+  };
 
   useEffect(() => {
     if (loading) return;
@@ -164,7 +181,17 @@ export default function CartPage() {
      
         </Container>
 
-      <div className={`mb-4 mt-3`}>{renderStepContent()}</div>
+        <div className={`py-3 ${styles.ppageBackground}`} onWheel={handleWheel}>
+        <div
+          className={styles.Circle2}
+          style={{
+            width: `${circleSize}px`,
+            height: `${circleSize}px`,
+          }}
+        ></div>
+        
+        {renderStepContent()}
+      </div>
     </>
   );
 }
