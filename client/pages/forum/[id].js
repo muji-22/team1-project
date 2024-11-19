@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Card, Button, Form } from "react-bootstrap";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Head from "next/head";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaEdit, FaTrash, FaReply, FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -244,6 +245,9 @@ export default function PostDetail() {
 
   return (
     <>
+      <Head>
+        <title>{post.title} | 討論區 | Pertho</title>
+      </Head>
       <style jsx global>
         {`
           .content-wrapper {

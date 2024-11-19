@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import ProductFilter from "@/components/product/filter";
 import ProductList from "@/components/product/ProductList";
 import { GrFilter } from "react-icons/gr";
@@ -29,7 +30,15 @@ function Products() {
   // 監聽 URL 參數變化，只做初始化
   useEffect(() => {
     if (router.isReady) {
-      const { gametypes, search, players, playtime, age, price_min, price_max } = router.query;
+      const {
+        gametypes,
+        search,
+        players,
+        playtime,
+        age,
+        price_min,
+        price_max,
+      } = router.query;
 
       const newFilters = {
         search: search || "",
@@ -40,7 +49,7 @@ function Products() {
         price: {
           min: price_min || "",
           max: price_max || "",
-        }
+        },
       };
 
       // 更新 filters 和 activeFilters
@@ -119,7 +128,7 @@ function Products() {
 
   // 處理分頁變更
   const handlePageChange = (page) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setCurrentPage(page);
   };
 
@@ -130,21 +139,25 @@ function Products() {
     updateActiveFilters(newFilters);
 
     // 更新 URL，但不重新加載頁面
-    router.push({
-      pathname: '/products',
-      query: {
-        ...(newFilters.search && { search: newFilters.search }),
-        ...(newFilters.gametypes?.length > 0 && { 
-          gametypes: JSON.stringify(newFilters.gametypes) 
-        }),
-        ...(newFilters.players && { players: newFilters.players }),
-        ...(newFilters.playtime && { playtime: newFilters.playtime }),
-        ...(newFilters.age && { age: newFilters.age }),
-        ...(newFilters.price?.min && { price_min: newFilters.price.min }),
-        ...(newFilters.price?.max && { price_max: newFilters.price.max }),
-        ...(newFilters.sortPrice && { sort_price: newFilters.sortPrice }),
-      }
-    }, undefined, { shallow: true });
+    router.push(
+      {
+        pathname: "/products",
+        query: {
+          ...(newFilters.search && { search: newFilters.search }),
+          ...(newFilters.gametypes?.length > 0 && {
+            gametypes: JSON.stringify(newFilters.gametypes),
+          }),
+          ...(newFilters.players && { players: newFilters.players }),
+          ...(newFilters.playtime && { playtime: newFilters.playtime }),
+          ...(newFilters.age && { age: newFilters.age }),
+          ...(newFilters.price?.min && { price_min: newFilters.price.min }),
+          ...(newFilters.price?.max && { price_max: newFilters.price.max }),
+          ...(newFilters.sortPrice && { sort_price: newFilters.sortPrice }),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   // 移除篩選標籤
@@ -175,82 +188,92 @@ function Products() {
   };
 
   return (
-    <div className="container mt-3">
-      {/* 麵包屑 */}
-      <Breadcrumb
-        items={[
-          { label: "首頁", href: "/" },
-          { label: "商品列表", active: true },
-        ]}
-      />
+    <>
+      <Head>
+        <title>商品列表 | Pertho</title>
+      </Head>
+      <div className="container mt-3">
+        {/* 麵包屑 */}
+        <Breadcrumb
+          items={[
+            { label: "首頁", href: "/" },
+            { label: "商品列表", active: true },
+          ]}
+        />
 
-      <h2 className="mb-5">商品列表</h2>
+        <h2 className="mb-5">商品列表</h2>
 
-      {/* 手機版篩選按鈕區 */}
-      <div className="d-lg-none mb-4">
-        <div className="d-flex justify-content-end gap-2 overflow-auto pb-2">
-          <button
-            className="btn btn-custom d-flex align-items-center gap-2 flex-shrink-0 rounded-pill"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#filterOffcanvasBottom"
-            aria-controls="filterOffcanvasBottom"
-          >
-            <GrFilter />
-            <span>篩選</span>
-          </button>
+        {/* 手機版篩選按鈕區 */}
+        <div className="d-lg-none mb-4">
+          <div className="d-flex justify-content-end gap-2 overflow-auto pb-2">
+            <button
+              className="btn btn-custom d-flex align-items-center gap-2 flex-shrink-0 rounded-pill"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#filterOffcanvasBottom"
+              aria-controls="filterOffcanvasBottom"
+            >
+              <GrFilter />
+              <span>篩選</span>
+            </button>
+          </div>
+
+          {/* 已選擇的篩選標籤 */}
+          {hasActiveFilters && (
+            <div className="d-flex flex-wrap gap-2 mt-2 justify-content-end">
+              {activeFilters.map((filter, index) => (
+                <span
+                  key={index}
+                  className="badge bg-custom d-flex align-items-center gap-2"
+                >
+                  {filter.label}
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => removeFilter(filter.id)}
+                    style={{ fontSize: "0.65em" }}
+                  ></button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* 已選擇的篩選標籤 */}
-        {hasActiveFilters && (
-          <div className="d-flex flex-wrap gap-2 mt-2 justify-content-end">
-            {activeFilters.map((filter, index) => (
-              <span
-                key={index}
-                className="badge bg-custom d-flex align-items-center gap-2"
-              >
-                {filter.label}
-                <button
-                  type="button"
-                  className="btn-close btn-close-white"
-                  onClick={() => removeFilter(filter.id)}
-                  style={{ fontSize: "0.65em" }}
-                ></button>
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* 主要內容區 */}
-      <div className="row">
-        {/* 左側-篩選欄 */}
-        <ProductFilter onSelectTags={handleFilterChange} initialFilters={filters} />
-
-        {/* 右側-商品列表 */}
-        <div className="col-12 col-lg-9">
-        <div className="col-3 ms-auto">
-          <select
-            className="form-select mb-4"
-            onChange={(e) => handleFilterChange({...filters, sortPrice: e.target.value })}
-            value={filters.sortPrice || ""}
-          >
-            <option value="">預設排序</option>
-            <option value="asc">價格：低到高</option>
-            <option value="desc">價格：高到低</option>
-          </select>
-          </div>
-          
-          <ProductList 
-            filters={filters}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setTotalPages={setTotalPages}
-            onPageChange={handlePageChange}
+        {/* 主要內容區 */}
+        <div className="row">
+          {/* 左側-篩選欄 */}
+          <ProductFilter
+            onSelectTags={handleFilterChange}
+            initialFilters={filters}
           />
+
+          {/* 右側-商品列表 */}
+          <div className="col-12 col-lg-9">
+            <div className="col-3 ms-auto">
+              <select
+                className="form-select mb-4"
+                onChange={(e) =>
+                  handleFilterChange({ ...filters, sortPrice: e.target.value })
+                }
+                value={filters.sortPrice || ""}
+              >
+                <option value="">預設排序</option>
+                <option value="asc">價格：低到高</option>
+                <option value="desc">價格：高到低</option>
+              </select>
+            </div>
+
+            <ProductList
+              filters={filters}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setTotalPages={setTotalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

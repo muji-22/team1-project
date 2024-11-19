@@ -1,6 +1,7 @@
 // pages/coupons/index.js
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import Head from "next/head";
 import CouponListCard from "@/components/coupon/CouponListCard";
 import Pagination from "@/components/product/Pagination";
 import Swal from "sweetalert2";
@@ -200,6 +201,10 @@ export default function Coupons() {
   if (error) return <div className="text-center p-5 text-danger">{error}</div>;
 
   return (
+    <>
+    <Head>
+    <title>優惠券領取 | Pertho</title>
+    </Head>
     <div className="container py-5">
       {/* 麵包屑 */}
       <Breadcrumb
@@ -289,5 +294,6 @@ export default function Coupons() {
         />
       )}
     </div>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 //pages/rents/index.js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import ProductFilter from "@/components/product/filter";
 import RentList from "@/components/rent/RentList";
 import { GrFilter } from "react-icons/gr";
@@ -175,6 +176,10 @@ function Rents() {
   };
 
   return (
+    <>
+    <Head>
+      <title>商品租賃 | Pertho</title>
+    </Head>
     <div className="container mt-3">
       <Breadcrumb
         items={[
@@ -250,6 +255,7 @@ function Rents() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

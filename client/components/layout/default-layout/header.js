@@ -71,7 +71,7 @@ function Header() {
                   }`}
                   href="/forum"
                 >
-                  文章
+                  討論區
                 </Link>
               </li>
               <li className="nav-item mx-3">
@@ -247,14 +247,14 @@ function Header() {
               className="list-group-item list-group-item-action"
               onClick={handleClose}
             >
-              商品租借
+              商品租賃
             </Link>
             <Link
               href="/forum"
               className="list-group-item list-group-item-action"
               onClick={handleClose}
             >
-              文章
+              討論區
             </Link>
           </div>
 

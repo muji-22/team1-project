@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Container, Card, Button, Table } from "react-bootstrap";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import Swal from "sweetalert2";
 import { CheckCircle } from "lucide-react";
 import html2canvas from "html2canvas";
@@ -166,6 +167,10 @@ export default function PaymentSuccess() {
   }
 
   return (
+    <>
+    <Head>
+      <title>付款成功 | Pertho</title>
+    </Head>
     <Container className="py-5">
       <Card className="border-0 shadow-sm">
         <Card.Body className="py-5">
@@ -333,5 +338,6 @@ export default function PaymentSuccess() {
         </Card.Body>
       </Card>
     </Container>
+    </>
   );
 }
