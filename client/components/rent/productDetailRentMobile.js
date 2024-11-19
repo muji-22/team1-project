@@ -62,8 +62,8 @@ const ProductDetailSideMobile = ({
 
   return (
     <>
-      <div class="row mt-5">
-        <div class="col-12 text-center">
+      <div class="row">
+        <div class="col-12 text-center ">
           <h4 style={{ fontWeight: "700" }}>
             {name}
             <FavoriteButton
@@ -76,8 +76,8 @@ const ProductDetailSideMobile = ({
           />
           </h4>
         </div>
-        <h5 class="col-6 text-center">押金${deposit}</h5>
-        <h5 class="col-6 text-center">租金${rental_fee}/天</h5>
+        <h5 class="col-6 text-center mt-3">押金${deposit}</h5>
+        <h5 class="col-6 text-center mt-3">租金${rental_fee}/天</h5>
         <div className="col-12 mt-3 text-center">
           商品數量<QuantityAdjuster 
             value={quantity}
@@ -90,8 +90,8 @@ const ProductDetailSideMobile = ({
         <h5 className="col-12 mt-4 text-center">總價${(deposit+rental_fee*days)*quantity}</h5>
       </div>
 
-      <div className="row align-items-center g-2 mt-4 mb-2">
-        <div className="col-6 pe-5">
+      <div className="row align-items-center g-2 mt-3 ">
+        <div className="col">
         <AddToCartButton
             className="btn buttonCustomC w-100  gap-2" 
             productId={id}
@@ -102,7 +102,7 @@ const ProductDetailSideMobile = ({
             type="rental"
           />
         </div>
-        <div className="col-6 ps-5">
+        <div className="col">
         <Link
             href={`/product/${id}`}
             className="btn btn-success w-100 rounded-pill d-flex align-items-center justify-content-center py-2"

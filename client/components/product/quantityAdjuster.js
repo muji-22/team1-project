@@ -41,7 +41,7 @@ const QuantityAdjuster = ({ value = 1, onChange }) => {
 
   return (
     <div 
-      className='btn-group border border-2' 
+      className='btn-group border border-2 ms-3' 
       role="group" 
       style={{ height: '40px' }}
     >
