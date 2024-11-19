@@ -5,6 +5,7 @@ import { useCart } from "@/contexts/CartContext";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 import { toast } from "react-toastify";
+import styles from "@/styles/cart.module.css";
 
 const StepOne = ({
   setstepType,

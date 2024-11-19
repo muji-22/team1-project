@@ -96,8 +96,8 @@ const StepTwo = ({
   // components/cart/StepTwo.js 的 return 部分
 
   return (
-    <Container>
-      <Row className="justify-content-center">
+    <Container className="z-2 position-relative">
+      <Row className="justify-content-center ">
         <Col md={8} lg={6}>
           <div className="border rounded p-4 bg-white shadow-sm">
             <h4 className="mb-4 bg-custom py-3 text-center text-white">填寫收件資料</h4>

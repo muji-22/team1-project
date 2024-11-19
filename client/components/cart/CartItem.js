@@ -1,11 +1,11 @@
 // components/cart/CartItem.js
-import React, { useState } from 'react';
-import { Card } from 'react-bootstrap';
-import { FaTrash } from 'react-icons/fa';
-import { useCart } from '@/contexts/CartContext';
-import Link from 'next/link';
-import styles from '@/styles/cart.module.css';
-import Swal from 'sweetalert2';
+import React, { useState } from "react";
+import { Card } from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
+import { useCart } from "@/contexts/CartContext";
+import Link from "next/link";
+import styles from "@/styles/cart.module.css";
+import Swal from "sweetalert2";
 
 const CartItem = ({ item, onUpdate }) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -18,10 +18,14 @@ const CartItem = ({ item, onUpdate }) => {
 
     setIsUpdating(true);
     try {
-      await updateCartItem(item.id, newQuantity, item.type === 'rental' ? rentalDays : undefined);
+      await updateCartItem(
+        item.id,
+        newQuantity,
+        item.type === "rental" ? rentalDays : undefined
+      );
       await onUpdate();
     } catch (error) {
-      console.error('更新失敗:', error);
+      console.error("更新失敗:", error);
     } finally {
       setIsUpdating(false);
     }
@@ -37,7 +41,7 @@ const CartItem = ({ item, onUpdate }) => {
       await updateCartItem(item.id, item.quantity, newDays);
       await onUpdate();
     } catch (error) {
-      console.error('更新天數失敗:', error);
+      console.error("更新天數失敗:", error);
     } finally {
       setIsUpdating(false);
     }
@@ -47,38 +51,43 @@ const CartItem = ({ item, onUpdate }) => {
   const handleDelete = async () => {
     try {
       const result = await Swal.fire({
-        title: '確定要刪除此商品嗎？',
-        icon: 'warning',
-        iconColor: '#ff6b6b',
+        title: "確定要刪除此商品嗎？",
+        icon: "warning",
+        iconColor: "#ff6b6b",
         showCancelButton: true,
-        confirmButtonColor: '#ff6b6b',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: '確定刪除',
-        cancelButtonText: '取消'
+        confirmButtonColor: "#ff6b6b",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "確定刪除",
+        cancelButtonText: "取消",
       });
-  
+
       if (result.isConfirmed) {
         await removeCartItem(item.id);
         await onUpdate();
       }
     } catch (error) {
-      console.error('刪除失敗:', error);
+      console.error("刪除失敗:", error);
     }
   };
 
   return (
     <Card className="mb-3">
       <Card.Body>
-        <div className="d-flex">
+        <div className="d-flex align-items-center">
           {/* 商品圖片 */}
           <div className={`${styles.Imgitem} ${styles.cartItemImage}`}>
-            <Link href={`/${item.type === 'rental' ? 'rent' : 'product'}/${item.product_id}`}>
+            <Link
+              href={`/${item.type === "rental" ? "rent" : "product"}/${
+                item.product_id
+              }`}
+            >
               <img
                 src={`http://localhost:3005/productImages/${item.product_id}/${item.product_id}-1.jpg`}
                 alt={item.name}
                 className={`img-fluid rounded `}
                 onError={(e) => {
-                  e.target.src = "http://localhost:3005/productImages/default-product.png"
+                  e.target.src =
+                    "http://localhost:3005/productImages/default-product.png";
                 }}
               />
             </Link>
@@ -87,13 +96,15 @@ const CartItem = ({ item, onUpdate }) => {
           {/* 商品資訊 */}
           <div className="flex-grow-1 ms-3">
             <div className="d-flex justify-content-between">
-              <Link 
-                href={`/${item.type === 'rental' ? 'rent' : 'product'}/${item.product_id}`}
+              <Link
+                href={`/${item.type === "rental" ? "rent" : "product"}/${
+                  item.product_id
+                }`}
                 className="text-decoration-none"
               >
                 <h5 className="card-title">{item.name}</h5>
               </Link>
-              <button 
+              <button
                 className="btn btn-link text-danger p-0"
                 onClick={handleDelete}
               >
@@ -103,7 +114,7 @@ const CartItem = ({ item, onUpdate }) => {
 
             {/* 價格資訊 */}
             <p className="text-muted mb-2">
-              {item.type === 'rental' ? (
+              {item.type === "rental" ? (
                 <>
                   租金：NT$ {item.rental_fee.toLocaleString()} /天
                   <br />
@@ -118,56 +129,74 @@ const CartItem = ({ item, onUpdate }) => {
             <div className="d-flex justify-content-between align-items-center mt-3">
               <div className="d-flex flex-column gap-2">
                 {/* 商品數量控制 */}
-                <div className="d-flex align-items-center">
+                <div
+                  className={`${styles.PPPhonecontrol} d-flex align-items-center`}
+                >
                   <span className="me-2">商品數量:</span>
-                  <button 
-                    className="btn btn-outline-secondary btn-sm"
-                    onClick={() => handleQuantityChange(item.quantity - 1)}
-                    disabled={item.quantity <= 1 || isUpdating}
-                  >
-                    -
-                  </button>
-                  <span className="mx-3">{item.quantity}</span>
-                  <button 
-                    className="btn btn-outline-secondary btn-sm"
-                    onClick={() => handleQuantityChange(item.quantity + 1)}
-                    disabled={isUpdating}
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* 租借天數控制 (只在租借商品顯示) */}
-                {item.type === 'rental' && (
-                  <div className="d-flex align-items-center">
-                    <span className="me-2">租借天數:</span>
-                    <button 
+                  <div className="d-flex">
+                    <button
                       className="btn btn-outline-secondary btn-sm"
-                      onClick={() => handleDaysChange(rentalDays - 1)}
-                      disabled={rentalDays <= 1 || isUpdating}
+                      onClick={() => handleQuantityChange(item.quantity - 1)}
+                      disabled={item.quantity <= 1 || isUpdating}
                     >
                       -
                     </button>
-                    <span className="mx-3">{rentalDays}</span>
-                    <button 
+                    <span className="mx-3">{item.quantity}</span>
+                    <button
                       className="btn btn-outline-secondary btn-sm"
-                      onClick={() => handleDaysChange(rentalDays + 1)}
+                      onClick={() => handleQuantityChange(item.quantity + 1)}
                       disabled={isUpdating}
                     >
                       +
                     </button>
                   </div>
+                </div>
+
+                {/* 租借天數控制 (只在租借商品顯示) */}
+                {item.type === "rental" && (
+                  <div
+                    className={`${styles.PPPhonecontrol} d-flex align-items-center`}
+                  >
+                    <span className="me-2">租借天數:</span>
+                    <div className="d-flex">
+                      <button
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={() => handleDaysChange(rentalDays - 1)}
+                        disabled={rentalDays <= 1 || isUpdating}
+                      >
+                        -
+                      </button>
+                      <span className="mx-3">{rentalDays}</span>
+                      <button
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={() => handleDaysChange(rentalDays + 1)}
+                        disabled={isUpdating}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
 
               {/* 價格顯示 */}
-              <div className="text-primary fw-bold">
-                {item.type === 'rental' ? (
+              <div className="text-primary fw-bold text-end">
+                {item.type === "rental" ? (
                   <>
-                    NT$ {((item.deposit * item.quantity) + (item.rental_fee * rentalDays * item.quantity)).toLocaleString()}
+                    NT${" "}
+                    {(
+                      item.deposit * item.quantity +
+                      item.rental_fee * rentalDays * item.quantity
+                    ).toLocaleString()}
                     <div className="text-muted small">
-                      (押金: {(item.deposit * item.quantity).toLocaleString()} + 
-                      租金: {(item.rental_fee * rentalDays * item.quantity).toLocaleString()})
+                      (押金: {(item.deposit * item.quantity).toLocaleString()} +
+                      租金:{" "}
+                      {(
+                        item.rental_fee *
+                        rentalDays *
+                        item.quantity
+                      ).toLocaleString()}
+                      )
                     </div>
                   </>
                 ) : (

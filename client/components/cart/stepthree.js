@@ -195,7 +195,7 @@ const StepThree = ({
   const subtotals = calculateSubtotals();
 
   return (
-    <Container>
+    <Container className="z-3 position-relative">
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <Card className="mb-4">
