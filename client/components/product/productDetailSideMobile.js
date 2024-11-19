@@ -52,7 +52,7 @@ const ProductDetailSideMobile = ({
 
   return (
     <>
-      <div className="row mt-5">
+      <div className="row">
         <div className="col-12 text-center">
           <h4 style={{ fontWeight: "700" }}>
             {name}
@@ -73,14 +73,14 @@ const ProductDetailSideMobile = ({
       </div>
 
       <div className="row align-items-center g-2 mt-4 mb-2">
-        <div className="col-6 mt-3 pe-5">
+        <div className="col mt-3 ">
         <AddToCartButton
             className="btn buttonCustomC w-100  gap-2" 
             productId={id}
             quantity={quantity}
           />
         </div>
-        <div className="col-6 mt-3 ps-5">
+        <div className="col mt-3 ">
         <Link
             href={`/rent/${id}`}
             className="btn btn-success w-100 rounded-pill d-flex align-items-center justify-content-center py-2"

@@ -6,7 +6,7 @@ const ProductDetailNotice = () => {
     return (
         <div className="accordion" id="noticeAccordion">
             <div className="accordion-item border-0">
-                <div className={`row ${styles.noticeLine}`}>
+                <div className={`row mt-5 ${styles.noticeLine}`}>
                     <h5 className=" accordion-header">
                         <button
                             className={`accordion-button h5 ${styles.accordionButton}`}
