@@ -75,10 +75,10 @@ export default function Orders() {
         <Table hover className={styles.orderTable}>
           <thead>
             <tr>
-              <th>訂單編號</th>
+              <th>編號</th>
               <th>訂購日期</th>
               <th>訂單金額</th>
-              <th>訂單狀態</th>
+              <th>狀態</th>
             </tr>
           </thead>
           <tbody>
