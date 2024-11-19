@@ -16,6 +16,9 @@ export default function CartPage() {
   const router = useRouter();
   const { fetchCartCount } = useCart();
 
+  const [saleTotal, setSaleTotal] = useState(0);
+  const [rentalTotal, setRentalTotal] = useState(0);
+  const [rentalFeeTotal, setRentalFeeTotal] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
   const [discountPrice, setDiscountPrice] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
@@ -23,7 +26,7 @@ export default function CartPage() {
   const [cartProductDtl, setCartProductDtl] = useState([]);
   const [cartOriginDtl, setCartOriginDtl] = useState([]);
   const [scrollRatio, setScrollRatio] = useState(0);
-  const [orderStoreName, setOrderStoreName] = useState('');
+  const [orderStoreName, setOrderStoreName] = useState("");
 
   const [circleSize, setCircleSize] = useState(1200); // 初始圓形大小
 
@@ -128,6 +131,9 @@ export default function CartPage() {
             setCartCouponId={setCartCouponId}
             setCartProductDtl={setCartProductDtl}
             setCartOriginDtl={setCartOriginDtl}
+            setSaleTotal={setSaleTotal} 
+            setRentalTotal={setRentalTotal} 
+            setRentalFeeTotal={setRentalFeeTotal}
           />
         );
       case 2:
@@ -136,6 +142,9 @@ export default function CartPage() {
             setstepType={handleStepChange}
             discountPrice={discountPrice}
             discountAmount={discountAmount}
+            saleTotal={saleTotal}
+            rentalTotal={rentalTotal}
+            rentalFeeTotal={rentalFeeTotal}
             setOrderName={(value) => updateOrderInfo({ name: value })}
             setOrderPhone={(value) => updateOrderInfo({ phone: value })}
             setOrderAddress={(value) => updateOrderInfo({ address: value })}
@@ -166,20 +175,20 @@ export default function CartPage() {
     return <div>載入中...</div>; // 或是使用你的載入動畫組件
   }
 
-
   return (
     <>
-        <Container fluid="fluid" className={`${styles.stepImg} d-flex justify-content-center align-items-center`}>
-
-          <Row
-            className={`d-flex justify-content-center align-items-center ${styles.stepBar} fw-bold`}
-          >
-            {renderStepIndicator(1, "購物車")}
-            {renderStepIndicator(2, "填寫資料")}
-            {renderStepIndicator(3, "最後確認")}
-          </Row>
-     
-        </Container>
+      <Container
+        fluid="fluid"
+        className={`${styles.stepImg} d-flex justify-content-center align-items-center`}
+      >
+        <Row
+          className={`d-flex justify-content-center align-items-center ${styles.stepBar} fw-bold`}
+        >
+          {renderStepIndicator(1, "購物車")}
+          {renderStepIndicator(2, "填寫資料")}
+          {renderStepIndicator(3, "最後確認")}
+        </Row>
+      </Container>
 
         <div className={`py-3 ${styles.ppageBackground}`} onWheel={handleWheel}>
         <div

@@ -210,7 +210,7 @@ function ProductRent() {
             onDaysChange={handleDaysChange}
           />
         </div>
-        <div className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}>
+        <div className={`d-lg-none col-md-12 col-lg-6`}>
           <ProductDetailRentMobile
             id={product.id}
             name={product.name}

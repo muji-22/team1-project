@@ -198,7 +198,7 @@ function ProductDetail() {
                     />
                 </div>
                 <div
-                    className={`d-lg-none col-md-12 col-lg-6 ${style.rightSide}`}
+                    className={`d-lg-none col-md-12 col-lg-6`}
                 >
                     <ProductDetailSideMobile
                         id={product.id}

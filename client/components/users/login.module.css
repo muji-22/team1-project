@@ -102,7 +102,7 @@
   font-weight: 700;
 
   &:hover {
-    text-shadow:2px 2px 5px black;
+    text-shadow: 1px 1px 1px #40CBCE;
   }
 }
 
@@ -119,7 +119,7 @@
 
   &:hover {
     box-shadow: 3px 3px 3px black;
-    text-shadow: 1px 1px 1px black;
+    text-shadow: 1px 1px 1px #40CBCE;
   }
 }
 
@@ -250,7 +250,7 @@
   }
 
   .resgiter {
-    max-width: 500px;
+    max-width: 350px;
     height: 500px;
     border-radius: 20px;
     margin-inline: auto;
@@ -260,20 +260,21 @@
 
   .inputGroup {
     /* display: block; */
-    width: 75%;
+    width: 68%;
     height: 35px;
     background: #D9D9D9;
     border: 2px solid #40CBCE;
     background: rgba(255, 255, 255, 0.6);
     border-radius: 5px;
-    margin: 15px auto;
+    margin-block: 15px;
+    margin-inline-start: 15px;
     outline: none;
     padding-left: 25px;
     font-size: 20px;
     box-shadow: 3px 3px 5px gray;
   }
   .eye{
-    margin-inline-start: 330px;
+    margin-inline-start: 290px;
     margin-top: -45px;
     margin-bottom: 30px;
   }
@@ -282,16 +283,21 @@
     /* display: block; */
     background: #40CBCE;
     color: white;
-    width: 75%;
+    width: 70%;
     height: 55px;
     border-radius: 5px;
-    margin: 20px auto 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;  
+    margin-inline-start: 45px;
     border: 0px;
     font-size: 24px;
     box-shadow: 3px 3px 5px gray;
   }
   .googleButton {
-    width: 75%;
+    width: 70%;
+    margin-top: 20px;
+    margin-bottom: 10px;  
+    margin-inline-start: 45px;
   }
 
   .bottom {
@@ -316,20 +322,33 @@
 
   .icon {
     color: #40CBCE;
-    margin-left: 20px;
+    margin-left: 30px;
     font-size: 35px;
   }
   .title{
-    width: 200px;
+    width: 180px;
     border-bottom: 2px solid black;
-    margin-inline: auto;
+    margin-inline-start: 90px;
     text-align: center;
     margin-block: 15px;
     font-size: 36px;
     font-weight: 600;
     text-shadow: 1px 1px 3px #40CBCE;
   }
-
+  .icon {
+    color: #40CBCE;
+    margin-left: 10px;
+    font-size: 25px;
+  }
+  .forgrt{
+    margin-inline-start: 130px;
+  }
+  .bottom {
+    margin: 30px 0px 0px 80px;
+  }
+  .message {
+  width: 348px;
+  }
 
 
 }

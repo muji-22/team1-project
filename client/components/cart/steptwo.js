@@ -9,6 +9,9 @@ const StepTwo = ({
   setstepType,
   discountPrice,
   discountAmount,
+  saleTotal,
+  rentalTotal,
+  rentalFeeTotal,
   setOrderName,
   setOrderPhone,
   setOrderAddress,
@@ -84,13 +87,14 @@ const StepTwo = ({
     }
 
     // 延遲 0.5 秒後執行提交
- 
-      setOrderName(formData.name);
-      setOrderPhone(formData.phone);
-      setOrderAddress(formData.address);
-      setOrderStoreName(formData.deliveryMethod === '711' ? store711.storename : '');
-      setstepType(3);
 
+    setOrderName(formData.name);
+    setOrderPhone(formData.phone);
+    setOrderAddress(formData.address);
+    setOrderStoreName(
+      formData.deliveryMethod === "711" ? store711.storename : ""
+    );
+    setstepType(3);
   };
 
   // components/cart/StepTwo.js 的 return 部分
@@ -100,7 +104,9 @@ const StepTwo = ({
       <Row className="justify-content-center ">
         <Col md={8} lg={6}>
           <div className="border rounded p-4 bg-white shadow-sm">
-            <h4 className="mb-4 bg-custom py-3 text-center text-white">填寫收件資料</h4>
+            <h4 className="mb-4 bg-custom py-3 text-center text-white">
+              填寫收件資料
+            </h4>
 
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
               {/* 配送方式選擇 */}
@@ -252,11 +258,20 @@ const StepTwo = ({
           {/* 金額摘要 */}
           <div className="mt-4 p-3 border rounded bg-light">
             <div className="d-flex justify-content-between mb-2">
-              <span>商品總金額</span>
-              <span>
-                NT$ {(discountPrice + discountAmount).toLocaleString()}
-              </span>
+              <span>購買商品總額</span>
+              <span>NT$ {saleTotal?.toLocaleString() || 0}</span>
             </div>
+            {rentalFeeTotal > 0 && (
+              <div className="d-flex justify-content-between mb-2">
+                <span>租借商品總額</span>
+                <div className="text-end">
+                  <div>租金：NT$ {rentalFeeTotal.toLocaleString()}</div>
+                  <div>
+                    押金：NT$ {(rentalTotal - rentalFeeTotal).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            )}
             {discountAmount > 0 && (
               <div className="d-flex justify-content-between mb-2 text-danger">
                 <span>優惠折抵</span>
@@ -270,6 +285,12 @@ const StepTwo = ({
                 NT$ {discountPrice.toLocaleString()}
               </span>
             </div>
+            {rentalTotal - rentalFeeTotal > 0 && (
+              <div className="small text-muted mt-2">
+                *含押金 NT$ {(rentalTotal - rentalFeeTotal).toLocaleString()}
+                ，將於商品歸還後退還
+              </div>
+            )}
           </div>
         </Col>
       </Row>
