@@ -38,7 +38,11 @@ const Category = () => {
         <div className="col-8 text-center">
           <h2 className={'display-4 font-weight-bold mb-3'}>分類多元</h2>
           <p className={'lead'}>
+<<<<<<< HEAD
+            找到適合您的桌遊類型，讓我們為您推薦最適合的商品！
+=======
             利用多元的分類，找到適合您的桌遊類型，讓我們為您推薦最適合的商品！
+>>>>>>> dev
           </p>
         </div>
       </div>
@@ -46,7 +50,11 @@ const Category = () => {
         {categories.map((category) => (
           <div 
             key={category.id} 
+<<<<<<< HEAD
+            className="col-6 col-sm-4 col-md-3 col-lg-2 mb-4"
+=======
             className="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 mb-4"
+>>>>>>> dev
             onClick={() => handleCategoryClick(category.tagId)}
             role="button"
           >
