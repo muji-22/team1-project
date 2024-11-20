@@ -12,13 +12,9 @@ const CartSummary = ({
   saleTotal = 0,
   rentalTotal = 0,
 <<<<<<< HEAD
-  rentalFeeTotal = 0,
-=======
-<<<<<<< HEAD
   cartItems = [],
 =======
 >>>>>>> dev
->>>>>>> dev_shawn
   setDiscountPrice,
   setDiscountAmount,
   setCartCouponId,
@@ -405,18 +401,10 @@ const CartSummary = ({
             disabled={total <= 0}
           >
 <<<<<<< HEAD
-            {total <= 0
-              ? "購物車是空的"
-              : appliedCoupon
-              ? "更改優惠券"
-              : "選擇優惠券"}
-=======
-<<<<<<< HEAD
             {appliedCoupon ? "更改優惠券" : "選擇優惠券"}
 =======
             {total <= 0 ? "購物車是空的" : appliedCoupon ? "更改優惠券" : "選擇優惠券"}
 >>>>>>> dev
->>>>>>> dev_shawn
           </Button>
 
           {/* 優惠券選擇器 */}
