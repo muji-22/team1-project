@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'react-toastify'
 import dynamic from 'next/dynamic'
+import { FaCheckCircle } from 'react-icons/fa'
 
 const Editor = dynamic(() => import('@/components/forum/Editor'), {
   ssr: false,
