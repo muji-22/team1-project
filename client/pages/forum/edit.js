@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'react-toastify'
 import { FaCheckCircle } from "react-icons/fa";
+import Breadcrumb from "@/components/Breadcrumb";
 import dynamic from 'next/dynamic'
 
 const Editor = dynamic(() => import('@/components/forum/Editor'), {
@@ -215,6 +216,15 @@ export default function PostEdit() {
       <title>{id ? '編輯文章' : '發表新文章'} | Pertho</title>
     </Head>
     <Container className="py-4">
+      {/* 麵包屑 */}
+      <Breadcrumb
+          items={[
+            { label: "首頁", href: "/" },
+            { label: "討論區", href: "/forum"},
+            { label: `${id ? '編輯文章' : '發表新文章'}`, active: true },
+          ]}
+        />
+
       <div className="forum-edit-container">
         <h2 className="mb-4">{id ? '編輯文章' : '發表新文章'}</h2>
 
