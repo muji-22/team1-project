@@ -7,11 +7,11 @@ import { HiDocumentText } from "react-icons/hi2";
 
 export default function UserSideBar({ onItemClick }) {
     const menuItems = [
-        { id: 'profile', lable: '個人資料', icon: <FaUser size={20} /> },
+        { id: 'profile', lable: '會員資料', icon: <FaUser size={20} /> },
         { id: 'resetPassword', lable: '修改密碼', icon: <FaKey size={20} /> },
         { id: 'coupon', lable: '我的優惠券', icon: <RiCoupon5Fill size={20} /> },
         { id: 'favorites', lable: '收藏', icon: <FaHeart size={20} /> },
-        { id: 'record', lable: '歷史訂單', icon: <HiDocumentText size={20} /> }
+        { id: 'orders', lable: '歷史訂單', icon: <HiDocumentText size={20} /> }
     ]
 
 

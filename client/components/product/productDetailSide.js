@@ -1,81 +1,127 @@
-import React from "react";
-import { IoMdHeartEmpty } from "react-icons/io";
-import { FaCartPlus } from "react-icons/fa";
+// components/product/productDetailSide.js
+import React, { useState, useEffect } from "react";
 import QuantityAdjuster from "@/components/product/quantityAdjuster";
+import style from "./productDetailSide.module.css";
+import AddToCartButton from "./AddToCartButton";
+import { useAuth } from '@/contexts/AuthContext';
+import FavoriteButton from "./FavoriteButton";
+import Link from "next/link";
 
+const ProductDetailSide = ({
+  id,
+  name,
+  price,
+  description,
+  min_age,
+  min_users,
+  max_users,
+  playtime,
+  quantity,
+  onQuantityChange,
+}) => {
+  const { user } = useAuth();
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  // 檢查收藏狀態
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!user) return;
 
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/favorites/check/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setIsFavorited(data.data.isFavorited);
+        }
+      } catch (error) {
+        console.error("檢查收藏狀態失敗:", error);
+      }
+    };
 
-const ProductDetailSide = ({}) => {
+    checkFavoriteStatus();
+  }, [id, user]);
+
   return (
-      <>
-        <dl class="row">
-            <dt class="col-sm-9">
-              <h4 style={{ fontWeight: "700" }}>商品名稱</h4>
-            </dt>
-            <dd class="col-sm-3">
-              <a href="#" className="btn">
-                <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
-              </a>
-            </dd>
-            <h6 class="col-sm-3">$</h6>
-            <dd class="col-sm-9"></dd>
-            <div className="col-6">
-              商品數量 <QuantityAdjuster/>
-            </div>
-          </dl>
+    <>
+      <div className="row">
+        <div className="col-11">
+          <h3 className={`${style.name}`}>{name}</h3>
+        </div>
+        <div className="col-1">
+          <FavoriteButton
+            productId={id}
+            isFavorited={isFavorited}
+            setIsFavorited={setIsFavorited}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            className="btn"
+          />
+        </div>
+        <h5 className={`col-3 mt-3 ${style.price}`}>${price}</h5>
+        <div className="col-9 mt-3"></div>
+        <div className="col-8 mt-3">
+          商品數量 
+          <QuantityAdjuster 
+            value={quantity}
+            onChange={onQuantityChange}
+          />
+        </div>
+      </div>
 
-          <div className="row align-items-center g-2 mb-2">
-            <div className="col-sm-4">
-						<a
-            href="#"
-            className="btn btn-custom  w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto "
-          >
-            加入購物車 <FaCartPlus size={20} />
-          </a>
-            </div>
-						<div className="col-sm-4">
-						<a
-            href="#"
-            className="btn btn-success  w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto "
+      <div className="row align-items-center g-2 mt-4 mb-2">
+        <div className="col-sm-6">
+          <AddToCartButton
+            className="btn buttonCustomC w-100  gap-2" 
+            productId={id}
+            quantity={quantity}
+          />
+        </div>
+        <div className="col-sm-6">
+          <Link
+            href={`/rent/${id}`}
+            className="btn btn-success w-100 rounded-pill d-flex align-items-center justify-content-center py-2"
           >
             切換至租借商品
-          </a>
-            </div>
-          </div>
-          
+          </Link>
+        </div>
+      </div>
 
-          {/* 商品敘述 */}
-          <p>讀取商品敘述</p>
+      <p className={`mt-5 ${style.description}`}>{description}</p>
 
-          <dl class="row">
-            <dt class="col-sm-3">規格</dt>
-            <dd class="col-sm-9"></dd>
+      <div className="row mt-4">
+        <p className={`mt-3 ${style.subtitle}`}>規格</p>
+        <div></div>
 
-            <dt class="col-sm-3">最少玩家人數</dt>
-            <dd class="col-sm-9">
-              <p>讀取最少玩家人數</p>
-            </dd>
+        <div className={`mt-3 ${style.subtitle}`}>最少玩家人數</div>
+        <div>
+          <p>{min_users}</p>
+        </div>
 
-            <dt class="col-sm-3">最多玩家人數</dt>
-            <dd class="col-sm-9">
-              <p>讀取最多玩家人數</p>
-            </dd>
+        <div className={`${style.subtitle}`}>最多玩家人數</div>
+        <div>
+          <p>{max_users}</p>
+        </div>
 
-            <dt class="col-sm-3">建議年齡</dt>
-            <dd class="col-sm-9">
-              <p>讀取建議年齡</p>
-            </dd>
+        <div className={`${style.subtitle}`}>建議年齡</div>
+        <div>
+          <p>{min_age}</p>
+        </div>
 
-            <dt class="col-sm-3">平均遊玩時長</dt>
-            <dd class="col-sm-9">
-              <p>讀取平均遊玩時長</p>
-            </dd>
-          </dl>
-      </>
+        <div className={`${style.subtitle}`}>平均遊玩時長</div>
+        <div>
+          <p>{playtime}分鐘</p>
+        </div>
+      </div>
+    </>
   );
-}
-
-
+};
 
 export default ProductDetailSide;

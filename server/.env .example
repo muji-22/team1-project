@@ -5,12 +5,32 @@ DB_PORT="3306" #設定資料庫的port
 DB_DATABASE="mfee57" #要連線資料庫的名稱
 DB_USERNAME="admin" #連線資料庫的帳號
 DB_PASSWORD="admin" #連線資料庫的密碼
-SMTP_TO_EMAIL=test@gmail.com
-SMTP_TO_PASSWORD=vgmnwokxwxflxxxx
+GMAIL_USER= #你的Gmail信箱
+GMAIL_APP_PASSWORD= #你的Gmail應用程式密碼
 ACCESS_TOKEN_SECRET=thisisverstrongaccesstokensecre
 DEBUG=true
 OTP_SECRET=thisisaotpsecretforserver
 JWT_SECRET=your_very_long_and_secure_secret_key
+
+
+# 綠界所提供的測試 API
+# https://vendor-stage.ecpay.com.tw/User/LogOn_Step1
+ECPAY_MERCHANT_ID=3002599
+ECPAY_HASH_KEY=spPjZn66i0OhqJsQ
+ECPAY_HASH_IV=hT5OJckN45isQTTs
+
+# 前端頁面 URL (付款完成後要導向的頁面)
+ECPAY_ORDER_RESULT_URL=http://localhost:3000/payment/success
+
+# 訂單完成後的後端接收 URL
+ECPAY_RETURN_URL=http://localhost:3005/api/ecpay/callback
+
+# 訂單完成後要導向的頁面 URL
+ECPAY_ORDER_CALLBACK_URL=http://localhost:3000/payment/success
+
+
+# 超商取貨回調 URL
+SHIP_711_STORE_CALLBACK_URL=http://localhost:3000/shipment/callback
 
 
 

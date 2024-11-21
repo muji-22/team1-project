@@ -4,6 +4,11 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import pool from '../config/db.js'
 import { authenticateToken } from '../middlewares/auth.js'
+import multer from 'multer'
+import path from 'path'
+import fs from 'fs'
+import transporter from '../config/mail.js'
+import crypto from 'crypto'
 
 const router = express.Router()
 
@@ -11,14 +16,12 @@ const router = express.Router()
 router.post('/login', async (req, res) => {
   try {
     const { account, password } = req.body
-    console.log('Login attempt:', { account, password }) // 除錯用
 
     // 查詢使用者
     const [users] = await pool.query(
       'SELECT * FROM users WHERE account = ? AND valid = 1',
       [account]
     )
-    console.log('Found users:', users) // 除錯用
     
     if (users.length === 0) {
       return res.status(401).json({ message: '帳號或密碼錯誤' })
@@ -28,7 +31,6 @@ router.post('/login', async (req, res) => {
 
     // 驗證密碼
     const isValid = await bcrypt.compare(password, user.password)
-    console.log('Password validation:', isValid) // 除錯用
 
     if (!isValid) {
       return res.status(401).json({ message: '帳號或密碼錯誤' })
@@ -52,7 +54,10 @@ router.post('/login', async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role || 'user',
-      avatar_url: user.avatar_url
+      avatar_url: user.avatar_url,
+      phone: user.phone,
+      birthday: user.birthday,
+      address: user.address
     }
 
     res.json({
@@ -238,5 +243,126 @@ router.put('/password', authenticateToken, async (req, res) => {
     res.status(500).json({ message: '伺服器錯誤' })
   }
 })
+
+// 設定檔案儲存
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // 設定儲存路徑
+    cb(null, 'public/avatar')
+  },
+  filename: (req, file, cb) => {
+    // 確保檔名是唯一的，並保留原始副檔名
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+// 設定檔案過濾
+const fileFilter = (req, file, cb) => {
+  // 只允許 image 類型
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true)
+  } else {
+    cb(new Error('只允許上傳圖片檔案！'), false)
+  }
+}
+
+// 設定 multer
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1024 * 1024 * 5 // 限制 5MB
+  }
+})
+
+// 上傳大頭貼
+router.post('/upload-avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: '請選擇要上傳的圖片' })
+    }
+
+    // 處理舊的大頭貼檔案
+    const [user] = await pool.query(
+      'SELECT avatar_url FROM users WHERE id = ?',
+      [req.user.id]
+    )
+
+    if (user[0].avatar_url) {
+      const oldPath = path.join('public', user[0].avatar_url)
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath)
+      }
+    }
+
+    // 設定新的大頭貼路徑 (存入資料庫的是相對路徑)
+    const avatarUrl = `http://localhost:3005/avatar/${req.file.filename}`
+
+    // 更新資料庫
+    await pool.query(
+      'UPDATE users SET avatar_url = ? WHERE id = ?',
+      [avatarUrl, req.user.id]
+    )
+
+    res.json({
+      message: '大頭貼上傳成功',
+      avatar_url: avatarUrl
+    })
+
+  } catch (error) {
+    console.error('上傳大頭貼錯誤:', error)
+    res.status(500).json({ 
+      message: error.message || '上傳大頭貼失敗'
+    })
+  }
+})
+
+// 忘記密碼請求
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // 檢查信箱是否存在
+    const [users] = await pool.query(
+      'SELECT * FROM users WHERE email = ? AND valid = 1',
+      [email]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: '此信箱未註冊' });
+    }
+
+    // 生成臨時密碼
+    const tempPassword = crypto.randomBytes(4).toString('hex');
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+    // 更新資料庫中的密碼
+    await pool.query(
+      'UPDATE users SET password = ? WHERE email = ?',
+      [hashedPassword, email]
+    );
+
+    // 發送郵件
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: '密碼重置通知',
+      html: `
+        <h1>密碼重置</h1>
+        <p>您的臨時密碼是: <strong>${tempPassword}</strong></p>
+        <p>請使用此臨時密碼登入後立即更改您的密碼。</p>
+        <p>如果這不是您本人的操作，請立即聯繫我們。</p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.json({ message: '新密碼已發送至您的信箱' });
+  } catch (error) {
+    console.error('忘記密碼處理錯誤:', error);
+    res.status(500).json({ message: '伺服器錯誤' });
+  }
+});
 
 export default router

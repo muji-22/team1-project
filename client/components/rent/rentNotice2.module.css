@@ -1,0 +1,28 @@
+.noticeLine {
+  background-color: #40cbce;
+}
+
+.noticeLine.accordion-button::after {
+  filter: brightness(0) invert(1);
+}
+
+.p {
+  font-weight: 700;
+}
+
+.accordionButton {
+  background-color: #40cbce !important;
+  color: #000000 !important;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* 展開時的樣式 */
+.accordionButton:not(.collapsed) {
+  background-color: #40cbce !important;
+  color: #000000 !important;
+}

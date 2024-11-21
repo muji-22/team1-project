@@ -1,0 +1,146 @@
+.diceContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    transform-origin: center center;
+    width: 45vh;
+    height: auto;
+    aspect-ratio: 1/1;
+    animation: diceRotate 3s linear infinite;
+  }
+  
+  .dice {
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    transform-style: preserve-3d;
+    animation: spinner 3s linear infinite;
+    margin: 7vh;
+  }
+  
+  .dice:nth-of-type(1) {
+    position: absolute;
+    top: 0;
+    animation: spinner 3s linear infinite reverse;
+  }
+  
+  .dice:nth-of-type(2) {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    animation: spinner 3.45s linear infinite reverse;
+  }
+  
+  .dice:nth-of-type(3) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  
+  @keyframes spinner {
+    0% {
+      transform: rotate3d(1, 1, 1, 0deg);
+    }
+    100% {
+      transform: rotate3d(1, 1, 1, 360deg);
+    }
+  }
+  
+  @keyframes diceRotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* 骰子邊線 */
+  .side {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #d4d4d4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Arial", sans-serif;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transform-origin: center center;
+  }
+  
+  .side:after {
+    position: absolute;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+  }
+  
+  /* 骰子底色 */
+  .side:before {
+    position: absolute;
+    box-sizing: border-box;
+    content: "";
+    width: 92%;
+    height: 92%;
+    background: #ffffff;
+    
+  }
+  
+  .one {
+    transform: translateY(5vh) rotateX(-90deg);
+  }
+  
+  .one:after {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56' fill='none'%3E%3Ccircle cx='28' cy='28' r='6' fill='%23302322'/%3E%3C/svg%3E");
+  }
+  
+  .two {
+    transform: translateX(5vh) rotateY(-90deg);
+  }
+  
+  .two:after {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56' fill='none'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='44' r='6' fill='%23302322'/%3E%3C/svg%3E");
+  }
+  
+  .three {
+    transform: translateZ(-5vh) rotateY(0deg);
+  }
+  
+  .three:after {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56' fill='none'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='28' cy='28' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='44' r='6' fill='%23302322'/%3E%3C/svg%3E");
+  }
+  
+  .four {
+    transform: translateZ(5vh) rotateY(0deg);
+  }
+  
+  .four:after {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56' fill='none'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='12' cy='44' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='44' r='6' fill='%23302322'/%3E%3C/svg%3E");
+  }
+  
+  .five {
+    transform: translateX(-5vh) rotateY(-90deg);
+  }
+  
+  .five:after {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56' fill='none'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='28' cy='28' r='6' fill='%23302322'/%3E%3Ccircle cx='12' cy='44' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='44' r='6' fill='%23302322'/%3E%3C/svg%3E");
+  }
+  
+  .six {
+    transform: translateY(-5vh) rotateX(-90deg);
+  }
+  
+  .six:after {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56' fill='none'%3E%3Ccircle cx='12' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='12' cy='28' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='28' r='6' fill='%23302322'/%3E%3Ccircle cx='12' cy='44' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='12' r='6' fill='%23302322'/%3E%3Ccircle cx='44' cy='44' r='6' fill='%23302322'/%3E%3C/svg%3E");
+  }
+  

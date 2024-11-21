@@ -6,11 +6,15 @@
 .breadcrumb {
     max-width: 1440px;
     height: 80px;
-    position: relative;
-    line-height: 5;
-    display: block;
+    line-height: 4;
     left: 50px;
-    color: orange;
+    color: #40CBCE;
+    margin-inline-start: 250px;
+    font-size: 20px;
+}
+.text{
+    color: #40CBCE;
+    font-size: 16px;
 }
 
 .wrap {
@@ -129,8 +133,12 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 1px solid black;
-    margin: 70px auto;
+    border: 1px solid #40CBCE;
+    margin: 70px auto 60px auto;
+    box-shadow: 0px 1px 5px gray;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .userPic2 {
@@ -146,6 +154,10 @@
         width: 100%;
         position: relative;
     }
+    .label {
+        font-size: 14px;
+        font-weight: 600;
+    }
 
     .wrap {
         max-width: 576px;
@@ -156,11 +168,14 @@
         border-radius: 16px;
         box-shadow: 3px 3px 5px gray;
     }
+    .breadcrumb {
+        margin-inline-start: 150px;
+    }
 
     .inputContext {
         margin-left: 10px;
-        width: 55%;
-        height: 40px;
+        width: 60%;
+        height: 35px;
         border: 1px solid #40CBCE;
         font-size: 16px;
         padding-left: 25px;
@@ -184,14 +199,6 @@
         }
     }
 
-    .breadcrumb {
-        width: 200px;
-        height: 80px;
-        line-height: 5;
-        display: block;
-        color: orange;
-    }
-
 
     .leftUser {
         width: 10%;
@@ -199,7 +206,7 @@
         border-right: 1px solid black;
 
         .aLink {
-            width: 50%;
+            width: 100%;
             text-decoration: none;
             text-align: center;
             display: block;
@@ -217,6 +224,7 @@
                 color: white;
                 background: #40CBCE;
                 width: 100%;
+                height: 125px;
             }
         }
     }
@@ -275,3 +283,72 @@
         display: none;
     }
 }
+
+/* 大頭貼相關樣式 */
+.avatarSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .avatarPreview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid #40CBCE;
+    margin: 70px auto 20px auto;
+    box-shadow: 0px 1px 5px gray;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .uploadSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .fileInput {
+    display: none;
+  }
+  
+  .uploadButton {
+    width: 136px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #40CBCE;
+    background: white;
+    font-size: 20px;
+    box-shadow: 3px 3px 5px gray;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  
+    &:hover {
+      color: white;
+      background: #40CBCE;
+    }
+  }
+  
+  /* RWD 樣式 */
+  @media(max-width: 992px) {
+    .avatarPreview {
+      width: 120px;
+      height: 120px;
+      margin-inline: auto;
+      margin-top: -25px;
+    }
+  
+    .uploadButton {
+      width: 80px;
+      height: 35px;
+      font-size: 14px;
+      margin-top: -20px;
+      border-radius: 5px;
+    }
+  }

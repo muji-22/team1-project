@@ -1,0 +1,569 @@
+.pcDNone {
+    display: none;
+}
+@media (max-width: 393px) {
+    .pcDNone {
+        display: block;
+    }
+}
+.phoneDNone
+ {
+    display: block;
+}
+@media (max-width: 393px) {
+    .pcDNone {
+        display: none;
+    }
+}
+
+.listTitle {
+    color: #fff;
+    display: flex;
+    background: linear-gradient(to right, #40cbce 10%, rgb(45, 172, 174) 50%, #40cbce 100%, rgb(143, 255, 255));
+    height: 70px;
+    padding: 0px 10px;
+    justify-content: space-around;
+    align-items: center;
+    border: 0px solid #40CBCE;
+}
+@media (max-width: 393px) {
+    .listTitle {
+        height: 47px;
+        justify-content: center;
+        padding-inline: 12px;
+    }
+
+}
+
+.listTitle div span {
+    cursor: pointer;
+}
+.listTitle div {
+    justify-content: center;
+    display: flex;
+}
+
+@media (max-width: 393px) {
+    .listTitle div {
+        justify-content: flex-start;
+    }
+}
+
+/* ----------------- */
+.productList {
+    padding: 20px;
+    border-inline: 1px solid #b9b9b8;
+    border-bottom: 1px solid #b9b9b8;
+    display: flex;
+}
+@media (max-width: 393px) {
+    .productList {
+        padding:10px 5px;
+        font-size: 14px;
+    }
+}
+
+.productList div {
+    margin-block: auto;
+    display: flex;
+    justify-content: center;
+    justify-content: center;
+    align-items: center;
+
+}
+.productList .deleteSection{
+    justify-content: space-between;
+    
+}
+@media (max-width: 393px) {
+    .productList .deleteSection{
+        padding-inline: 5px;
+    }
+}
+
+.productList .couponSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.productList .couponSection select{
+    height: 45px;
+    width: 200px;
+    
+}
+@media (max-width: 393px) {
+    .productList .couponSection select{
+        height: 30px;
+        width: 150px;
+        
+    }
+}
+.productList select {
+    padding: 10px 40px;
+    margin-bottom: 10px;
+    border-radius: 2px;
+    width: 150px;
+}
+
+@media (max-width: 393px) {
+    .productList select {
+        padding: 0;
+        height: 25px;
+        font-size: 12px;
+        width: 100px;
+    }
+    .couponSection select{
+        width: 150px;
+    }
+}
+.courseList{
+    padding: 20px;
+    border-inline: 1px solid #616153;
+    border-bottom: 1px solid #616153;
+    display: flex;
+    justify-content: space-between;
+}
+@media (max-width: 393px) {
+    .courseList{
+        padding:10px 5px;
+        font-size: 14px;
+    }
+}
+
+.deleteBtn {
+    background-color: #40CBCE;
+    border: #40CBCE 1px solid;
+    border-radius: 5px;
+
+    color: #fff;
+    height: 45px;
+    width: 120px;
+}
+@media (max-width: 393px) {
+    .deleteBtn{
+        width: 44px;
+        height: 30px;
+    }
+}
+
+.backBtn {
+    background-color: #40CBCE;
+    border: #40CBCE 1px solid;
+    border-radius: 5px;
+
+    color: #fff;
+    height: 45px;
+    width: 120px;
+    
+}
+@media (max-width: 393px) {
+    .backBtn{
+        width: 44px;
+        height: 30px;
+    }
+}
+
+.deleteBtn:hover {
+    background-color: #2DACAE;
+    border: #2DACAE 1px solid;
+}
+
+.totalSection {
+    margin-block: 20px 20px;
+    padding-inline: 20px;
+    border-top: 2px solid #969696;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    color: #696969;
+}
+
+@media (max-width: 393px) {
+    .totalSection {
+        margin-block: 20px;
+        padding-inline: 0;
+        font-size: 14px;
+        align-items: flex-end;
+        padding-bottom: 80px;
+    }
+
+    .totalSection label {
+        padding-bottom: 20px;
+    }
+
+}
+
+.nextStepBtn {
+    padding: 15px 30px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: 0.5px solid ;
+    background: #40CBCE;
+    color: #fff;
+    letter-spacing: 5px;
+    width: 100%;
+}
+
+.nextStepBtn:hover {
+    background: #2DACAE
+}
+
+/* 當按鈕被禁用時的樣式 */
+.nextStepBtn:disabled {
+    background: #A9A9A9; /* 暗灰色 */
+    color: #fff;
+    cursor: not-allowed; /* 顯示禁止標誌的指針 */
+    border: none; /* 可以隨需求取消邊框 */
+}
+
+/* 禁用狀態時，不啟用 hover 效果 */
+.nextStepBtn:disabled:hover {
+    background: #A9A9A9; /* 保持暗灰色 */
+}
+
+@media (max-width: 393px) {
+    .nextStepBtn {
+        font-size: 12px;
+        padding: 10px;
+        line-height: 100%;
+    }
+}
+
+.total {
+    display: flex;
+    flex-direction: column;
+    text-align: end;
+    padding: 25px 10px;
+    gap: 25px;
+}
+
+@media (max-width: 393px) {
+    .total {
+        padding: 10px;
+        gap: 10px;
+    }
+}
+
+.total div span {
+    color: red;
+}
+
+.total :last-child {
+    font-size: 25px;
+}
+
+@media (max-width: 393px) {
+    .total :last-child {
+        font-size: 16px;
+    }
+}
+
+.total span span {
+    font-weight: bold;
+    padding-right: 10px;
+}
+/* -----------list----------- */
+.calGroup{
+    border: 2px solid #616153;
+    border-radius: 0;
+}
+.numSquare{
+    width: 119px;
+    border-inline: 1px solid #616153;
+    height: 48px;
+    z-index: 5000;
+    background-color: #fff;
+}
+@media (max-width: 393px) {
+    .numSquare{
+        width: 33px;    
+        height: 22px;
+        background-color: #fff;
+    }
+}
+
+.prodImg{
+  
+   width: 150px;
+   height: 150px;
+}
+@media (max-width: 393px) {
+    .prodImg{
+        width: 80px;
+        height: 80px;
+    }
+}
+.fakeSelect{
+    display: flex;
+    padding: 0px 15px;
+    width: 148px;
+    border: 1px solid #616153;
+    background-color: #fff;
+}
+@media (max-width: 393px) {
+    .fakeSelect{
+        width: 100px;
+    }
+}
+
+.calGroup .calBtn{
+    width: 59px;
+    height: 48px;
+    border-radius: 0;
+    background-color: #ffffff00;
+    
+}
+@media (max-width: 393px) {
+    .calGroup .calBtn{
+        width: 26px;    
+        height: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        background-color: #FFF;
+    }
+}
+.calGroup .calBtn:hover{
+    background-color: #6161535e;
+}
+
+
+
+/* -----------step2----------- */
+
+.opacity50{
+    opacity: 0.1;
+}
+.stepTypeTitle {
+    border-top: 2px solid rgba(97, 97, 83, 0.50);
+    padding: 20px;
+}
+
+.radioSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px;
+}
+
+.customCheckbox {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    user-select: none;
+}
+
+.customCheckbox input[type="checkbox"] {
+    display: none;
+}
+
+
+.customCheckbox input[type="checkbox"]+span {
+    display: inline-block;
+    padding-left: 45px;
+    line-height: 37px;
+    background: url("/Ciro/checkbox.png") no-repeat left top;
+    user-select: none;
+    word-break: break-word;
+}
+
+.customCheckbox input[type="checkbox"]:checked+span {
+    background: url("/Ciro/checked.png") no-repeat left top;
+}
+
+.order {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.orderTotal {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    position: relative;
+    padding: 15px;
+}
+
+.line {
+    width: 100%;
+    height: 3px;
+    padding: 15px;
+    background: url("/Ciro/line.png") no-repeat center;
+}
+
+.orderTotal span {
+    color: #B16464;
+}
+
+.stepBtnGroup {
+    display: flex;
+    padding: 50px 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+@media (max-width: 393px) {
+    .stepBtnGroup {
+        padding-bottom: 100px;
+    }
+}
+
+.orderTitle {
+    color: #fff;
+    display: flex;
+    background: #616153;
+    height: 70px;
+    padding: 0px 10px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+@media (max-width: 393px) {
+    .orderTitle {
+        width: 100%;
+    }
+}
+
+.orderTitle div {
+    justify-content: center;
+    display: flex;
+}
+
+.orderTitle div button {
+    border: 0;
+    color: #fff;
+}
+
+.card-section .rccs{
+    margin-inline:auto ;
+    margin-block: 20px;
+}
+.cardForm{
+    width: 250px;
+}
+
+/* -----------orderList----------- */
+
+.orderTableHead{
+    background-color: rgba(97, 97, 83, 0.50);
+    color: #fff;
+}
+.orderDetail{
+    background-color: #fff;
+}
+.itemDetail{
+    height: 90px;
+}
+
+/* -----------step3----------- */
+
+.stepThreeMain {
+    padding: 30px 20px;
+}
+
+.ordererTitle {
+    padding: 10px;
+}
+
+.cartMemberInfo {
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+}
+
+@media (max-width: 393px) {
+    .cartMemberInfo {
+        flex-direction: column;
+    }
+}
+
+
+.cartMemberInfo input {
+    width: calc(50% - 7.5px);
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    background: #FFF;
+
+}
+
+@media (max-width: 393px) {
+    .cartMemberInfo input {
+        width: 100%;
+    }
+}
+
+.receiverInfo {
+    padding-right: 30px;
+}
+
+/* -----------step4----------- */
+#body{
+    padding-right: 0 !important;
+}
+.modal{
+    padding-right: 0 !important;
+}
+.modal-content .modal-header {
+    border-bottom: 0 #FFF;
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+}
+
+
+.modal-header button {
+    display: flex;
+    width: 100px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid rgba(97, 97, 83, 0.50);
+    background: #616153;
+    color: #FFF;
+}
+.payTypeInput input{
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    background: #FFF;
+}
+.swal2-actions .custom-confirm-button-class{
+    width: 100px;
+    padding: 10px;
+    background: #616153;
+}
+.swal2-actions .swal2-confirm:focus {
+    box-shadow: 0 0 0 #fff; /* 取消焦点时的阴影 */
+    outline: none; /* 取消焦点时的轮廓 */
+  }
+
+.border{
+    border: 1px solid #d4d4d2;
+}
+
+.Couponbtn{
+    width: 200px;
+}
+.keepshoping{
+    width: 200px;
+    background-color: #40CBCE;
+    color: #e7e7e7;
+}
+.keepshoping:hover{
+    background-color:  rgb(45, 172, 174);
+    color: #fff;
+}

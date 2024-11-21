@@ -1,364 +1,278 @@
-import React from "react";
-import dynamic from "next/dynamic";
+// pages/forum/index.js
+import React, { useState, useEffect, act } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
 import Link from "next/link";
-import "@/styles/forum.module.css"
-import Articles from "@/components/forum/Article";
-function forumPage() {
+import Head from "next/head";
+import { useAuth } from "@/contexts/AuthContext";
+import { FaSearch, FaRegCommentDots, FaRegNewspaper } from "react-icons/fa";
+import { toast } from "react-toastify";
+import Pagination from "@/components/product/Pagination";
+import Breadcrumb from "@/components/Breadcrumb";
+import moment from "moment";
+import "moment/locale/zh-tw";
+moment.locale("zh-tw");
+
+export default function ForumList() {
+  const { isAuthenticated, loading } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [postLoading, setPostLoading] = useState(true);
+  const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  // 載入文章列表
+  const fetchPosts = async (pageNum = 1, search = "") => {
+    try {
+      setPostLoading(true);
+      let url = `http://localhost:3005/api/forum/posts?page=${pageNum}&limit=12`;
+      if (search) {
+        url = `http://localhost:3005/api/forum/search?keyword=${search}&page=${pageNum}&limit=12`;
+      }
+  
+      //console.log('Fetching posts from:', url) // 除錯用
+  
+      const response = await fetch(url)
+      const data = await response.json()
+  
+     // console.log('Response:', data) // 除錯用
+  
+      if (response.ok) {
+        setPosts(data.data.posts);
+        setTotalPages(data.data.pagination.total_pages);
+      } else {
+        throw new Error(data.message || "載入文章失敗");
+      }
+    } catch (error) {
+      console.error("載入文章失敗:", error);
+      toast.error("載入文章失敗");
+    } finally {
+      setPostLoading(false);
+    }
+  };
+
+  // 搜尋處理
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1);
+    fetchPosts(1, keyword);
+  };
+
+  // 換頁處理
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    fetchPosts(newPage, keyword);
+  };
+
+  // 初始載入文章，等待身份驗證完成
+  useEffect(() => {
+    // 等待身份驗證載入完成
+    if (loading) return;
+
+    fetchPosts();
+  }, [loading]);
+
+  // 顯示載入中
+  if (loading || postLoading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <nav>
-        <h1>nav</h1>
-      </nav>
-      <div className="main container">
-        <h1 className={"title"}>熱門文章</h1>
-        <div className="searchbar">
-          <input type="text" />
-        </div>
-        <div className="article-container container text-center">
-          <Articles></Articles>
-          <div className="article-row d-flex">
-            <div className="article-card col">
-              <div className="img-container">
-                <img className="img"
-                  src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="text-container">
-                <h4 className="text-content">
-                  財務記者信心樓上我會這段傳說選手案件信箱運輸
-                </h4>
-                <div className="icon-container">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                      fill="#2DACAE"
-                    />
-                  </svg>
-                  繼續閱讀
-                </div>
-              </div>
-            </div>
-            <div className="article-card col">
-              <div className="img-container">
-                <img className="img"
-                  src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="text-container">
-                <h4 className="text-content">
-                  財務記者信心樓上我會這段傳說選手案件信箱運輸
-                </h4>
-                <div class="icon-container">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                      fill="#2DACAE"
-                    />
-                  </svg>
-                  繼續閱讀
-                </div>
-              </div>
-            </div>
-            <div className="article-card col">
-              <div className="img-container">
-                <img className="img"
-                  src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="text-container">
-                <h4 className="text-content">
-                  財務記者信心樓上我會這段傳說選手案件信箱運輸
-                </h4>
-                <div className="icon-container">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                      fill="#2DACAE"
-                    />
-                  </svg>
-                  繼續閱讀
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="article-row d-flex">
-            <div className="article-card col">
-              <div className="img-container">
-                <img className="img"
-                  src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="text-container">
-                <h4 className="text-content">
-                  財務記者信心樓上我會這段傳說選手案件信箱運輸
-                </h4>
-                <div className="icon-container">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                      fill="#2DACAE"
-                    />
-                  </svg>
-                  繼續閱讀
-                </div>
-              </div>
-            </div>
-            <div className="article-card col">
-              <div className="img-container">
-                <img className="img"
-                  src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="text-container">
-                <h4 className="text-content">
-                  財務記者信心樓上我會這段傳說選手案件信箱運輸
-                </h4>
-                <div className="icon-container">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                      fill="#2DACAE"
-                    />
-                  </svg>
-                  繼續閱讀
-                </div>
-              </div>
-            </div>
-            <div className="article-card col">
-              <div className="img-container">
-                <img className="img"
-                  src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="text-container">
-                <h4 className="text-content">
-                  財務記者信心樓上我會這段傳說選手案件信箱運輸
-                </h4>
-                <div className="icon-container">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                      fill="#2DACAE"
-                    />
-                  </svg>
-                  繼續閱讀
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="page container d-flex">
-          <svg
-            width="25"
-            height="25"
-            viewBox="0 0 25 25"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3.11023 13.3306L9.75086 19.9712C10.2098 20.4302 10.952 20.4302 11.4061 19.9712L12.5096 18.8677C12.9686 18.4087 12.9686 17.6665 12.5096 17.2124L7.8075 12.5005L12.5145 7.79346C12.9735 7.33447 12.9735 6.59229 12.5145 6.13818L11.411 5.02979C10.952 4.5708 10.2098 4.5708 9.75574 5.02979L3.11511 11.6704C2.65125 12.1294 2.65125 12.8716 3.11023 13.3306Z"
-              fill="#1E1E28"
-            />
-          </svg>
+    <Head>
+      <title>討論區 | Pertho</title>
+    </Head>
+    <Container className="py-4">
+       {/* 麵包屑 */}
+       <Breadcrumb
+        items={[
+          { label: '首頁', href: '/' },
+          { label: '討論區', active: true }, 
+        ]}
+      />
 
-          <div className="btn">1</div>
-          <div className="btn">2</div>
-          <div className="btn">3</div>
-          <div className="btn">4</div>
-          <div className="btn">5</div>
-          <svg
-            width="25"
-            height="25"
-            viewBox="0 0 25 25"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21.8892 11.6704L15.2485 5.02979C14.7895 4.5708 14.0474 4.5708 13.5933 5.02979L12.4897 6.1333C12.0308 6.59229 12.0308 7.33447 12.4897 7.78857C14.328 9.62679 15.3586 10.6574 17.1968 12.4956L12.4897 17.2026C12.0308 17.6616 12.0308 18.4038 12.4897 18.8579L13.5933 19.9614C14.0522 20.4204 14.7944 20.4204 15.2485 19.9614L21.8892 13.3208C22.3481 12.8716 22.3481 12.1294 21.8892 11.6704Z"
-              fill="#1E1E28"
-            />
-          </svg>
-        </div>
-      </div>
-      <div className="banner">
-        <h1>熱門教學影片</h1>
-        <h1>
-          <svg
-            width="25"
-            height="25"
-            viewBox="0 0 25 25"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3.11023 13.3306L9.75086 19.9712C10.2098 20.4302 10.952 20.4302 11.4061 19.9712L12.5096 18.8677C12.9686 18.4087 12.9686 17.6665 12.5096 17.2124L7.8075 12.5005L12.5145 7.79346C12.9735 7.33447 12.9735 6.59229 12.5145 6.13818L11.411 5.02979C10.952 4.5708 10.2098 4.5708 9.75574 5.02979L3.11511 11.6704C2.65125 12.1294 2.65125 12.8716 3.11023 13.3306Z"
-              fill="#1E1E28"
-            />
-          </svg>
-          <svg
-            width="25"
-            height="25"
-            viewBox="0 0 25 25"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21.8892 11.6704L15.2485 5.02979C14.7895 4.5708 14.0474 4.5708 13.5933 5.02979L12.4897 6.1333C12.0308 6.59229 12.0308 7.33447 12.4897 7.78857C14.328 9.62679 15.3586 10.6574 17.1968 12.4956L12.4897 17.2026C12.0308 17.6616 12.0308 18.4038 12.4897 18.8579L13.5933 19.9614C14.0522 20.4204 14.7944 20.4204 15.2485 19.9614L21.8892 13.3208C22.3481 12.8716 22.3481 12.1294 21.8892 11.6704Z"
-              fill="#1E1E28"
-            />
-          </svg>
-        </h1>
-        <div className="video-container d-flex">
-          <div className="video-card col">
-            <div className="img-vid">
-              <img className="img"
-                src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                alt=""
-              />
-            </div>
-            <div className="text-container">
-              <h4 className="text-content">
-                財務記者信心樓上我會這段傳說選手案件信箱運輸
-              </h4>
-              <div className="icon-container">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                    fill="#2DACAE"
-                  />
-                </svg>
-                繼續閱讀
-              </div>
-            </div>
-          </div>
-          <div className="video-card col">
-            <div className="img-vid">
-              <img className="img"
-                src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                alt=""
-              />
-            </div>
-            <div className="text-container">
-              <h4 className="text-content">
-                財務記者信心樓上我會這段傳說選手案件信箱運輸
-              </h4>
-              <div className="icon-container">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                    fill="#2DACAE"
-                  />
-                </svg>
-                繼續閱讀
-              </div>
-            </div>
-          </div>
-          <div className="video-card col">
-            <div className="img-vid">
-              <img className="img"
-                src="../client/public/images/product_img/5ab8f227ff9c8b19a8cecd5f_BurnRate_box_3D.jpg"
-                alt=""
-              />
-            </div>
-            <div className="text-container">
-              <h4 className="text-content">
-                財務記者信心樓上我會這段傳說選手案件信箱運輸
-              </h4>
-              <div className="icon-container">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M8.07912 0.423143C8.23349 0.00505336 8.56199 -0.125304 8.81285 0.131982L15.7462 7.24298C15.9039 7.40476 16 7.69133 16 8C16 8.30867 15.9039 8.59524 15.7462 8.75702L8.81285 15.868C8.56199 16.1253 8.23349 15.9949 8.07912 15.5769C7.92474 15.1588 8.00296 14.6113 8.25381 14.354L13.5824 8.88888H0.533333C0.238781 8.88888 0 8.49091 0 8C0 7.50909 0.238781 7.11112 0.533333 7.11112H13.5824L8.25381 1.64602C8.00296 1.38873 7.92474 0.841232 8.07912 0.423143Z"
-                    fill="#2DACAE"
-                  />
-                </svg>
-                繼續閱讀
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* 標題區 */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>討論區</h2>
+        {isAuthenticated() && (
+          <Link href="/forum/edit" className="btn btn-custom">
+            發表文章
+          </Link>
+        )}
       </div>
 
-      <footer>footer</footer>
+      {/* 搜尋區 */}
+      <Card className="mb-4">
+        <Card.Body>
+          <Form onSubmit={handleSearch}>
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="搜尋文章..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+              <Button variant="outline-secondary" type="submit">
+                <FaSearch />
+              </Button>
+            </InputGroup>
+          </Form>
+        </Card.Body>
+      </Card>
+
+      {/* 文章列表 */}
+      {posts.length > 0 ? (
+        <>
+          <Row xs={1} md={2} lg={3} className="g-4 mb-4">
+            {posts.map((post) => (
+              <Col key={post.id}>
+                <Card className="h-100 forum-card">
+                  {/* 封面圖片區 */}
+                  <Link
+                    href={`/forum/${post.id}`}
+                    className="text-decoration-none"
+                  >
+                    <div className="cover-image-wrapper">
+                      {post.cover_image ? (
+                        <Card.Img
+                          variant="top"
+                          src={`http://localhost:3005/uploads/forum/${post.cover_image}`}
+                          alt={post.title}
+                          className="cover-image"
+                          onError={(e) => {
+                            e.target.src =
+                              "http://localhost:3005/productImages/default-post.png";
+                          }}
+                        />
+                      ) : (
+                        <div className="default-cover">
+                          <FaRegNewspaper size={32} className="text-muted" />
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+
+                  <Card.Body className="d-flex flex-column">
+                    <Link
+                      href={`/forum/${post.id}`}
+                      className="text-decoration-none text-dark"
+                    >
+                      <Card.Title className="h5 mb-3">{post.title}</Card.Title>
+                    </Link>
+                  </Card.Body>
+
+                  <Card.Footer className="bg-white">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="d-flex align-items-center">
+                        <img
+                          src={
+                            post.author_avatar ||
+                            "http://localhost:3005/avatar/default-avatar.png"
+                          }
+                          alt={post.author_name}
+                          className="rounded-circle"
+                          width="24"
+                          height="24"
+                          onError={(e) => {
+                            e.target.src =
+                              "http://localhost:3005/avatar/default-avatar.png";
+                          }}
+                        />
+                        <span className="ms-2 small">{post.author_name}</span>
+                      </div>
+                      <div className="d-flex align-items-center gap-3">
+                        <div className="d-flex align-items-center text-muted small">
+                          <FaRegCommentDots className="me-1" />
+                          <span>{post.reply_count}</span>
+                        </div>
+                        <small className="text-muted">
+                          {moment(post.created_at).fromNow()}
+                        </small>
+                      </div>
+                    </div>
+                  </Card.Footer>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+
+          {/* 分頁 */}
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </>
+      ) : (
+        <div className="text-center py-5">
+          <h4>目前還沒有文章</h4>
+          <p className="text-muted">成為第一個發文的人吧！</p>
+        </div>
+      )}
+
+      {/* 添加樣式 */}
+      <style jsx global>{`
+        .forum-card {
+          transition: transform 0.2s;
+        }
+
+        .forum-card:hover {
+          transform: translateY(-5px);
+        }
+
+        .cover-image-wrapper {
+          position: relative;
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
+          background-color: #f8f9fa;
+        }
+
+        .cover-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .forum-card:hover .cover-image {
+          transform: scale(1.05);
+        }
+
+        .default-cover {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #f8f9fa;
+        }
+
+        .card-title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          min-height: 3rem;
+        }
+      `}</style>
+    </Container>
     </>
   );
 }
-
-export default forumPage;

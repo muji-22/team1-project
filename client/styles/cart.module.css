@@ -1,50 +1,226 @@
-.pcDNone{
-    display: none;
+/* styles/cart.module.css */
+.summaryCard {
+  position: sticky;
+  top: 100px;
+}
+.CardShadow{
+  box-shadow: 5px 10px 15px rgba(110, 110, 110, 0.3);
 }
 
-.stepBar{
-    padding: 5rem 3rem 5rem 3rem;
+.checkoutButton{
+  background-color: var(--bs-custom);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0px 4px 10px rgba(63, 63, 63, 0.2);
+
 }
 
-.step{
-    display: flex;
-    max-width: 459px;
-    opacity: 0.5;
-    gap: 10px;
+.BBBtn{
+  transition: all 0.3s;
 }
+.BBBtn:hover{
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(63, 63, 63, 0.2);
+}
+.Imgitem{
+  transition: all 0.3s;
+}
+.Imgitem:hover{
+  transform: scale(1.2);
+}
+
+.nextButton{
+  background-color: var(--bs-custom);
+  color: white;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0px 4px 10px rgba(63, 63, 63, 0.2);
+
+}
+
+.cartItemImage {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.cartItemImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.priceDetails {
+  font-size: 1rem;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantityControl button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.stepBar {
+  padding: 2rem 0;
+  color: #3a3a3a;
+  /* background-color: #3a81c9; */
+  
+}
+
+.stepImg{
+  background: url("../public/images/stpbar5.png") ;
+  height: 200px;
+  background-repeat:no-repeat;
+  background-size: cover;
+  opacity: 1;
+  z-index: -1;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nowStep {
+  opacity: 1;
+}
+
+
+
+.nowStep .stepBox {
+  background-color: var(--bs-custom);
+  color: white;
+  height: 80px;
+  width: 80px;
+  box-shadow: 1px 5px 3px 2px rgba(73, 73, 73, 0.5);
+  animation: jumpAnimation 1.5s infinite ease-in-out;
+}
+
 
 .stepBox {
-    background: rgb(45, 172, 174);
-    display: flex;
-    width: 100px;
-    height: 100px;
-    padding: 5px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    
-}
-.stepNum{
-    font-size: 50px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    width: 50px;
-    padding-right: 3px;
-    text-align: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #36a5a5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 2rem;
+  transition: 0.5s;
 }
 
+@keyframes jumpAnimation {
+  0% {
+    transform: translateY(0); /* 初始位置 */
+  }
+  50% {
+    transform: translateY(-10px); /* 向上移動 20px */
+  }
+  100% {
+    transform: translateY(0); /* 回到原位置 */
+  }
+}
+
+
 .stepWord {
-    display: flex;
-    flex-direction: column;
-    margin-block: auto;
-    margin-left: 12px;
-    color: #030303;
+  align-items: center;
+  gap: 0.5rem;
+  
 }
 
 .stepline {
-    height: 1px;
-    width: 147px;
-    background-color: #000;
-    margin-block: 10px;
+  width: 200px;
+  height: 2px;
+  background-color: #3a3a3a;
+  margin: 5px 0;
 }
+
+@media (max-width: 768px) {
+  .cartItemImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .phoneDNone {
+    display: none;
+  }
+}
+
+/* 手機排版 */
+@media (max-width: 500px) {
+  .step{
+    display: none;
+  }
+  .nowStep{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  }
+
+  
+  
+  @media (max-width: 390px) {
+    .PPPhonecontrol {
+      display: flex;
+      flex-direction: column; /* 設置垂直排列 */
+      align-items: start; /* 水平左對齊 */
+      gap: 10px;
+
+    }
+    
+  }
+
+  .ppageBackground {
+    position: relative;
+    background: linear-gradient(to bottom, #FAFAFC, #f1f1f1); /* 背景顏色 */
+    overflow: hidden;
+    
+  }
+ 
+
+  .Circle2{
+    position: absolute; /* 定位圓形 */
+    width: 1000px; /* 圓形的寬度 */
+    height: 1000px; /* 圓形的高度 */
+    background-color: rgba(189, 189, 189, 0.1); 
+    border-radius: 50%; /* 確保圓形 */
+    top: -500px; /* 距離父容器頂部的比例 */
+    left: -500px;/* 向左偏移，創造部分可見效果 */ 
+    transition: 0.8s;
+    
+  }
+
+    

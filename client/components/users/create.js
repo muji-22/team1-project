@@ -56,8 +56,14 @@ import { useRouter } from "next/router";
 import styles from "./creat.module.css";
 import { FaArrowRightLong } from "react-icons/fa6";
 import Link from "next/link";
+import { RiLockPasswordFill } from "react-icons/ri";
+import { MdAccountCircle } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
+import { FaPhone } from "react-icons/fa";
+import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import Swal from "sweetalert2";
 
-export default function Register({setCurrentForm}) {
+export default function Register({ setCurrentForm }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -77,26 +83,27 @@ export default function Register({setCurrentForm}) {
     e.preventDefault();
 
     // 基本驗證
-    if(!formData.account){
+    if (!formData.account) {
       setError("帳號不得為空");
-      return
+      return;
     }
-    if(!formData.password){
+    if (!formData.password) {
       setError("密碼不得為空");
-      return
+      return;
     }
-    if(!formData.confirmPassword){
+    if (!formData.confirmPassword) {
       setError("再輸入一次密碼");
-      return
-    }
-    if(!formData.email){
-      setError("信箱不得為空");
-      return
+      return;
     }
     if (formData.password !== formData.confirmPassword) {
       setError("密碼與確認密碼不符");
       return;
     }
+    if (!formData.email) {
+      setError("信箱不得為空");
+      return;
+    }
+    
 
     setError("");
     // setIsLoading(true);
@@ -125,9 +132,13 @@ export default function Register({setCurrentForm}) {
       }
 
       // 註冊成功，導向登入頁
-      router.push('/auth/login')
+      Swal.fire({
+        icon: "success",
+        title: "註冊成功",
+        text: `前往登入`,
+      });
+      router.push("/auth/login");
       setTimeout(() => {
-  
         // 註冊成功後重新整理頁面
         window.location.reload();
       }, 2000); // 模擬 API 請求延遲
@@ -146,11 +157,13 @@ export default function Register({setCurrentForm}) {
   };
   return (
     <>
+      <div className={styles.space}></div>
       <form onSubmit={handleSubmit} className={styles.resgiter}>
         <div className={styles.top}>
-      
-         
-          
+        <div className={styles.title}>會員註冊</div>
+          <label className={styles.icon}>
+            <MdAccountCircle />
+          </label>
           <input
             type="text"
             name="account"
@@ -159,9 +172,11 @@ export default function Register({setCurrentForm}) {
             value={formData.account}
             onChange={handleChange}
           />
-          
-     
-         
+
+          <div></div>
+          <label className={styles.icon}>
+            <RiLockPasswordFill />
+          </label>
           <input
             type="password"
             name="password"
@@ -170,7 +185,11 @@ export default function Register({setCurrentForm}) {
             value={formData.password}
             onChange={handleChange}
           />
-        
+
+          <div></div>
+          <label className={styles.icon}>
+            <RiLockPasswordFill />
+          </label>
           <input
             type="password"
             name="confirmPassword"
@@ -179,8 +198,10 @@ export default function Register({setCurrentForm}) {
             value={formData.confirmPassword}
             onChange={handleChange}
           />
-      
-           <input
+
+          <div></div>
+          <label className={styles.icon}><MdOutlineDriveFileRenameOutline /></label>
+          <input
             type="text"
             name="name"
             className={styles.inputGroup}
@@ -188,7 +209,11 @@ export default function Register({setCurrentForm}) {
             value={formData.name}
             onChange={handleChange}
           />
-      
+
+          <div></div>
+          <label className={styles.icon}>
+            <MdEmail />
+          </label>
           <input
             type="email"
             name="email"
@@ -197,7 +222,9 @@ export default function Register({setCurrentForm}) {
             placeholder="信箱"
             onChange={handleChange}
           />
-        
+
+          <div></div>
+          <label className={styles.icon}><FaPhone /></label>
           <input
             type="phone"
             name="phone"
@@ -206,8 +233,10 @@ export default function Register({setCurrentForm}) {
             placeholder="手機"
             onChange={handleChange}
           />
-         
-          <button type="submit" className={styles.btnResgiter}>註冊</button>
+
+          <button type="submit" className={styles.btnResgiter}>
+            註冊
+          </button>
           <div className={styles.box}>
             <span className={styles.message}>{error}</span>
           </div>

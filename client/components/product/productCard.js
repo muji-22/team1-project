@@ -1,62 +1,56 @@
+// components/product/ProductCard.js
 import React from "react";
-import { IoMdHeartEmpty } from "react-icons/io";
+import Link from "next/link";
 import styles from "./productCard.module.css";
-import { FaCartPlus } from "react-icons/fa";
-// // 定義產品資料型別
+import FavoriteButton from "./FavoriteButton";
+import AddToCartButton from "./AddToCartButton";
 
-// // 元件接收產品資料作為props
-const ProductCard = ({
-    id,
-    name,
-    price,
-    image,
-    descrition, // 注意：資料庫中的欄位名稱是 descrition
-    onAddToCart,
-    onAddToWishlist, }) => {
-    const handleImageError = (e) => {
-        e.target.src = "/images/default-product.jpg";
-    };
+const ProductCard = ({ id, name, price, description, className }) => {
 
-    return (
-        <>
-            <div className="col-lg-4 col-md-5 col-sm-6 mb-4">
-                <div className={`card border-0 ${styles.card} col-2`}>
-                    <img
-                        className={`card-img-top ${styles.img}`}
-                        src={`/images/product_img/${encodeURIComponent(image)}`}
-                        onError={(e) => {
-                            // 錯誤時的預設圖片
-                        }}
-                        alt={name}
-                    />
-                    <div className="card-body">
-                        <h5 className="card-title">{name}</h5>
-                        <p className="card-text price origin text-danger ">
-                            <del>{descrition}</del>
-                        </p>
-                        <div className="row align-items-center g-2 mb-2">
-                            <div className="col">
-                                <p className="card-text price mb-0"> NT$ {price?.toLocaleString()}</p>
-                            </div>
-                            <div className="col-auto">
-                                <a className="btn btn-outline-danger border-0"
-                                    onClick={() => onAddToWishlist?.(id)}
-                                    title="加入收藏">
-                                    <IoMdHeartEmpty className="fs-4 ${styles.heart} text-danger" />
-                                </a>
-                            </div>
-                        </div>
-                        <a
-                            href="#"
-                            className="btn btn-custom  w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-auto "
-                        >
-                            加入購物車 <FaCartPlus size={20} />
-                        </a>
-                    </div>
-                </div>
+  return (
+    <Link href={`/product/${id}`} className="text-decoration-none">
+      <div className={`card h-100 ${styles.card} ${className || ''}`}>
+        <div className="position-relative">
+          {/* 商品圖片 */}
+          <div className={`position-relative ${styles.imageContainer}`}>
+            <img
+              src={`http://localhost:3005/productImages/${id}/${id}-1.jpg`}
+              className={`card-img-top ${styles.productImage}`}
+              alt={name}
+              onError={(e) => {
+                e.target.src = "http://localhost:3005/productImages/default-product.png";
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="card-body d-flex flex-column">
+          <h5 className="card-title text-dark">{name}</h5>
+          <p className="card-text text-secondary text-truncate">
+            {description || '無商品描述'}
+          </p>
+
+          <div className="mt-auto">
+            <div className="d-flex justify-content-between align-items-center">
+              {/* 商品價格 */}
+              <span className="card-text fs-5 m-2 fw-bold">
+                NT$ {(price || 0).toLocaleString()}
+              </span>
+
+              {/* 收藏按鈕 */}
+              <FavoriteButton
+                productId={id}
+                className="pe-2"
+              />
             </div>
-        </>
-    );
+
+            {/* 加入購物車按鈕 */}
+            <AddToCartButton productId={id} className="buttonCustomC w-100 text-nowrap" type="sale"/>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 };
 
 export default ProductCard;
