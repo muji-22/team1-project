@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-21 09:59:35
+-- 產生時間： 2024-11-23 17:09:07
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.0.30
 
@@ -40,7 +40,7 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`id`, `user_id`, `created_at`, `updated_at`, `status`) VALUES
-(1, 1, '2024-11-18 09:10:09', '2024-11-18 09:10:09', 1);
+(1, 1, '2024-11-06 20:39:00', '2024-11-06 20:39:00', 1);
 
 -- --------------------------------------------------------
 
@@ -60,14 +60,6 @@ CREATE TABLE `cart_items` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `rental_days` int(11) DEFAULT 3 COMMENT '租借天數'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 傾印資料表的資料 `cart_items`
---
-
-INSERT INTO `cart_items` (`id`, `cart_id`, `product_id`, `type`, `quantity`, `rental_start_date`, `rental_end_date`, `created_at`, `updated_at`, `rental_days`) VALUES
-(11, 1, 1, 'sale', 1, NULL, NULL, '2024-11-20 14:38:12', '2024-11-20 14:38:12', 3),
-(12, 1, 1, 'rental', 1, NULL, NULL, '2024-11-20 14:38:15', '2024-11-20 14:38:15', 3);
 
 -- --------------------------------------------------------
 
@@ -94,12 +86,12 @@ CREATE TABLE `coupons` (
 --
 
 INSERT INTO `coupons` (`id`, `name`, `code`, `type`, `discount`, `start_date`, `end_date`, `apply_to`, `valid`, `created_time`, `updated_time`) VALUES
-(1, '滿千折 $120', 'coupon120', 'fixed', 120, '2024-11-01', '2024-12-31', 'both', 1, '2024-11-04 14:42:58', '2024-11-18 11:23:37'),
-(2, '滿千折 $50', 'coupon50', 'fixed', 50, '2024-11-01', '2024-12-31', 'both', 1, '2024-11-04 14:42:58', '2024-11-04 14:42:58'),
-(3, '新客85折', 'NEWUSER15', 'percentage', 15, '2024-11-11', '2024-12-31', 'both', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
+(1, '$120折扣', 'coupon120', 'fixed', 120, '2024-11-01', '2024-12-31', 'sale', 1, '2024-11-04 14:42:58', '2024-11-23 16:33:46'),
+(2, '$50折扣', 'coupon50', 'fixed', 50, '2024-11-01', '2024-12-31', 'sale', 1, '2024-11-04 14:42:58', '2024-11-23 16:33:49'),
+(3, '快樂折扣', 'NEWUSER15', 'percentage', 15, '2024-11-11', '2024-12-31', 'both', 1, '2024-11-11 14:43:27', '2024-11-23 16:36:57'),
 (4, '耶誕優惠', 'XMAS200', 'fixed', 200, '2024-12-01', '2024-12-25', 'sale', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
 (5, '春節特典', 'CNY2024', 'percentage', 20, '2024-12-25', '2025-02-15', 'both', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
-(6, '租賃折扣', 'RENT100', 'fixed', 100, '2024-11-11', '2025-01-31', 'rental', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
+(6, '租賃折扣', 'RENT100', 'fixed', 10, '2024-11-11', '2025-01-31', 'rental', 1, '2024-11-11 14:43:27', '2024-11-23 16:34:32'),
 (7, '週年慶特惠', 'ANNI25', 'percentage', 25, '2024-11-15', '2024-11-30', 'both', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
 (8, 'VIP專屬', 'VIP2024', 'percentage', 12, '2024-11-11', '2024-12-31', 'both', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
 (9, '快閃特惠', 'FLASH150', 'fixed', 150, '2024-11-20', '2024-11-25', 'sale', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
@@ -108,10 +100,40 @@ INSERT INTO `coupons` (`id`, `name`, `code`, `type`, `discount`, `start_date`, `
 (12, '聖誕驚喜', 'SANTA300', 'fixed', 300, '2024-12-20', '2024-12-31', 'sale', 1, '2024-11-11 14:43:27', '2024-11-11 14:43:27'),
 (13, '新會員優惠', 'NEW100', 'fixed', 100, '2024-01-01', '2024-12-31', 'both', 1, '2024-11-12 14:32:13', '2024-11-12 14:32:13'),
 (14, '周年慶特惠', 'ANNI85', 'percentage', 85, '2024-01-01', '2024-12-31', 'sale', 1, '2024-11-12 14:32:13', '2024-11-12 14:32:13'),
-(15, '租賃優惠', 'RENT200', 'fixed', 200, '2024-01-01', '2024-12-31', 'rental', 1, '2024-11-12 14:32:13', '2024-11-12 14:32:13'),
-(16, '限時折扣', 'SALE90', 'percentage', 90, '2024-01-01', '2024-02-29', 'both', 1, '2024-11-12 14:32:13', '2024-11-12 14:32:13'),
+(15, '租賃優惠', 'RENT20', 'fixed', 20, '2024-01-01', '2024-12-31', 'rental', 1, '2024-11-12 14:32:13', '2024-11-23 16:35:03'),
+(16, '限時折扣', 'SALE10', 'percentage', 10, '2024-01-01', '2024-02-29', 'both', 1, '2024-11-12 14:32:13', '2024-11-23 16:35:15'),
 (17, '春節特惠', 'SPRING150', 'fixed', 150, '2024-02-01', '2024-02-29', 'both', 1, '2024-11-12 14:32:13', '2024-11-12 14:32:13'),
-(18, '會員生日禮', 'BIRTH88', 'percentage', 88, '2024-01-01', '2024-12-31', 'both', 1, '2024-11-12 14:32:13', '2024-11-12 14:32:13');
+(18, '哈哈禮', 'Haha88', 'percentage', 88, '2024-01-01', '2024-12-31', 'both', 1, '2024-11-12 14:32:13', '2024-11-23 16:36:08'),
+(19, '租賃享優惠', 'RENT5', 'fixed', 5, '2024-11-20', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(20, '租賃折8元', 'RENT8', 'fixed', 8, '2024-11-20', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(21, '租賃折10元', 'RENT10', 'fixed', 10, '2024-11-20', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(22, '租賃85折', 'RENT85', 'percentage', 15, '2024-11-20', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(23, '租賃88折', 'RENT88', 'percentage', 12, '2024-11-20', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(24, '租賃95折', 'RENT95', 'percentage', 5, '2024-11-20', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(25, '租賃92折', 'RENT92', 'percentage', 8, '2024-12-01', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(26, '租賃限時折', 'RENT7', 'fixed', 7, '2024-12-01', '2024-12-15', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(27, '聖誕租賃優惠', 'RENTXMAS', 'fixed', 6, '2024-12-20', '2024-12-30', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(28, '新年租賃折扣', 'RENTNEWY', 'percentage', 10, '2024-12-25', '2025-01-05', 'rental', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(29, '商品折200', 'SALE200', 'fixed', 200, '2024-11-20', '2024-12-30', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(30, '商品折150', 'SALE150', 'fixed', 150, '2024-11-20', '2024-12-30', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(31, '商品折100', 'SALE100', 'fixed', 100, '2024-11-20', '2024-12-30', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(32, '商品85折', 'SALE85', 'percentage', 15, '2024-11-20', '2024-12-30', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(33, '商品88折', 'SALE88', 'percentage', 12, '2024-11-20', '2024-12-30', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(34, '商品限時折300', 'SALE300', 'fixed', 300, '2024-12-01', '2024-12-15', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(35, '商品限時9折', 'SALE90', 'percentage', 10, '2024-12-01', '2024-12-15', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(36, '聖誕商品折250', 'SALEXMAS', 'fixed', 250, '2024-12-20', '2024-12-30', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(37, '新年商品折扣', 'SALENEWY', 'percentage', 20, '2024-12-25', '2025-01-05', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(38, '商品折180', 'SALE180', 'fixed', 180, '2024-11-20', '2024-12-30', 'sale', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(39, '全站88折', 'ALL88', 'percentage', 12, '2024-11-20', '2024-12-30', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(40, '全站85折', 'ALL85', 'percentage', 15, '2024-11-20', '2024-12-30', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(41, '全站92折', 'ALL92', 'percentage', 8, '2024-11-20', '2024-12-30', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(42, '全站95折', 'ALL95', 'percentage', 5, '2024-11-20', '2024-12-30', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(43, '全站限時9折', 'ALL90', 'percentage', 10, '2024-12-01', '2024-12-15', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(44, '全站限時88折', 'ALL88LM', 'percentage', 12, '2024-12-01', '2024-12-15', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(45, '聖誕全站85折', 'ALLXMAS85', 'percentage', 15, '2024-12-20', '2024-12-30', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(46, '聖誕全站9折', 'ALLXMAS90', 'percentage', 10, '2024-12-20', '2024-12-30', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(47, '新年全站88折', 'ALLNEWY88', 'percentage', 12, '2024-12-25', '2025-01-05', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05'),
+(48, '早鳥93折', 'EARLY93', 'percentage', 7, '2024-11-20', '2024-11-30', 'both', 1, '2024-11-23 16:39:05', '2024-11-23 16:39:05');
 
 -- --------------------------------------------------------
 
@@ -125,14 +147,6 @@ CREATE TABLE `favorites` (
   `product_id` int(5) UNSIGNED NOT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 傾印資料表的資料 `favorites`
---
-
-INSERT INTO `favorites` (`id`, `user_id`, `product_id`, `created_at`) VALUES
-(4, 1, 3, '2024-11-18 12:51:10'),
-(5, 1, 4, '2024-11-18 12:51:12');
 
 -- --------------------------------------------------------
 
@@ -156,7 +170,7 @@ CREATE TABLE `forum_posts` (
 --
 
 INSERT INTO `forum_posts` (`id`, `user_id`, `title`, `content`, `created_at`, `updated_at`, `status`, `cover_image`) VALUES
-(1, 1, 'CC', '<p>CCCC<img src=\"http://localhost:3005/uploads/forum/forum-1731656835050-154417418.jpg\"></p>', '2024-11-15 15:47:33', '2024-11-15 15:47:33', 1, NULL),
+(1, 1, '【桌遊開箱報】Animals Gathering 拼動奇跡 開箱＋介紹', '<p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgB_OmNCnH4dteS9wAQ6-CH86YtabiZU3JkxeKjhxNBF1DbGA_Kr0grElw9lb51dErMp7KcsjKGAmzYyB9oaHWVzBRGyOewBXjnb7_BjBkWwXEogXxR8phpnG_2XdRd4swtxBOQayGWzPL-qCoWA7a2mE5mlkBkAeTDDQSNwb06KXu_SPkyxQZjKjrr/s4020/DSC02075.JPG\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgB_OmNCnH4dteS9wAQ6-CH86YtabiZU3JkxeKjhxNBF1DbGA_Kr0grElw9lb51dErMp7KcsjKGAmzYyB9oaHWVzBRGyOewBXjnb7_BjBkWwXEogXxR8phpnG_2XdRd4swtxBOQayGWzPL-qCoWA7a2mE5mlkBkAeTDDQSNwb06KXu_SPkyxQZjKjrr/w640-h382/DSC02075.JPG\"></a></p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\">▲這個則是成品的外盒，英文標題變得好漂亮，好有質感～</p><p class=\"ql-align-center\">遊戲人數：2-5人　遊戲時間：20-40mins　建議年齡：15+</p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEju3UewNPcdJHyPI0bQZMfRmq6oYkvU_KQwW76AEl-dZspbL1J3pvoG2spTsPc0Lu6NG4bFaE_31zqkVWinE5MKJ3RFPP_igLy51xpC_Y5b-u2p6nZsD6D2cMpeFG6wIc-ISFcU3_Ag6mDdtCTqvenuUxdomtpus4imvAAq5-aq9fIncHZZobtWRiQC/s2004/DSC02076.JPG\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEju3UewNPcdJHyPI0bQZMfRmq6oYkvU_KQwW76AEl-dZspbL1J3pvoG2spTsPc0Lu6NG4bFaE_31zqkVWinE5MKJ3RFPP_igLy51xpC_Y5b-u2p6nZsD6D2cMpeFG6wIc-ISFcU3_Ag6mDdtCTqvenuUxdomtpus4imvAAq5-aq9fIncHZZobtWRiQC/w624-h640/DSC02076.JPG\"></a></p><p class=\"ql-align-center\">▲原本的樣品是沒有盒底的，可以看到盒底也做得很漂亮～（成品）</p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgGDxmusiZT2K9aufOuFRkSWNdhz7RUIEdRUl_oYW4w4Cf2rDtfHXDDa7gdMhNWT6qwwnhJKxhbY79zTdEQLoZO2Yo9lEGRPkahApFJerz2CbpfO-MoVemU1Ys6CAohAMRV6utJNo4v3eYQti2NQ_GK4d-wfcUFcX2dxSVo4NqGYClbxNQhdFaBEs6i/s4840/DSC02079.JPG\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgGDxmusiZT2K9aufOuFRkSWNdhz7RUIEdRUl_oYW4w4Cf2rDtfHXDDa7gdMhNWT6qwwnhJKxhbY79zTdEQLoZO2Yo9lEGRPkahApFJerz2CbpfO-MoVemU1Ys6CAohAMRV6utJNo4v3eYQti2NQ_GK4d-wfcUFcX2dxSVo4NqGYClbxNQhdFaBEs6i/w640-h396/DSC02079.JPG\"></a></p><p class=\"ql-align-center\">▲內容物一覽（成品）</p><p class=\"ql-align-center\">可以看到最大的改變與不同就是成品多了很多收納的規劃</p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgbvlVfymUQq9we-G687711cbGP1as5ypBBLfAF0eBOA-HlbPIqSwFh4n8zFuXW67uT_j9XJyDiODGe_5XvjCROjoBXDXmuMBm0Yvls7eTBFFuDKYfdx07pyPiHhy4zhwkjB_4ULtSch4kcFzTFQ_nZidEujNb9OOmv-oA1768kWhZptDbQAaQxF-C_/s4660/DSC02082.JPG\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgbvlVfymUQq9we-G687711cbGP1as5ypBBLfAF0eBOA-HlbPIqSwFh4n8zFuXW67uT_j9XJyDiODGe_5XvjCROjoBXDXmuMBm0Yvls7eTBFFuDKYfdx07pyPiHhy4zhwkjB_4ULtSch4kcFzTFQ_nZidEujNb9OOmv-oA1768kWhZptDbQAaQxF-C_/w640-h378/DSC02082.JPG\"></a></p><p class=\"ql-align-center\">▲先來看上層，有大小兩種卡片跟骰子的收納空間</p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3cXJ_lqv-h8XuNqobD59rWlelBrd2RLEa7y53QGzC9dXMzByc8pm9UJ9rAwcyCw81WSs8EcbQsYZ_3l18VM58t-IwTrRwR3SFM9BqLV4NPtMYdib-1xBkBx5s2_Nf-_oO68TZ-LeksQodS5iX7mIL2z402VG50nHJgFpJy82-W8V4QMHDBWmXdE-a/s4760/DSC02078.JPG\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3cXJ_lqv-h8XuNqobD59rWlelBrd2RLEa7y53QGzC9dXMzByc8pm9UJ9rAwcyCw81WSs8EcbQsYZ_3l18VM58t-IwTrRwR3SFM9BqLV4NPtMYdib-1xBkBx5s2_Nf-_oO68TZ-LeksQodS5iX7mIL2z402VG50nHJgFpJy82-W8V4QMHDBWmXdE-a/w640-h394/DSC02078.JPG\"></a></p><p class=\"ql-align-center\">▲下層則是各種寶石板塊的空間，每一格裡面還有符號提示玩家們怎麼收納，很貼心～</p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgZPQc3Luufzs7Ng1ms4Kj5ErYY483bUWwumLlWlt5vBp9xEVJGIutAUIuyHwhkWT_okgD3Fi3VJd4yqY35GHX6mIETQj4SeiA9JE28FfNKPI_2GdEygBUCslfI1KAEXk8upFzoch--Nj8a7jXjQr8eDNpSpzruqOxpaeP0LGZf4oJg7tk-ITH9XFoq/s5120/DSC02081.JPG\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgZPQc3Luufzs7Ng1ms4Kj5ErYY483bUWwumLlWlt5vBp9xEVJGIutAUIuyHwhkWT_okgD3Fi3VJd4yqY35GHX6mIETQj4SeiA9JE28FfNKPI_2GdEygBUCslfI1KAEXk8upFzoch--Nj8a7jXjQr8eDNpSpzruqOxpaeP0LGZf4oJg7tk-ITH9XFoq/w640-h398/DSC02081.JPG\"></a></p><p class=\"ql-align-center\">▲實際放入寶石板塊後的樣子，很療癒～</p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-center\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiEiequNL5id5EC6olpUSZ4YmjbqUstRBwpfKzWptpB6eVRxXmw8n1j18Tu5W5lFYpG05o5OXaKcIaNKEhVYCKM0e4Y3_eaL6rrL_XiUOVaZGl43VJ4JZeJAaq_I9Cr3HgEvXabYbDU78cEDqFTCjOJDlLEXOeFkUPTi_ZYZ4zZkWOAZVzy9Qt9EfY_/w640-h389/DSC01765.JPG\"></p>', '2024-11-15 15:47:33', '2024-11-23 16:50:59', 1, 'forum-1732351859353-419094117.jpg'),
 (2, 1, '【桌遊開箱報】The Voyages of Marco Polo 馬可波羅 開箱＋五分鐘桌遊教室＋玩家幫助卡＋擴充介紹', '<p>出版社：新天鵝堡 Z-Man Games </p><p>設計師：Simone Luciani Daniele Tascini 美術：Dennis Lohausen </p><p>中文名稱：馬可波羅 </p><p>英文名稱：The Voyages of Marco Polo </p><p>遊戲人數：2-4人 </p><p>遊戲時間：40-100 mins </p><p>建議年齡：12+ </p><p>遊戲類型：成套收集/不同玩家能力/擲骰/工人置放 </p><p>文字需求：無 </p><p>遊戲元素：馬可波羅/商隊/駱駝/綠洲/可汗</p><p><img src=\"http://localhost:3005/uploads/forum/forum-1731892349306-418508714.jpg\"></p><p><br></p><p>這次的五分鐘桌遊教室要介紹的是《矮人礦坑》，這是我最喜歡的陣營遊戲（沒有之一）。支援人數廣，好教，好笑，又好心機，《矮人礦坑》對我來說是一款很優秀的好遊戲。</p>', '2024-11-18 09:12:31', '2024-11-18 09:12:31', 1, NULL),
 (3, 1, '【五分鐘桌遊教室】Saboteur 矮人礦坑', '<h3><br></h3><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEig5QSFkO0RyO980d5G69NDJyw08Iai_xE5B6oiZp_qIS6lCrnta2KBYGZoOSNnTBnL7UiJ1tChpFS16-qGlR6McUuSf9rzzCr4d-JwawB59N4G_cubuiOv3xkROSde5BkN9BklJiyHI-s/s1600/sab.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEig5QSFkO0RyO980d5G69NDJyw08Iai_xE5B6oiZp_qIS6lCrnta2KBYGZoOSNnTBnL7UiJ1tChpFS16-qGlR6McUuSf9rzzCr4d-JwawB59N4G_cubuiOv3xkROSde5BkN9BklJiyHI-s/s640/sab.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><br></p><p class=\"ql-align-justify\">這次的五分鐘桌遊教室要介紹的是《矮人礦坑》，這是我最喜歡的陣營遊戲（沒有之一）。支援人數廣，好教，好笑，又好心機，《矮人礦坑》對我來說是一款很優秀的好遊戲。</p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnFJpGoDL8PpJjuYVDm6PSF2hyphenhyphenRRKU9LjBlXcPcnCmdFBsIjmtP2ldpcUAtg5GTyfQJHGRshpmTFKQB7ymcons4JXjLo3eAKlGxm1C83-mb-8XxTgMmPVF7QXnB6mTPRAt7S1OMhf69eU/s1600/01.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnFJpGoDL8PpJjuYVDm6PSF2hyphenhyphenRRKU9LjBlXcPcnCmdFBsIjmtP2ldpcUAtg5GTyfQJHGRshpmTFKQB7ymcons4JXjLo3eAKlGxm1C83-mb-8XxTgMmPVF7QXnB6mTPRAt7S1OMhf69eU/s640/01.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNOPkclhy4mA7DVQOnAFk6NRHay-3uxBmjCDXSf7lFTH2pq20m3TfeFeYDpBxqEfRBSk1ep1v5tYiZycjNC9numlylhVn9WP1K8iNe9Ha2u32kL6Jv_ClGJ-Ce1e-sGjWFBikDZuK2Xcc/s1600/02.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNOPkclhy4mA7DVQOnAFk6NRHay-3uxBmjCDXSf7lFTH2pq20m3TfeFeYDpBxqEfRBSk1ep1v5tYiZycjNC9numlylhVn9WP1K8iNe9Ha2u32kL6Jv_ClGJ-Ce1e-sGjWFBikDZuK2Xcc/s640/02.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8s2EJAJCo_avotm285vjDIQeBLIozu9sHHCwkNQENsf5eL0bu533n2SR1M8mTKyrps46jk4O8Hj5kniHwPRr-XXoPdBOGJ-1uHy5Dj86BTlGQewyOawZrzyAo2179A8AZy5pMkPOMKVs/s1600/a.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8s2EJAJCo_avotm285vjDIQeBLIozu9sHHCwkNQENsf5eL0bu533n2SR1M8mTKyrps46jk4O8Hj5kniHwPRr-XXoPdBOGJ-1uHy5Dj86BTlGQewyOawZrzyAo2179A8AZy5pMkPOMKVs/s640/a.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgjElrB83HkelwAaqOGSABfbMdUsTtAWYOsyPxzAmIZaBQaXkdKf9WYTuQQBL0Vyx5-YigxbYsXkk4_B4JuJzp6Vix7uyvT_TtVFT_BBeSEW7RhaeYsOjZXyP4VspdnIieFnRdX33yL08c/s1600/b.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgjElrB83HkelwAaqOGSABfbMdUsTtAWYOsyPxzAmIZaBQaXkdKf9WYTuQQBL0Vyx5-YigxbYsXkk4_B4JuJzp6Vix7uyvT_TtVFT_BBeSEW7RhaeYsOjZXyP4VspdnIieFnRdX33yL08c/s640/b.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYFT4UJcEr-Yz4LTsiUI_z4pUx1f-u2Qf6_mtZ5BhPzZPozX989ntAqkc5RVX001jt_I9d1XHAMtJSjcTUSvBH6fMI3DVGOSMhzazn7nfcq3ATn5PkLoCWr-rMqCv9XnWIjcpForfGsv4/s1600/c.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYFT4UJcEr-Yz4LTsiUI_z4pUx1f-u2Qf6_mtZ5BhPzZPozX989ntAqkc5RVX001jt_I9d1XHAMtJSjcTUSvBH6fMI3DVGOSMhzazn7nfcq3ATn5PkLoCWr-rMqCv9XnWIjcpForfGsv4/s640/c.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwK-7_mjrxgru4FC_GtDYgWKyn3MeNX6KAG4_NiIlNYfSd5_zSw7wqEP0kbT_MxDCJLxixcGZM_LGy6xc4LBixX_N3D78MEPRNoqfQyWFx49CUv5NdPPehU54pwhTINwoboCTtilzni30/s1600/d.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwK-7_mjrxgru4FC_GtDYgWKyn3MeNX6KAG4_NiIlNYfSd5_zSw7wqEP0kbT_MxDCJLxixcGZM_LGy6xc4LBixX_N3D78MEPRNoqfQyWFx49CUv5NdPPehU54pwhTINwoboCTtilzni30/s640/d.jpg\"></a></p><p><br></p>', '2024-11-18 09:37:40', '2024-11-18 09:37:40', 1, 'forum-1731893860067-583559260.jpg'),
 (4, 1, '【五分鐘桌遊教室】Catan 卡坦島', '<h3><br></h3><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh36gv2-HWFdElLcJaYBtgQmBbh26xBpmASLcJ5GUrz4VdVz76xLnhmMLq9JN2Z4vHfKsSlI_dnOCFx-wThabvDTN6hacI63j0naqVhI_Dsemr8famfcXVGoMixR7rrnKaTucZAPidt7PGf/s1600/Catan.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh36gv2-HWFdElLcJaYBtgQmBbh26xBpmASLcJ5GUrz4VdVz76xLnhmMLq9JN2Z4vHfKsSlI_dnOCFx-wThabvDTN6hacI63j0naqVhI_Dsemr8famfcXVGoMixR7rrnKaTucZAPidt7PGf/s640/Catan.jpg\"></a></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\">開個新單元－<strong>【五分鐘桌遊教室】</strong>，主要是因為覺得現在網路上資訊爆炸，很多東西都是一閃而過，有時候打了長長（很囉唆的）一篇也不知道到底會認真看完的有幾個人，也想趁機逼自己盡量整理重點，不要囉哩囉嗦一堆，於是便有了這個想法。這個單元的第一篇，就拿我們家已經玩過幾百場的<strong>《卡坦島》</strong>來開刀吧。</p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\">這個新單元的目的有兩個：</p><p class=\"ql-align-justify\"><strong>（一）讓沒玩過這個遊戲的人可以快速瞭解這個遊戲</strong></p><p class=\"ql-align-justify\"><strong>（二）讓玩過遊戲但是忘記規則的人可以快速複習</strong></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\">但是，沒辦法當作完整的規則來閱讀喔，畢竟是簡略再簡略的版本。</p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\">ＰＳ我本來想要每一格都自己畫的，但是光畫完封面就崩潰了～所以後面就用照片啦～</p><p class=\"ql-align-justify\">ＰＳ看這篇只要五分鐘，但是做這些還是花了我好多時間＠＠</p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLsvQIE-36Ma9gKl3_PgMiSxLC9j9RJxV8bvfyYi-VT5sdXayKsrzuF-dxsJXWzTgygDBLGgUxjY9X_HTjuucd2Oxtr8aOz9Pj-MeMsDUkJ1Gm0HoSI9WVFNEdryPl-5KDQeGOIHRmFIOL/s1600/01-Catan-01.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLsvQIE-36Ma9gKl3_PgMiSxLC9j9RJxV8bvfyYi-VT5sdXayKsrzuF-dxsJXWzTgygDBLGgUxjY9X_HTjuucd2Oxtr8aOz9Pj-MeMsDUkJ1Gm0HoSI9WVFNEdryPl-5KDQeGOIHRmFIOL/s640/01-Catan-01.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhzj10uYzV4rv2V05wPO8A7b3KSnRj2KnKCghEsW0OpbnFEIObWq348JsdFSJvZHNZ9t1BwFe_QL5ksnIEkCxtJLh4l67aWEmuD38up7Eg3ZDvrTAmxMrjvtVcV0j6eH50WdRkJDL1r5wMY/s1600/01-Catan-02.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhzj10uYzV4rv2V05wPO8A7b3KSnRj2KnKCghEsW0OpbnFEIObWq348JsdFSJvZHNZ9t1BwFe_QL5ksnIEkCxtJLh4l67aWEmuD38up7Eg3ZDvrTAmxMrjvtVcV0j6eH50WdRkJDL1r5wMY/s640/01-Catan-02.jpg\"></a></p><p class=\"ql-align-justify\"><br></p><p><br></p><p class=\"ql-align-center\">下面是分頁大圖（內容相同）</p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPFD2NKeQaA_p7UUqAf29pYpM3wuzoeKbu86j1Fph_Qz7wFNkmREGxjxO6eBe-TG2MLUE0q3VjANDf7p6sNVU_b9jf6Uu01HNoNUCvaq7hITn3NR8EILJ6KHInRxNqkan0bGhCMopVH6kT/s1600/01.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPFD2NKeQaA_p7UUqAf29pYpM3wuzoeKbu86j1Fph_Qz7wFNkmREGxjxO6eBe-TG2MLUE0q3VjANDf7p6sNVU_b9jf6Uu01HNoNUCvaq7hITn3NR8EILJ6KHInRxNqkan0bGhCMopVH6kT/s640/01.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjig0nyX9ZRogHgGIIP1ERSREQWpZfk7tYb4NOr1qo-Mr3PKU0FZnM0JZPSzT-RQRptfhpOaZURlXRApJeAXaxBhIvs3BW2oPrjOXa9wsKMjOV_Etnk85QRVmE_D5g7DJ_mVMZj9_3m2DMp/s1600/02.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjig0nyX9ZRogHgGIIP1ERSREQWpZfk7tYb4NOr1qo-Mr3PKU0FZnM0JZPSzT-RQRptfhpOaZURlXRApJeAXaxBhIvs3BW2oPrjOXa9wsKMjOV_Etnk85QRVmE_D5g7DJ_mVMZj9_3m2DMp/s640/02.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitKvTUGEyQjsKDAElpZybbFax-Q25fBmYt9_30lD0nFwsq2CYb7Mjx-g62kD-IlcCO5C-Bfsitovb4wOTVEBRjvmcqd3Kbsg5AFh38ly853Ec814AAmYENNR0pJXUxktTIq0MJS8AluqL7/s1600/03.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitKvTUGEyQjsKDAElpZybbFax-Q25fBmYt9_30lD0nFwsq2CYb7Mjx-g62kD-IlcCO5C-Bfsitovb4wOTVEBRjvmcqd3Kbsg5AFh38ly853Ec814AAmYENNR0pJXUxktTIq0MJS8AluqL7/s640/03.jpg\"></a></p><p><br></p><p class=\"ql-align-center\"><a href=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjiDEgvNh3U9_1M9wLk7oYpsaearODO9RbWnRRkmvhZHlUpSsfJLJMTt56mjhSgIAc8c3AUCOo8b1qVsbHuEbDbnNf6OpvuxtAwTITwP9e9Q0Rzo_yZapqm5RdcHKuq99bZ-59ZlB_sR8Kh/s1600/04.jpg\" rel=\"noopener noreferrer\" target=\"_blank\"><img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjiDEgvNh3U9_1M9wLk7oYpsaearODO9RbWnRRkmvhZHlUpSsfJLJMTt56mjhSgIAc8c3AUCOo8b1qVsbHuEbDbnNf6OpvuxtAwTITwP9e9Q0Rzo_yZapqm5RdcHKuq99bZ-59ZlB_sR8Kh/s640/04.jpg\"></a></p><p><br></p>', '2024-11-18 09:38:28', '2024-11-18 09:38:28', 1, 'forum-1731893908596-583625383.jpg'),
@@ -301,8 +315,74 @@ INSERT INTO `orders` (`id`, `user_id`, `recipient_name`, `recipient_phone`, `rec
 (32, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 2500, 0, 2500, NULL, 'credit_card', 1, 3, '2024-02-01 00:00:00', '2024-11-13 20:25:47', NULL, 'home'),
 (33, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 4000, 0, 4000, NULL, 'credit_card', 1, 3, '2024-03-01 00:00:00', '2024-11-13 20:25:47', NULL, 'home'),
 (34, 1, '測試用戶', '0912345678', '台北市測試區測試路123號', 1500, 0, 1500, NULL, 'credit_card', 0, 1, '2024-11-13 20:25:47', '2024-11-13 20:25:47', NULL, 'home'),
-(35, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 7720, 6228, 1492, 11, 'credit_card', 1, 3, '2024-11-19 09:53:21', '2024-11-19 09:53:49', NULL, 'home'),
-(36, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 1150, 0, 1150, NULL, 'credit_card', 1, 3, '2024-11-20 14:24:05', '2024-11-20 14:24:23', NULL, 'home');
+(35, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 200, 520, 4, 'credit_card', 0, 1, '2024-11-16 00:15:48', '2024-11-16 00:15:48', NULL, 'home'),
+(36, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 200, 520, 4, 'credit_card', 0, 1, '2024-11-16 00:17:40', '2024-11-16 00:17:40', NULL, 'home'),
+(37, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 200, 520, 4, '', 0, 1, '2024-11-16 00:18:26', '2024-11-16 00:18:26', NULL, 'home'),
+(38, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:18:56', '2024-11-16 00:18:56', NULL, 'home'),
+(39, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:19:01', '2024-11-16 00:19:01', NULL, 'home'),
+(40, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:20:15', '2024-11-16 00:20:15', NULL, 'home'),
+(41, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:22:09', '2024-11-16 00:22:09', NULL, 'home'),
+(42, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:23:02', '2024-11-16 00:23:02', NULL, 'home'),
+(43, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:28:05', '2024-11-16 00:28:05', NULL, 'home'),
+(44, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:29:06', '2024-11-16 00:29:06', NULL, 'home'),
+(45, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 720, 0, 720, NULL, 'credit_card', 0, 1, '2024-11-16 00:29:16', '2024-11-16 00:29:16', NULL, 'home'),
+(46, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 430, 0, 430, NULL, 'credit_card', 0, 1, '2024-11-16 00:31:02', '2024-11-16 00:31:02', NULL, 'home'),
+(47, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 3440, 0, 3440, NULL, 'credit_card', 0, 1, '2024-11-16 00:36:30', '2024-11-16 00:36:30', NULL, 'home'),
+(48, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 290, 0, 290, NULL, 'credit_card', 0, 1, '2024-11-16 00:36:56', '2024-11-16 00:36:56', NULL, 'home'),
+(49, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 15740, 0, 15740, NULL, 'credit_card', 0, 1, '2024-11-16 00:39:42', '2024-11-16 00:39:42', NULL, 'home'),
+(50, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 5590, 0, 5590, NULL, 'credit_card', 0, 1, '2024-11-16 01:39:47', '2024-11-16 01:39:47', NULL, 'home'),
+(51, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 7350, 0, 7350, NULL, 'credit_card', 0, 1, '2024-11-16 09:49:26', '2024-11-16 09:49:26', NULL, 'home'),
+(52, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 490, 0, 490, NULL, 'credit_card', 0, 1, '2024-11-16 09:51:04', '2024-11-16 09:51:04', NULL, 'home'),
+(53, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 09:54:27', '2024-11-16 09:54:27', NULL, 'home'),
+(54, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 09:56:16', '2024-11-16 09:56:16', NULL, 'home'),
+(55, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 1770, 0, 1770, NULL, 'credit_card', 0, 1, '2024-11-16 10:00:11', '2024-11-16 10:00:11', NULL, 'home'),
+(56, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 2260, 0, 2260, NULL, 'credit_card', 0, 1, '2024-11-16 10:05:54', '2024-11-16 10:05:54', NULL, 'home'),
+(57, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:10:29', '2024-11-16 10:10:29', NULL, 'home'),
+(58, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:14:32', '2024-11-16 10:14:32', NULL, 'home'),
+(59, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:17:00', '2024-11-16 10:17:00', NULL, 'home'),
+(60, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 1770, 0, 1770, NULL, 'credit_card', 0, 1, '2024-11-16 10:22:28', '2024-11-16 10:22:28', NULL, 'home'),
+(61, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:36:09', '2024-11-16 10:36:09', NULL, 'home'),
+(62, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:38:24', '2024-11-16 10:38:24', NULL, 'home'),
+(63, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:41:48', '2024-11-16 10:41:48', NULL, 'home'),
+(64, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:44:47', '2024-11-16 10:44:47', NULL, 'home'),
+(65, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:47:41', '2024-11-16 10:47:41', NULL, 'home'),
+(66, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:51:17', '2024-11-16 10:51:17', NULL, 'home'),
+(67, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 390, 0, 390, NULL, 'credit_card', 0, 1, '2024-11-16 10:55:46', '2024-11-16 10:55:46', NULL, 'home'),
+(68, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 10:57:38', '2024-11-16 10:57:38', NULL, 'home'),
+(69, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 490, 0, 490, NULL, 'credit_card', 0, 1, '2024-11-16 10:59:56', '2024-11-16 10:59:56', NULL, 'home'),
+(70, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 11:03:12', '2024-11-16 11:03:12', NULL, 'home'),
+(71, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 11:11:19', '2024-11-16 11:11:19', NULL, 'home'),
+(72, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 11:13:33', '2024-11-16 11:13:33', NULL, 'home'),
+(73, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 11:53:23', '2024-11-16 11:53:23', NULL, 'home'),
+(74, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 11:56:49', '2024-11-16 11:56:49', NULL, 'home'),
+(75, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 11:57:31', '2024-11-16 11:57:31', NULL, 'home'),
+(76, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 12:02:35', '2024-11-16 12:02:35', NULL, 'home'),
+(77, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 12:52:18', '2024-11-16 12:52:18', NULL, 'home'),
+(78, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 12:53:17', '2024-11-16 12:53:17', NULL, 'home'),
+(79, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'transfer', 0, 1, '2024-11-16 12:59:12', '2024-11-16 12:59:12', NULL, 'home'),
+(80, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 13:03:11', '2024-11-16 13:03:11', NULL, 'home'),
+(81, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 4140, 50, 4090, 2, 'credit_card', 0, 1, '2024-11-16 14:37:11', '2024-11-16 14:37:11', NULL, 'home'),
+(82, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 290, 0, 290, NULL, 'credit_card', 0, 1, '2024-11-16 15:01:05', '2024-11-16 15:01:05', NULL, 'home'),
+(83, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 15:01:32', '2024-11-16 15:01:32', NULL, 'home'),
+(84, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 430, 0, 430, NULL, 'credit_card', 0, 1, '2024-11-16 15:02:31', '2024-11-16 15:02:31', NULL, 'home'),
+(85, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 15:06:03', '2024-11-16 15:06:03', NULL, 'home'),
+(86, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 15:21:10', '2024-11-16 15:21:10', NULL, 'home'),
+(87, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 780, 0, 780, NULL, 'credit_card', 0, 1, '2024-11-16 15:25:55', '2024-11-16 15:25:55', NULL, 'home'),
+(88, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 15:38:28', '2024-11-16 15:38:28', NULL, 'home'),
+(89, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 860, 0, 860, NULL, 'credit_card', 0, 1, '2024-11-16 15:43:38', '2024-11-16 15:43:38', NULL, 'home'),
+(90, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 19:37:18', '2024-11-16 19:37:18', NULL, 'home'),
+(91, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-16 19:52:39', '2024-11-16 19:52:39', NULL, 'home'),
+(92, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 2580, 0, 2580, NULL, 'credit_card', 0, 1, '2024-11-16 20:11:53', '2024-11-16 20:11:53', NULL, 'home'),
+(93, 1, '測試用戶一', '0912345678', '台中市大甲區中山路二段920之21號之22號之23號之25號之26號', 290, 0, 290, NULL, 'credit_card', 0, 1, '2024-11-17 10:12:16', '2024-11-17 10:12:16', NULL, 'home'),
+(94, 1, '測試用戶一', '0912345678', '台中市大甲區中山路二段920之21號之22號之23號之25號之26號', 1280, 0, 1280, NULL, 'credit_card', 1, 3, '2024-11-17 10:26:29', '2024-11-17 16:04:26', NULL, 'home'),
+(95, 1, '測試用戶一', '0912345678', '基隆市七堵區長安街239巷2號.241巷1號', 490, 0, 490, NULL, 'credit_card', 0, 1, '2024-11-17 10:36:19', '2024-11-17 10:36:19', NULL, 'home'),
+(96, 1, '測試用戶一', '0912345678', '花蓮縣玉里鎮中山路一段96號', 790, 0, 790, NULL, 'credit_card', 0, 1, '2024-11-17 10:51:51', '2024-11-17 10:51:51', '璞石閣門市', '711'),
+(97, 1, '測試用戶一', '0912345678', '桃園市八德區中山一路116號', 980, 0, 980, NULL, 'credit_card', 0, 1, '2024-11-17 15:07:08', '2024-11-17 15:07:08', '八德仁貴門市', '711'),
+(98, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 490, 0, 490, NULL, 'credit_card', 0, 1, '2024-11-17 15:20:07', '2024-11-17 15:20:07', NULL, 'home'),
+(99, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 1280, 0, 1280, NULL, 'credit_card', 0, 1, '2024-11-17 15:26:25', '2024-11-17 15:26:25', NULL, 'home'),
+(100, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 490, 0, 490, NULL, 'credit_card', 1, 3, '2024-11-17 15:37:31', '2024-11-17 16:04:37', NULL, 'home'),
+(101, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 790, 0, 790, NULL, 'credit_card', 1, 3, '2024-11-17 16:05:26', '2024-11-17 16:05:50', NULL, 'home'),
+(102, 1, '測試用戶一', '0912345678', '台北市測試區測試路123號', 1760, 0, 1760, NULL, 'credit_card', 1, 3, '2024-11-18 19:41:38', '2024-11-18 19:41:59', NULL, 'home');
 
 -- --------------------------------------------------------
 
@@ -361,11 +441,103 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `type`, `quantity`, `
 (29, 29, 4, 'sale', 2, 1500, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
 (30, 29, 5, 'sale', 1, 1000, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
 (31, 34, 6, 'sale', 1, 1500, NULL, NULL, NULL, NULL, NULL, '2024-11-13 20:25:47'),
-(32, 35, 3, 'sale', 13, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-19 09:53:21'),
-(33, 35, 4, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-19 09:53:21'),
-(34, 35, 2, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-19 09:53:21'),
-(35, 36, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-20 14:24:05'),
-(36, 36, 2, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-20 14:24:05');
+(32, 35, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:15:48'),
+(33, 35, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:15:48'),
+(34, 36, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:17:40'),
+(35, 36, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:17:40'),
+(36, 37, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:18:26'),
+(37, 37, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:18:26'),
+(38, 38, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:18:56'),
+(39, 38, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:18:56'),
+(40, 39, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:19:01'),
+(41, 39, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:19:01'),
+(42, 40, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:20:15'),
+(43, 40, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:20:15'),
+(44, 41, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:22:09'),
+(45, 41, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:22:09'),
+(46, 42, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:23:02'),
+(47, 42, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:23:02'),
+(48, 43, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:28:05'),
+(49, 43, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:28:05'),
+(50, 44, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:29:06'),
+(51, 44, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:29:06'),
+(52, 45, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:29:16'),
+(53, 45, 1, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:29:16'),
+(54, 46, 3, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:31:02'),
+(55, 47, 3, 'rental', 8, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 00:36:30'),
+(56, 48, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:36:56'),
+(57, 49, 2, 'sale', 10, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:39:42'),
+(58, 49, 3, 'sale', 8, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 00:39:42'),
+(59, 49, 2, 'rental', 4, 20, 800, 9, NULL, NULL, NULL, '2024-11-16 00:39:42'),
+(60, 50, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 01:39:47'),
+(61, 50, 3, 'rental', 10, 10, 400, 8, NULL, NULL, NULL, '2024-11-16 01:39:47'),
+(62, 51, 7, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 09:49:26'),
+(63, 51, 3, 'sale', 14, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 09:49:26'),
+(64, 52, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 09:51:04'),
+(65, 53, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 09:54:27'),
+(66, 54, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 09:56:16'),
+(67, 55, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:00:11'),
+(68, 55, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:00:11'),
+(69, 55, 4, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:00:11'),
+(70, 56, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:05:54'),
+(71, 56, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:05:54'),
+(72, 56, 7, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:05:54'),
+(73, 56, 11, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:05:54'),
+(74, 57, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:10:29'),
+(75, 58, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:14:32'),
+(76, 59, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:17:00'),
+(77, 60, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:22:28'),
+(78, 60, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:22:28'),
+(79, 60, 4, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:22:28'),
+(80, 61, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:36:09'),
+(81, 62, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:38:24'),
+(82, 63, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:41:48'),
+(83, 64, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:44:47'),
+(84, 65, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:47:41'),
+(85, 66, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:51:17'),
+(86, 67, 9, 'sale', 1, 390, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:55:46'),
+(87, 68, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:57:38'),
+(88, 69, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 10:59:56'),
+(89, 70, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 11:03:12'),
+(90, 71, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 11:11:19'),
+(91, 72, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 11:13:33'),
+(92, 73, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 11:53:23'),
+(93, 74, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 11:56:49'),
+(94, 75, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 11:57:31'),
+(95, 76, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 12:02:35'),
+(96, 77, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 12:52:18'),
+(97, 78, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 12:53:17'),
+(98, 79, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 12:59:12'),
+(99, 80, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 13:03:11'),
+(100, 81, 2, 'sale', 4, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 14:37:11'),
+(101, 81, 3, 'sale', 2, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 14:37:11'),
+(102, 82, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 15:01:05'),
+(103, 83, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 15:01:32'),
+(104, 84, 3, 'rental', 1, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 15:02:31'),
+(105, 85, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 15:06:03'),
+(106, 86, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 15:21:10'),
+(107, 87, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-16 15:25:55'),
+(108, 87, 5, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-16 15:25:55'),
+(109, 88, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 15:38:28'),
+(110, 89, 2, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-16 15:43:38'),
+(111, 90, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 19:37:18'),
+(112, 91, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-16 19:52:39'),
+(113, 92, 1, 'rental', 4, 10, 400, 3, NULL, NULL, NULL, '2024-11-16 20:11:53'),
+(114, 92, 2, 'rental', 1, 20, 800, 3, NULL, NULL, NULL, '2024-11-16 20:11:53'),
+(115, 93, 1, 'sale', 1, 290, NULL, NULL, NULL, NULL, NULL, '2024-11-17 10:12:16'),
+(116, 94, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-17 10:26:29'),
+(117, 94, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-17 10:26:29'),
+(118, 95, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-17 10:36:19'),
+(119, 96, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-17 10:51:51'),
+(120, 97, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-17 15:07:08'),
+(121, 97, 4, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-17 15:07:08'),
+(122, 98, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-17 15:20:07'),
+(123, 99, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-17 15:26:25'),
+(124, 99, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-17 15:26:25'),
+(125, 100, 3, 'sale', 1, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-17 15:37:31'),
+(126, 101, 2, 'sale', 1, 790, NULL, NULL, NULL, NULL, NULL, '2024-11-17 16:05:26'),
+(127, 102, 3, 'sale', 2, 490, NULL, NULL, NULL, NULL, NULL, '2024-11-18 19:41:38'),
+(128, 102, 9, 'sale', 2, 390, NULL, NULL, NULL, NULL, NULL, '2024-11-18 19:41:38');
 
 -- --------------------------------------------------------
 
@@ -491,8 +663,8 @@ INSERT INTO `product` (`id`, `name`, `category_tag`, `price`, `description`, `im
 (96, '速速城國', '輕策略', 890, '這是史上少見，節奏明快的王國發展遊戲。\n只要經過數輪遊戲，便可以透過財富打造屬於自己的王國。你會興建華美的建築來為你的王國增添色彩？或是建造堅固的堡壘以防禦外敵入侵，來保衛疆土和人民？\n國王的日常沒那麼簡單，每個決定都對你的領地有著深遠的影響，每個行動都可能是勝負的關鍵！', '5c1db425fa9b3b0261d74d12_MinuteRealms_BOX.jpg', 2, 5, 10, '30', '2024-08-21 10:47:17', 1),
 (97, '鯊魚來襲', '骰子,樂齡', 590, '你是五星級海灘飯店的總裁，當旺季來臨時，總有數不清的遊客在海邊戲水，不幸的，這片水域常有鯊魚出 ，而且鯊魚攻擊遊客的負面新聞也影響了遊客到訪的意願。因此，你必須盡力讓更多的遊客可以下水遊玩，並且在鯊魚來襲時，盡可能拯救所有旅客的生命。在海邊開心玩水的遊客和在鯊魚來襲時生還的遊客都可以讓你得分。', '5ab91278326fa9d3daea2d3b_SharkAttacks_Box_3D.jpg', 2, 6, 10, '30', '2024-08-21 10:47:17', 1),
 (98, '奇獸競技場', '紙牌,猜心,輕策略,台灣作家,樂齡', 290, '玩家扮演魔法學院的學員，在奇獸飼育學的成果驗收中，要讓自己的奇獸在決鬥中勝出。在三回合的決鬥中，如何搭配自己奇獸的出場順序，並且猜測對手的奇獸組合，以獲取高分來贏得勝利。', '5ab908f7987c862c5153de70_MonstersArena_Box.jpg', 2, 4, 8, '15', '2024-08-21 10:47:17', 1),
-(99, '多米諾王國豐年擴充', '幼兒,輕策略', 0, '法國出版社 Blue Orange × 新天鵝堡桌遊\n讓你不出門也能獲得新擴充！\n\n全球因應疫情，許多地方實施了限令，很多人在這段時間不能出門，甚至面臨重重艱難的考驗。\n《多米諾王國豐年擴充》由法國出版社 Blue Orange 團隊與設計師在家連線設計，經新天鵝堡翻譯、編輯，提供給大家一些美好的事物，攜手共渡過這段特別的時光。\n\n歡迎下載並列印連結中的PDF檔案，其中包含配件與中文說明書。\n動手剪裁印好的配件，搭配《多米諾王國》或《多米諾女王》開始遊戲！\n\n免費，請自行下載連結的PDF檔案列印使用。\n\n須搭配《多米諾王國》或《多米諾女王》方能使用', '5ea21cc4996fb625dc6215cc_Kingdomino%20The%20Court%20Print%20%26%20Play_CN_Box.jpg', 2, 4, 8, '15', '2024-08-21 10:47:17', 1),
-(100, '多米諾王國玩家板', '幼兒,輕策略', 0, '玩多米諾王國時，一不留意就超出5x5的矩陣嗎？\n‍\n您可以下載並列印由法國出版社 Blue Orange 與繪師 Cyril Bouquet 設計的多米諾王國玩家板，讓王國的範圍一目了然！\n亦可下載自行著色的版本，繪製獨一無二的專屬玩家板喔！', '5ea2d8ac445c9ae6ae4d1f36_Kingdomino_Playmat_Box.jpg', 2, 4, 8, '15', '2024-08-21 10:47:17', 1),
+(99, '多米諾王國豐年擴充', '幼兒,輕策略', 100, '法國出版社 Blue Orange × 新天鵝堡桌遊\n讓你不出門也能獲得新擴充！\n\n全球因應疫情，許多地方實施了限令，很多人在這段時間不能出門，甚至面臨重重艱難的考驗。\n《多米諾王國豐年擴充》由法國出版社 Blue Orange 團隊與設計師在家連線設計，經新天鵝堡翻譯、編輯，提供給大家一些美好的事物，攜手共渡過這段特別的時光。\n\n歡迎下載並列印連結中的PDF檔案，其中包含配件與中文說明書。\n動手剪裁印好的配件，搭配《多米諾王國》或《多米諾女王》開始遊戲！\n\n免費，請自行下載連結的PDF檔案列印使用。\n\n須搭配《多米諾王國》或《多米諾女王》方能使用', '5ea21cc4996fb625dc6215cc_Kingdomino%20The%20Court%20Print%20%26%20Play_CN_Box.jpg', 2, 4, 8, '15', '2024-08-21 10:47:17', 1),
+(100, '多米諾王國玩家板', '幼兒,輕策略', 100, '玩多米諾王國時，一不留意就超出5x5的矩陣嗎？\n‍\n您可以下載並列印由法國出版社 Blue Orange 與繪師 Cyril Bouquet 設計的多米諾王國玩家板，讓王國的範圍一目了然！\n亦可下載自行著色的版本，繪製獨一無二的專屬玩家板喔！', '5ea2d8ac445c9ae6ae4d1f36_Kingdomino_Playmat_Box.jpg', 2, 4, 8, '15', '2024-08-21 10:47:17', 1),
 (101, '多米諾王國', '輕策略,樂齡', 790, '身為國王，你正在尋找新土地來擴張王國的勢力並提高聲望，必須探索所有的土地、麥田、湖泊以及山脈，來找到最棒的領地。但是要小心，其他的國王也在覬覦這些土地唷！\n選擇適當的多米諾板塊，妥善地將相同的地形拼放在一起，形成最大的領土，並透過事前的規劃，讓你王國中的每一寸土地都得到完善的利用，以獲得最高的聲望分數！\n\n建議搭配「QUEENDOMINO多米諾女王」獲得更多的樂趣！', '63527682758dca9070a69656_Kingdomino_Box_3D_2019.jpg', 2, 4, 8, '15', '2024-08-21 10:47:17', 1),
 (102, 'OFFICE 21', '紙牌', 390, '械噗市在景氣低迷物價飆漲的壓迫之下，政府祭出了每間集團總利潤超過21K 就要被扣押的政策。各集團的老闆們用各種手段來提高利潤，以求儘快達到21K 贏得勝利，但又擔心超過21K 遭到扣押，猶如走鋼索一般。查稅員和間諜讓這場競爭雪上加霜，勝利條件隨時可能改變！到底應該放手一搏還是且戰且走？你能抓準時機奪下勝利嗎？', '5ab909bd326fa9033cea187b_Office21_Box_3D.jpg', 2, 5, 8, '15', '2024-08-21 10:47:17', 1),
 (103, '貪吃鬼', '大腦,紙牌,猜心,派對,輕策略,樂齡', 290, '別再矜持了！放膽地從其他玩家手中偷牌，率先收集到6 張相同的數字牌，便能獲勝。太貪心可能讓你功虧一簣！', '5c1cb502fadfd55f5d865ec4_Greed_Box.jpg', 2, 5, 8, '15', '2024-08-21 10:47:17', 1),
@@ -717,7 +889,7 @@ INSERT INTO `product` (`id`, `name`, `category_tag`, `price`, `description`, `im
 (321, '立方聰明', '大腦,骰子,輕策略', 490, '1. 選擇骰子\n2. 進行記錄\n3. 其他玩家使用剩餘的骰子', '63da2e4c121636db1bbe0aaf_Clever%20Cubed_Box_3D.jpg', 1, 4, 8, '30', '2024-08-21 10:47:17', 1),
 (322, '永保聰明', '大腦,骰子,輕策略', 490, '1. 選擇骰子\n2. 進行記錄\n3. 其他玩家使用剩餘的骰子', '63da3a432c22222d74003be2_Clever_4Ever_Box_3D.jpg', 1, 4, 8, '30', '2024-08-21 10:47:17', 1),
 (323, '矮人礦坑 2 擴充', '陣營,派對,樂齡', 390, '在這個擴充當中，等待著玩家的是新的矮人角色，新的行動卡及路徑卡。有一般的淘金客矮人，但現在他們分成二隊：綠隊及藍隊。一如往常，淘金客想要在礦坑中找到寶藏。但這次，他們不能只為了自己，必須和隊友們合作才能取得成功。\n\n本擴充必須搭配「矮人礦坑」基本遊戲方可使用', '5ab910e0c6b5aa63ef11288e_Saboteur2_Box_3D_CN.jpg', 2, 12, 8, '30', '2024-08-21 10:47:17', 1),
-(324, '矮人礦坑・十五週年貼紙擴充', '陣營,派對', 0, '每一輪結束時，獲勝的矮人各拿取1每貼紙，貼在相應的紙牌上，在下一輪（或下一場）遊戲，貼有貼紙的卡片功能將發生改變！\n\n本擴充必須搭配「矮人礦坑」基本遊戲方可使用', '5f227dd58f5d4c8466307b7c_Saboteur_15Anni_Sticker_EXP.jpg', 2, 12, 8, '30', '2024-08-21 10:47:17', 1),
+(324, '矮人礦坑・十五週年貼紙擴充', '陣營,派對', 100, '每一輪結束時，獲勝的矮人各拿取1每貼紙，貼在相應的紙牌上，在下一輪（或下一場）遊戲，貼有貼紙的卡片功能將發生改變！\n\n本擴充必須搭配「矮人礦坑」基本遊戲方可使用', '5f227dd58f5d4c8466307b7c_Saboteur_15Anni_Sticker_EXP.jpg', 2, 12, 8, '30', '2024-08-21 10:47:17', 1),
 (325, '矮人礦坑20週年紀念版', '陣營,派對,樂齡', 890, '20年來⋯⋯矮人一直在礦坑中尋找珍貴的黃金，而搗蛋鬼則試圖阻止他們達成目標。 將路徑卡放入迷宮般的礦坑中來探查礦脈，期盼挖到驚人的寶藏。\n阻止那些可能對您不利的人，但是千萬不要洩漏自己的身分，以免成為對手攻擊的目標。保持警惕並仔細推敲到底該信任誰？因為，只有黃金是你永遠的朋友！\n\n20週年紀念版包含：', '6638cb3c822bfcc01f55b1cb_Saboteur_20th_Box.jpg', 2, 12, 8, '30', '2024-08-21 10:47:17', 1),
 (326, '猩戰', '輕策略', 1160, '香蕉大盜首領正計劃在退休前選出一位得力助手成為他的繼任人，首領向他們宣佈誰先成功獲取三個香蕉金幣，使可成為下一任的首領。香蕉金幣需藉由搶奪其他對手存有的猩猩貨幣轉化而成，所以大家須盡力擊打對手並搶套他們的猩猩貨幣，一場激烈的「猩戰」即將展開！', '5ab8f13ef866da4f04167c76_Banana%20bandits_Box_3D.jpg', 2, 4, 8, '30', '2024-08-21 10:47:17', 1),
 (327, '形色咚咚', '大腦,巧手,樂齡', 1290, '玩家輪流將一片咚咚放入遊戲塔中，依其降落後停留的樓層來獲得分數，若與面板上的獎勵圓圈重疊，便能得到獎勵分數。\n\n請小心：切勿違反降落規則！你投入的咚咚不能碰到其他形狀或顏色相同的咚咚。', '5ab8f745fc0a922332ad89fe_Drop%20it_Box.jpg', 2, 4, 8, '30', '2024-08-21 10:47:17', 1),
@@ -808,7 +980,7 @@ INSERT INTO `product` (`id`, `name`, `category_tag`, `price`, `description`, `im
 (411, '卡卡頌2.0 高塔擴充', '輕策略,樂齡', 690, '抽牌塔可容納180片版圖，桌面將井然有序，留給玩家們拓展大好的江山！\n在塔基上建築高塔，並抓走對手的手下，塔蓋得越高，瞭望的距離便增加，同時抓人的範圍也跟著擴展！\n\n須搭配卡卡頌基本版使用。', '5e8ae5bcbcf6e146dfccbd99_CarcEx4_Box.jpg', 2, 6, 7, '60', '2024-08-21 10:47:17', 1),
 (412, '卡卡頌2.0 僧院與市長擴充', '輕策略,樂齡', 690, '僧院\n百搭僧院版圖無論周圍地景為何，都能完美嵌入！\n許多絕妙新版圖，讓遊戲更加精彩！\n\n市長\n一名市長抵得了幾名手下？就看該城堡中有多少盾牌徽章啦！\n\n貨車\n等於有輪子的手下，計分後可以立刻轉戰無人佔領的地景，善用其機動性，讓你無往不利！\n\n農莊\n藉由農莊可在遊戲過程中召回農夫，並守護這片草原。', '5e8ae75cec626f26a833b238_CarcEx5_Box.jpg', 2, 6, 7, '60', '2024-08-21 10:47:17', 1),
 (413, '卡卡頌2.0 伯爵、國王與強盜擴充', '輕策略,樂齡', 690, '卡卡城與伯爵\n幫了其他玩家，不再落得兩袖清風！將手下派遣到卡卡城，計分前再調派到計分處，空降部隊讓你勝券在握！\n\n國王與強盜\n遊戲中若完成了最大的城堡或最長的道路，遊戲結束時將獲得豐厚的獎賞！\n\n禮拜堂\n派遣異教徒到修道院周圍的禮拜堂，與既有的修士互別苗頭，只有先完成九宮格教區的人才能得分，另一個人只好空手而回！\n\n河流II\n全新遊戲開始方式，分岔的河流讓地景有更豐富的變化，加入基本版的「河流I」，讓源遠流長的河在雄偉城堡與美麗草原間繞行！\n\n須搭配卡卡頌基本版使用。', '5e8ae8d94fbaea867d26fa28_CarcEx6_Box.jpg', 2, 6, 7, '60', '2024-08-21 10:47:17', 1),
-(414, '卡卡頌 土地測量師擴充', '輕策略,樂齡', 0, '在本迷你擴充中，土地測量師在卡卡頌裡到處穿梭，重新確認每種建築的分數。抓準時機才是致勝的關鍵，在對的時間點完成建築，才能讓你獲得最高的分數。\n\n遊戲免費，請自行下載列印使用。', '5ed74db05c2d8dcd7e1c5ae8_Carc_Mini_LandSurveyor.jpg', 2, 6, 7, '60', '2024-08-21 10:47:17', 1),
+(414, '卡卡頌 土地測量師擴充', '輕策略,樂齡', 100, '在本迷你擴充中，土地測量師在卡卡頌裡到處穿梭，重新確認每種建築的分數。抓準時機才是致勝的關鍵，在對的時間點完成建築，才能讓你獲得最高的分數。\n\n遊戲免費，請自行下載列印使用。', '5ed74db05c2d8dcd7e1c5ae8_Carc_Mini_LandSurveyor.jpg', 2, 6, 7, '60', '2024-08-21 10:47:17', 1),
 (415, '卡卡頌2.0 橋樑、山城與市集擴充', '輕策略,樂齡', 690, '橋樑\n橋樑可以延伸道路，讓道路穿越未開墾的草原，甚至越過城堡與修道院，只要兩個橋墩都站在草原即可。‍\n\n‍山城\n完成一個小城堡（由兩片版圖組成）時，可以將它改造為一座山城，放棄原來的分數，等待周圍建築完成時，共享得分！\n\n市集\n不論是在城堡中或草原上舉辦市集時，總是熱鬧非凡，玩家們無一缺席，在競標中費盡心機，想獲得鍾意的版圖又不想付費！\n\n須搭配卡卡頌基本版使用。', '5ee431e7f3efc10a69e5e8b4_CarcEx8_Box.jpg', 2, 6, 7, '60', '2024-08-21 10:47:17', 1),
 (416, '卡卡頌2.0 綿羊與山丘擴充', '輕策略,樂齡', 690, '牧羊人\n牧羊人在草原上放牧羊群，羊群逐漸繁衍、茁壯，把握適當時機趕羊入廄，才能讓分數落袋為安，否則，一旦狼來了，便要前功盡棄囉！\n\n葡萄園\n葡萄成熟時，修士身兼釀酒師，並為修道院帶來更多的財富。\n\n山丘\n站在高崗上，不但視野遼闊，更為手下帶來戰略優勢。當計分時出現平手的狀況，若你的手下在山丘上，便能打破平局，獨享分數！\n\n新版圖\n獨特的版圖豐富了打造城堡與草原的方式，為兼併他人的版圖埋下伏筆！\n\n須搭配卡卡頌基本版使用。', '5ee434ebba95a6ab2e1e60a7_CarcEx9_Box.jpg', 2, 6, 7, '60', '2024-08-21 10:47:17', 1),
 (417, '出租公寓', '輕策略', 590, '電力公司作者 Friedemann Friese 的出道作品 — 出租公寓（1992），時至今日依然魅力非凡。\n現在，它回來了！\n讓你一圓開心炸房、坑殺房客、惡搞對手的勢利房東夢！\n\n遊戲內含120張彩色圖卡，帶來全新的房客、硬幣與說明書。但只有一件事情沒有變，那就是只有最懂得榨出房客每一分錢的房東才能獲勝！', '5f87447eb11d56540635fa29_Landlord_box_SEAL.jpg', 2, 6, 12, '60', '2024-08-21 10:47:17', 1),
@@ -904,7 +1076,7 @@ INSERT INTO `product` (`id`, `name`, `category_tag`, `price`, `description`, `im
 (507, '地主', '紙牌,合作,樂齡', 290, '地主是款只能是恰好四個人玩的神秘遊戲！\n由兩兩夥伴組成一隊，試著在出牌及得分中幫助彼此，為團隊爭取分數！\n\n單張、對子、兩對子、三條、葫蘆、順字子、鐵枝與同花順...\n看似跟大老二相似，卻有著更高的策略性，四種單張特殊牌，巧妙使用將有奇效！\n雀將：成為這局的起始玩家，可以指定一張數字牌\n狗：將神聖的出牌權，傳遞給隊友\n龍：只能單張牌出，單出時是最大的\n鳳凰：單出時比上一張牌大1/2，也可以加入牌組當萬用牌\n\n爭取成為最快將手牌脫手的玩家，以獲取高分！\n\n但地主真的不僅僅如此，無論事宣告地主或大地主會讓加份或扣加成！\n與隊友、敵手換牌、出牌的時機........等等，都讓這個遊戲充滿了魅力，擁有眾多的死忠粉絲！\n讓你一場接一場，欲罷不能！', '5e795640dd63e9ba3c9aa71d_Tichu_2020_Box.jpg', 4, 4, 10, '60', '2024-08-21 10:47:17', 1),
 (508, '卡坦島 旅遊版', '中策略', 1490, '搭火車、山中涼亭小憩或草原野餐，卡坦島旅遊版的精巧設計讓您隨時可以享受卡坦島的樂趣！\n旅遊版的收納設計不只節省空間，也提供富有變化的遊戲地圖，村莊、道路和城市可以固定在地圖上，即使晃動也不會掉落，骰盒的設計讓人再也不用擔心會弄丟骰子。\n\n卡坦島旅遊版攜帶方便，並保有基本版所有的遊戲元素，令人驚豔！', '5a98fa1955afe20001961924_CATAN_komp_3D_BOX.jpg', 2, 4, 10, '60+', '2024-08-21 10:47:17', 1),
 (509, '卡坦島 海洋擴充', '中策略', 1490, '卡坦島已經建設完畢。是時候航向未知的海洋！\n用木頭和羊皮打造船隻，如海上的道路般，讓你從濱郊一路探索到外海。隨著船隻與海盜等新規則的加入，你們將會面對更具變化，更有挑戰性的卡坦冒險！\n冒險者們，你可聽見海風的呼喚？船已滿帆，就待你號令啟程！\n\n此擴充版本必須搭配卡坦島版使用，亦可同時選用騎士擴充來進行更富冒險性的遊戲！', '5ab8f408fc0a926d8ead83f8_CatanSeafarer_BOX_2018.jpg', 3, 4, 10, '60+', '2024-08-21 10:47:17', 1),
-(510, '卡坦島 劇本：當我們宅在一起', '中策略', 0, '在艱難的情勢下，互相扶持是很重要的事，此時，強盜的心性也有所改變，不再搶奪財物，轉而到處分送資源。\n當我們宅在一起劇本是卡坦島的一款迷你擴充，必須使用卡坦島基本版方能進行遊戲，可搭配海洋擴充和/或騎士擴充一起進行遊戲。\n\n遊戲免費，請自行下載列印使用。', '5eba2c8160310110a65295ca_CATAN_WeStayHome.jpg', 3, 4, 10, '60+', '2024-08-21 10:47:17', 1),
+(510, '卡坦島 劇本：當我們宅在一起', '中策略', 100, '在艱難的情勢下，互相扶持是很重要的事，此時，強盜的心性也有所改變，不再搶奪財物，轉而到處分送資源。\n當我們宅在一起劇本是卡坦島的一款迷你擴充，必須使用卡坦島基本版方能進行遊戲，可搭配海洋擴充和/或騎士擴充一起進行遊戲。\n\n遊戲免費，請自行下載列印使用。', '5eba2c8160310110a65295ca_CATAN_WeStayHome.jpg', 3, 4, 10, '60+', '2024-08-21 10:47:17', 1),
 (511, '卡坦島 廿五週年紀念版', '中策略,樂齡', 2990, '經驗更遼闊的卡坦世界\n‍\n「卡坦島基本版」、「卡坦島海洋擴充」、2個卡坦島地圖劇本：伊比利亞半島 & 夏威夷，都收藏在這盒「卡坦島25週年紀念版」之中！\n每款擴充都為遊戲帶來新的可能性，提升卡坦島體驗的多樣化！\n卡坦島25年來帶給數以百萬計的卡坦迷無限歡樂與刺激！\n‍\n現在全新的卡坦世界正對您敞開大門，邀您一同遨遊！', '5fe2f273d5c850e8fe10b2f8_CATAN_25th_Box_3D.jpg', 3, 4, 10, '60+', '2024-08-21 10:47:17', 1),
 (512, '卡坦島', '中策略,樂齡', 1690, '發現新世界！\n\n你們是首批登陸卡坦島的勇敢拓荒者，迅速創立了初期的村莊和道路，透過收集島上豐富的資源來擴展聚落，進而興建城市，並且藉由交易各取所需，解決資源分佈不均的問題。\n然而這兒畢竟是個小島，土地與資源都很有限；當各自的勢力越來越強大，衝突也隨之而來。你是否能從群雄中脫穎而出，稱霸卡坦島？\n\n自1995年榮獲德國年度遊戲冠軍以來，卡坦島讓全球數百萬玩家為之瘋狂，流連於這款充滿益智與趣味的遊戲中。\n\n想進入桌上遊戲世界，你一定不能錯過卡坦島！', '60011bc96c6297c92f1f1f7a_CATAN_Box_2021.jpg', 3, 4, 10, '60+', '2024-08-21 10:47:17', 1),
 (513, '卡坦島 3D版', '中策略', 9990, '從另一個向度體驗卡坦島！\n卡坦島以立體地圖在您眼前升起，強烈的帶入感超乎您對桌遊的想像。\n\n拓荒者在肥沃平原設立村莊並開墾麥田，在雄偉的礦山邊興建城市以開採礦石。\n運用收集的資源進行交易、鋪設道路、建設家園，整座卡坦島的商業與發展都十分活絡。\n但要當心虎視耽耽的強盜，正伺機掠奪資源，並控制富饒的區域。\n\n玩家期盼多年的《卡坦島3D版》，地圖上的區域版圖是由作者 Klaus Teuber 親手建模所製，19塊充滿想像力的區域版圖由6塊外圍海洋版圖所圍繞，這些配件均由手繪上色，塗裝細膩且色彩豐富；遊戲模型仿照早期的建築樣貌，讓配件散發歷史氣息與獨特風格，並完美嵌入立體地圖中。', '612c77a154a6a63a66db4578_CATAN%203D_Box_3D.jpg', 3, 4, 10, '60+', '2024-08-21 10:47:17', 1),
@@ -930,7 +1102,7 @@ INSERT INTO `product` (`id`, `name`, `category_tag`, `price`, `description`, `im
 (533, '幻化魔石', '大腦', 490, '祭司們正在為盛大的競賽做準備。競賽的目的是重新恢復土、水、火、空氣和魔法力量的流動秩序。\n能否以最快速重整元素的秩序，並成功通過魔法眼的測試，就能勝出慶典競賽。\n‍\n一款圖形觀察眼明手快的卡牌遊戲。', '5be54b10555d73adf5ee85e4_Rox_Box.jpg', 2, 4, 7, '15', '2024-08-21 10:47:17', 1),
 (534, '注意，施工中！', '大腦,競速,紙牌,幼兒', 490, '管工阿賓負責監督一個大型的工地，所有機械用具和車輛的安排都是由他負責。\n有時他會需要小休上廁所，作為助手的你有信心可以準確和迅速地協助阿賓完成最多的任務嗎?', '5be54a79b163cd1f8c0efbaa_CautionConstruction_Box.jpg', 2, 4, 5, '15', '2024-08-21 10:47:17', 1),
 (535, '彈彈兔拉力賽', '大腦,幼兒', 1290, '閃閃金光的蘿蔔和其他美味的胡蘿蔔，都生長在湖泊對岸的島嶼上，可憐的兔子們又不善於游泳。\n一位聰明的兔子想到把大石頭棄到湖中，再放上木板當作橋樑來過湖。\n糟糕了！没有足够的木板，牠們必須使用相同的橋樑材料，錯誤地估計木板長度便會原地不動。\n這場激烈的拉力赛開始了！請小心謹慎地測量和搭建橋樑。\n\n一款具挑戰性、有趣、距離及空間評估的競賽卡牌遊戲。', '5be549b1b163cd70740efafd_RuebenRallye_Box.jpg', 2, 4, 4, '15', '2024-08-21 10:47:17', 1),
-(536, '命運重置・窮途末路 試玩版', '大腦,紙牌,合作,言語', 0, '參加天鵝聚會，可現場獲得本試玩包，或由教練親自帶領體驗本遊戲！\n\n失去所愛的悲痛，除了哀傷和毀滅，別無所有。\n你們是命運的編織者。\n你們可以暫停時間，並跳躍到各個特定的時間點，去到逝者生命中的某一刻，改變決定，重編他的生命線，讓他跳脫死亡的命運。\n雖然你們只能改變時間軸上的某些片刻，希望你們的選擇有足夠的力量影響結局。\n在這種情況下，死者新的行為將會帶領他踏上一條更好的路途。\n\n命運重置｜窮途末路：遊戲規則\n命運重置｜窮途末路：遊戲進行範例', '5f018562310d7dcef560254d_Undo_Drowned_Hopes_CH.jpg', 2, 4, 10, '60', '2024-08-21 10:47:17', 1),
+(536, '命運重置・窮途末路 試玩版', '大腦,紙牌,合作,言語', 100, '參加天鵝聚會，可現場獲得本試玩包，或由教練親自帶領體驗本遊戲！\n\n失去所愛的悲痛，除了哀傷和毀滅，別無所有。\n你們是命運的編織者。\n你們可以暫停時間，並跳躍到各個特定的時間點，去到逝者生命中的某一刻，改變決定，重編他的生命線，讓他跳脫死亡的命運。\n雖然你們只能改變時間軸上的某些片刻，希望你們的選擇有足夠的力量影響結局。\n在這種情況下，死者新的行為將會帶領他踏上一條更好的路途。\n\n命運重置｜窮途末路：遊戲規則\n命運重置｜窮途末路：遊戲進行範例', '5f018562310d7dcef560254d_Undo_Drowned_Hopes_CH.jpg', 2, 4, 10, '60', '2024-08-21 10:47:17', 1),
 (537, 'SEVEN! 特別牌擴充', '言語,大腦,紙牌,派對,樂齡', 150, '本擴充包含19張全新的Seven!特別牌，每場遊戲可從中選擇/隨機抽取來替換基本版的特別牌，保持14張金星好牌和3張黑星壞牌，讓遊戲增加變化、更加刺激！', '5dda5465d31f0f8175637d4b_Seven_EX_Box.jpg', 3, 5, 7, '30', '2024-08-21 10:47:17', 1),
 (538, '消失的主角', '大腦,巧手,言語,樂齡', 890, '「消失的主角」是一款考驗想像力的遊戲。遊戲中，你必須畫圖，讓其他玩家看圖猜謎，但並不是要畫出「主角」讓大家猜，而是畫出主角周圍的環境、情境，讓其他人猜出你的「主角」是什麼！\n若想贏得勝利，聰明構圖和盡情猜測比做個稱職的畫家來得更重要！', '5e74597e5481bff5578051e6_WHAT%27S%20MISSING_BOX_3D.jpg', 3, 6, 7, '30', '2024-08-21 10:47:17', 1),
 (539, '消失的主角 紫色版', '大腦,巧手,言語,樂齡', 890, '「消失的主角」是一款考驗想像力的遊戲。遊戲中，你必須畫圖，讓其他玩家看圖猜謎，但並不是要畫出「主角」讓大家猜，而是畫出主角周圍的環境、情境，讓其他人猜出你的「主角」是什麼！\n若想贏得勝利，聰明構圖和盡情猜測比做個稱職的畫家來得更重要！\n\n畫出聯想，留下空白，創造謎題！\n《紫色版》與《黃色版》均為獨立遊戲，規則相同但包含240張不同圖卡，分屬4個難度等級。\n與《黃色版》合併使用最多可讓12人同樂！', '60bdc1cf2e7f5f0ee73e32e5_WhatsMissing_Purple_Box_3D.jpg', 3, 6, 7, '30', '2024-08-21 10:47:17', 1),
@@ -998,8 +1170,10 @@ INSERT INTO `product_comment` (`id`, `user_id`, `product_id`, `order_id`, `comme
 (88, 1, 3, 28, '包裝精美，送禮自用兩相宜。', 5, '2024-11-05 20:19:47', '2024-11-13 20:19:47', 1),
 (89, 1, 4, 27, '物超所值，推薦購買！', 5, '2024-11-04 20:19:47', '2024-11-13 20:19:47', 1),
 (90, 1, 5, 27, '客服態度很好，解決問題很有效率。', 4, '2024-11-03 20:19:47', '2024-11-13 20:19:47', 1),
-(91, 1, 1, 31, '我只是來試試', 5, '2024-11-13 20:59:38', '2024-11-13 20:59:38', 1),
-(92, 1, 2, 35, 'DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD', 4, '2024-11-19 15:25:08', '2024-11-19 15:25:58', -1);
+(91, 1, 1, 31, '我只是來試試', 5, '2024-11-13 20:59:38', '2024-11-18 19:39:44', -1),
+(92, 1, 3, 94, '好玩好玩', 3, '2024-11-18 19:42:33', '2024-11-23 16:59:58', 1),
+(93, 1, 3, 102, 'YA~', 4, '2024-11-18 19:42:49', '2024-11-23 17:00:06', 1),
+(94, 1, 3, 100, '留名', 3, '2024-11-18 19:46:31', '2024-11-23 17:00:13', 1);
 
 -- --------------------------------------------------------
 
@@ -4801,22 +4975,22 @@ CREATE TABLE `tags` (
 --
 
 INSERT INTO `tags` (`id`, `name`, `created_at`) VALUES
-(1, '大腦', '2024-08-20 21:33:38'),
-(2, '派對', '2024-08-20 21:33:38'),
-(3, '樂齡', '2024-08-20 21:33:38'),
-(4, '幼兒', '2024-08-20 21:33:38'),
-(5, '紙牌', '2024-08-20 21:33:38'),
-(6, '猜心', '2024-08-20 21:33:38'),
-(7, '輕策略', '2024-08-20 21:33:38'),
-(8, '競速', '2024-08-20 21:33:38'),
-(9, '台灣作家', '2024-08-20 21:33:38'),
-(10, '骰子', '2024-08-20 21:33:38'),
-(11, '巧手', '2024-08-20 21:33:38'),
-(12, '合作', '2024-08-20 21:33:38'),
-(13, '言語', '2024-08-20 21:33:38'),
-(14, '陣營', '2024-08-20 21:33:38'),
-(15, '中策略', '2024-08-20 21:33:38'),
-(16, '重策略', '2024-08-20 21:33:38');
+(1, '大腦', '2024-08-21 05:33:38'),
+(2, '派對', '2024-08-21 05:33:38'),
+(3, '樂齡', '2024-08-21 05:33:38'),
+(4, '幼兒', '2024-08-21 05:33:38'),
+(5, '紙牌', '2024-08-21 05:33:38'),
+(6, '猜心', '2024-08-21 05:33:38'),
+(7, '輕策略', '2024-08-21 05:33:38'),
+(8, '競速', '2024-08-21 05:33:38'),
+(9, '台灣作家', '2024-08-21 05:33:38'),
+(10, '骰子', '2024-08-21 05:33:38'),
+(11, '巧手', '2024-08-21 05:33:38'),
+(12, '合作', '2024-08-21 05:33:38'),
+(13, '言語', '2024-08-21 05:33:38'),
+(14, '陣營', '2024-08-21 05:33:38'),
+(15, '中策略', '2024-08-21 05:33:38'),
+(16, '重策略', '2024-08-21 05:33:38');
 
 -- --------------------------------------------------------
 
@@ -4843,8 +5017,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `account`, `password`, `phone`, `avatar_url`, `created_time`, `name`, `valid`, `birthday`, `address`) VALUES
-(1, 'test1@example.com', 'test1', '$2b$10$d9l5RQ2H.2415mnVjwbOVOO2VzW/f2V/d.dr24x9oc.DFRSfPWJD6', '0912345678', 'http://localhost:3005/avatar/1732154175650-577043914.png', '2024-11-01 15:49:56', '測試用戶一', 1, '1990-01-01', '台北市測試區測試路123號'),
-(2, 'test2@example.com', 'test2', '123456', '0987654321', NULL, '2024-11-01 15:49:56', '測試用戶二', 1, '1995-05-05', '新北市測試區測試路456號'),
+(1, 'test1@example.com', 'test1', '$2b$10$d9l5RQ2H.2415mnVjwbOVOO2VzW/f2V/d.dr24x9oc.DFRSfPWJD6', '0912345678', 'http://localhost:3005/avatar/1732352134420-857044496.jpg', '2024-11-01 15:49:56', '佩索', 1, '1990-01-01', '台北市測試區測試路123號'),
+(2, 'user0@example.com', 'user0', '$2b$10$YourHashedPassword0', '0987654321', NULL, '2024-11-01 15:49:56', '吳明氏', 1, '1995-05-05', '新北市測試區測試路456號'),
 (3, 'user1@example.com', 'user1', '$2b$10$YourHashedPassword1', '0912345671', NULL, '2024-11-13 10:38:43', '王大明', 1, '1990-01-01', '台北市中正區1號'),
 (4, 'user2@example.com', 'user2', '$2b$10$YourHashedPassword2', '0912345672', NULL, '2024-11-13 10:38:43', '李小華', 1, '1992-02-02', '台北市信義區2號'),
 (5, 'user3@example.com', 'user3', '$2b$10$YourHashedPassword3', '0912345673', NULL, '2024-11-13 10:38:43', '張美玲', 1, '1988-03-03', '台北市大安區3號'),
@@ -4871,18 +5045,12 @@ CREATE TABLE `user_coupons` (
 --
 
 INSERT INTO `user_coupons` (`id`, `user_id`, `coupon_id`, `used_time`, `received_time`, `expire_time`) VALUES
-(1, 1, 1, NULL, '2024-11-04 14:43:48', '2024-11-04 14:43:20'),
-(2, 1, 2, NULL, '2024-11-04 14:43:48', '2024-11-04 14:43:20'),
+(2, 1, 2, '2024-11-16 14:37:11', '2024-11-04 14:43:48', '2024-11-04 14:43:20'),
 (3, 1, 8, NULL, '2024-11-11 14:55:59', '2024-12-31 00:00:00'),
-(4, 1, 1, NULL, '2024-11-12 14:32:13', '2024-12-31 23:59:59'),
-(5, 1, 2, NULL, '2024-11-12 14:32:13', '2024-12-31 23:59:59'),
 (6, 1, 3, NULL, '2024-11-12 14:32:13', '2024-12-31 23:59:59'),
-(7, 1, 4, NULL, '2024-11-12 14:32:13', '2024-02-29 23:59:59'),
+(7, 1, 4, '2024-11-16 00:18:26', '2024-11-12 14:32:13', '2024-02-29 23:59:59'),
 (8, 1, 5, NULL, '2024-11-12 14:32:13', '2024-02-29 23:59:59'),
-(9, 1, 6, '2024-01-15 12:00:00', '2024-11-12 14:32:13', '2024-12-31 23:59:59'),
-(10, 1, 7, NULL, '2024-11-18 13:17:04', '2024-11-30 00:00:00'),
-(11, 1, 10, NULL, '2024-11-18 13:17:35', '2025-03-31 00:00:00'),
-(12, 1, 11, '2024-11-19 09:53:21', '2024-11-18 13:17:37', '2024-11-30 00:00:00');
+(9, 1, 6, '2024-01-15 12:00:00', '2024-11-12 14:32:13', '2024-12-31 23:59:59');
 
 --
 -- 已傾印資料表的索引
@@ -5029,19 +5197,19 @@ ALTER TABLE `cart`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `forum_posts`
@@ -5065,13 +5233,13 @@ ALTER TABLE `newsletters`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product`
@@ -5083,7 +5251,7 @@ ALTER TABLE `product`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product_comment`
 --
 ALTER TABLE `product_comment`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product_images`
@@ -5101,7 +5269,7 @@ ALTER TABLE `product_tags`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `rent`
 --
 ALTER TABLE `rent`
-  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=549;
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1024;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `tags`
@@ -5119,7 +5287,7 @@ ALTER TABLE `users`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `user_coupons`
 --
 ALTER TABLE `user_coupons`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- 已傾印資料表的限制式
