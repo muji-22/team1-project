@@ -233,7 +233,7 @@ function Rents() {
         />
 
         <div className="col-12 col-lg-9">
-        <div className="col-3 ms-auto">
+        <div className="col-lg-3 ms-auto">
           <select
             className="form-select mb-4"
             onChange={(e) => handleFilterChange({...filters, sortRentalFee: e.target.value })}
