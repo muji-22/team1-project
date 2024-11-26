@@ -249,7 +249,7 @@ function Products() {
 
           {/* 右側-商品列表 */}
           <div className="col-12 col-lg-9">
-            <div className="col-lg-3 ms-auto">
+            <div className="col-lg-3 col-6 ms-auto">
               <select
                 className="form-select mb-4"
                 onChange={(e) =>
