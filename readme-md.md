@@ -15,6 +15,7 @@
 - 租賃服務
 - 評價系統
 - 優惠券管理
+- 文章討論區
 - 電子報訂閱
 
 ### 特色
@@ -70,6 +71,7 @@
   - cart & cart_items：購物車系統
   - favorites：收藏清單
   - product_comment：商品評價
+  - forum_post & forum_reply 討論區系統
   - coupons & user_coupons：優惠券系統
   - newsletters：電子報訂閱
 
@@ -282,7 +284,22 @@ GET    /check/:productId    // 檢查是否已收藏特定商品
 POST   /:productId          // 新增收藏
 DELETE /:productId          // 刪除收藏
 ```
+### 文章討論區 API (forum.js)
+```javascript
+// 基本路徑: /api/forum
+  
+GET     /posts               // 取得文章列表 (含分頁)
+GET     /posts/:id           // 取得單一文章與回覆
+GET     /search              // 搜尋文章
+POST    /posts               // 新增文章 (需登入)
+POST    /posts/:id           // 更新文章 (需登入)
+DELETE  /posts/:id           // 刪除文章 (需登入)
+POST    /posts/:id/replies   // 新增回覆 (需登入)
+PUT     /replies/:id         // 修改回覆 (需登入)
+DELETE  /replies/:id         //刪除回覆 (需登入)
 
+
+```
 ### 電子報 API (newsletter.js)
 ```javascript
 // 基本路徑: /api/newsletter
